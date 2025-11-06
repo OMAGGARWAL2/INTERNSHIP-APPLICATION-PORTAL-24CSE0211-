@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Features</title>
+</head>
+<body>
+  <header><h1>Features</h1></header>
+  <main>
+    <section>
+      <ul>
+        <li>Quick tests</li>
+        <li>Resume builder</li>
+        <li>Internship tracking</li>
+      </ul>
+    </section>
+  </main>
+</main>
+  <!-- Hero Section -->
+  <section style="padding:4rem 0;">
+    <div class="ih-container" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;align-items:center">
+      <div>
+        <h1 style="font-size:2.4rem;margin-bottom:.8rem">Features that help you stand out</h1>
+        <p style="color:var(--text-secondary);margin-bottom:1rem">From quick tests to resume building and smart recommendations, InternHub packs practical tools students and hirers actually use.</p>
+        <div style="display:flex;gap:.8rem;flex-wrap:wrap">
+          <a href="find-internships.html" class="ih-btn">Find Internships</a>
+          <a href="resume-builder.html" class="ih-btn" style="background:linear-gradient(135deg,#16a34a,#22c55e)">Build Resume</a>
+        </div>
+      </div>
+      <div style="text-align:center">
+        <!-- Scholar/Graduation Cap SVG as required -->
+        <svg width="280" height="220" viewBox="0 0 640 512" aria-label="Graduation cap" role="img">
+          <defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#1e3a8a"/><stop offset="1" stop-color="#0ea5e9"/></linearGradient></defs>
+          <path fill="url(#g)" d="M622.34 153.51 343.4 38.99a48 48 0 0 0-38.8 0L17.66 153.51a16 16 0 0 0 0 29.79l287 116.1a48 48 0 0 0 38.8 0l279-112.52a16 16 0 0 0-.12-29.37zM64 320v64a64 64 0 0 0 64 64h320a64 64 0 0 0 64-64v-64l-192 80a96 96 0 0 1-77.6 0zM96 256a16 16 0 0 0-32 0v80a16 16 0 0 0 32 0z"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Grid (existing stays) -->
+  <section class="ih-container" style="margin:2rem auto">
+    <h2 style="margin-bottom:1rem">Core Features</h2>
+    <div class="grid" id="featGrid"></div>
+  </section>
+
+  <!-- How It Works -->
+  <section style="background:#fff;border-top:2px solid var(--border-color);border-bottom:2px solid var(--border-color);padding:3rem 0">
+    <div class="ih-container">
+      <h2 style="margin-bottom:1rem">How it works</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem">
+        <article class="card"><h3>1. Create Profile</h3><p>Add your skills, resume, and bio.</p></article>
+        <article class="card"><h3>2. Practice</h3><p>Use quick tests to build confidence.</p></article>
+        <article class="card"><h3>3. Apply Fast</h3><p>Short forms and "+1" click apply behavior.</p></article>
+        <article class="card"><h3>4. Track Progress</h3><p>Stay on top of status updates.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials snippet -->
+  <section class="ih-container" style="padding:2rem 0">
+    <h2 style="margin-bottom:1rem">What users say</h2>
+    <div id="featTestimonials" class="grid"></div>
+  </section>
+
+  <!-- CTA -->
+  <section style="padding:2rem 0">
+    <div class="ih-container" style="background:var(--tag-bg);border:2px solid var(--border-color);border-radius:16px;padding:1.5rem">
+      <h3>Ready to get started?</h3>
+      <p style="color:var(--text-secondary)">Find internships tailored to your skills, or post your first role as a hirer.</p>
+      <div style="display:flex;gap:.8rem;flex-wrap:wrap">
+        <a href="find-internships.html" class="ih-btn">Start Finding</a>
+        <a href="post-internship.html" class="ih-btn" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa)">Post a Role</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="market-enhancements.js"></script>
+  <script>
+    // Inject shared header/footer and base styles
+    window.addEventListener('DOMContentLoaded', ()=>{
+      if(window.SharedComponents){ SharedComponents.injectHeaderFooter(); }
+      // Existing features fill
+      (function(){
+        const items=[
+          {title:'Quick tests', desc:'Practice and build confidence', icon:'fa-bolt'},
+          {title:'Resume builder', desc:'Create a professional resume fast', icon:'fa-file-alt'},
+          {title:'Internship tracking', desc:'Stay on top of application progress', icon:'fa-tasks'},
+          {title:'Smart recommendations', desc:'See roles matched to your skills', icon:'fa-magic'},
+          {title:'Saved searches', desc:'Re-run filters instantly', icon:'fa-bookmark'},
+          {title:'Badges & streaks', desc:'Stay motivated with milestones', icon:'fa-trophy'},
+        ];
+        const grid=document.getElementById('featGrid');
+        grid.innerHTML=items.map(i=>`<article class="card"><h3><i class="fas ${i.icon}" style="color:var(--accent-color)"></i> ${i.title}</h3><p>${i.desc}</p></article>`).join('');
+      })();
+      // Testimonials load
+      (function(){
+        const tEl=document.getElementById('featTestimonials');
+        const samples=[
+          {name:'A. Student', text:'Got my internship in 2 weeks using the platform.', rating:5},
+          {name:'M. Intern', text:'Resume builder and quick tests made me stand out.', rating:5},
+          {name:'H. Recruiter', text:'Clear flow and helpful tests.', rating:4},
+        ];
+        tEl.innerHTML=samples.map(t=>`<article class="card"><div style="color:#f59e0b">${'★'.repeat(t.rating)}${'☆'.repeat(5-t.rating)}</div><p>${t.text}</p><strong>— ${t.name}</strong></article>`).join('');
+      })();
+    });
+  </script>
+  <style>
+    /* Additional page styles using the shared design system */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
+    .card{background:#fff;border:2px solid var(--border-color);border-radius:12px;padding:1rem}
+  </style>
+</body>
+</html>

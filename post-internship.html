@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Internship - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --cream:#f6f1e7; --blue:#1e3a8a; --sea-blue:#0ea5e9; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--cream); color: var(--blue); min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .header { 
+            background: white; 
+            border-bottom: 3px solid var(--sea-blue); 
+            padding: 1rem 0; 
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header-content { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 2rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            color: var(--blue); 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav a { 
+            color: var(--blue); 
+            text-decoration: none; 
+            margin-left: 2rem; 
+            font-weight: 600; 
+            transition: color 0.3s;
+        }
+        .nav a:hover { color: var(--sea-blue); }
+        .form-section { 
+            background: white; 
+            border-radius: 16px; 
+            padding: 2.5rem; 
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid rgba(30,58,138,0.15);
+        }
+        .section-title { 
+            font-size: 1.8rem; 
+            font-weight: 700; 
+            margin-bottom: 1.5rem; 
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-group { margin-bottom: 1.5rem; }
+        label { 
+            display: block; 
+            margin-bottom: 0.5rem; 
+            font-weight: 600;
+            color: var(--blue);
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.9rem;
+            border: 2px solid rgba(30,58,138,0.15);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--sea-blue);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+        }
+        .btn { 
+            padding: 0.9rem 1.8rem; 
+            background: linear-gradient(135deg, var(--blue), var(--sea-blue)); 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-weight: 600;
+            font-size: 1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25); }
+        .btn-secondary { background: linear-gradient(135deg, var(--sea-blue), var(--blue)); }
+        .module-card, .question-card { 
+            background: #f9fafb; 
+            padding: 2rem; 
+            border-radius: 12px; 
+            margin-bottom: 1.5rem; 
+            border: 2px solid rgba(30,58,138,0.15);
+            position: relative;
+        }
+        .module-card::before, .question-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--sea-blue);
+            border-radius: 12px 0 0 12px;
+        }
+        .assignment-fields {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 2px dashed rgba(30,58,138,0.25);
+            margin-top: 1rem;
+        }
+        .marks-weightage {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .badge {
+            background: var(--sea-blue);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        /* Rich Text Editor Toolbar */
+        .editor-toolbar {
+            background: #f3f4f6;
+            border: 2px solid rgba(30,58,138,0.15);
+            border-bottom: 1px solid rgba(30,58,138,0.15);
+            border-radius: 10px 10px 0 0;
+            padding: 0.75rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .editor-btn {
+            padding: 0.5rem 0.75rem;
+            background: white;
+            border: 1px solid rgba(30,58,138,0.2);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--blue);
+            font-size: 0.9rem;
+        }
+        .editor-btn:hover {
+            background: var(--sea-blue);
+            color: white;
+            border-color: var(--sea-blue);
+        }
+        .editor-btn.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+        .editor-divider {
+            width: 1px;
+            height: 24px;
+            background: rgba(30,58,138,0.2);
+        }
+        .editor-select {
+            padding: 0.4rem 0.6rem;
+            border: 1px solid rgba(30,58,138,0.2);
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .rich-textarea {
+            border-radius: 0 0 10px 10px !important;
+            border-top: none !important;
+            min-height: 150px;
+            font-family: inherit;
+        }
+        
+        /* Rich Text Editable Div */
+        .rich-textarea-editable {
+            width: 100%;
+            min-height: 150px;
+            padding: 0.9rem;
+            border: 2px solid rgba(30,58,138,0.15);
+            border-radius: 0 0 10px 10px;
+            border-top: none;
+            font-size: 1rem;
+            font-family: inherit;
+            background: white;
+            overflow-y: auto;
+            outline: none;
+        }
+        
+        .rich-textarea-editable:focus {
+            border-color: var(--sea-blue);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+        }
+        
+        .rich-textarea-editable[contenteditable="true"]:empty:before {
+            content: attr(data-placeholder);
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-briefcase"></i>
+                <span>InternHub - Post Internship</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="hirer.html">Dashboard</a>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container">
+        <form id="postForm">
+            <!-- Basic Information -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    Basic Internship Information
+                </h2>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Position Title *</label>
+                        <input type="text" id="position" required placeholder="e.g., Frontend Developer Intern">
+                    </div>
+                    <div class="form-group">
+                        <label>Company Name *</label>
+                        <input type="text" id="company" required readonly style="background: rgba(30,58,138,0.05); cursor: not-allowed;" placeholder="Will be filled from your profile">
+                        <small style="color: rgba(30,58,138,0.7); margin-top: 0.25rem; display: block;">
+                            <i class="fas fa-info-circle"></i> Company name comes from your profile. 
+                            <a href="hirer-profile.html" style="color: var(--sea-blue);">Update Profile</a>
+                        </small>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Location *</label>
+                        <input type="text" id="location" required placeholder="e.g., Remote, Mumbai">
+                    </div>
+                    <div class="form-group">
+                        <label>Stipend Range *</label>
+                        <input type="text" id="stipend" required placeholder="e.g., ₹15,000 - ₹25,000">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description *</label>
+                    <div class="editor-toolbar">
+                        <button type="button" class="editor-btn" onclick="formatTextReal('bold')" title="Bold"><i class="fas fa-bold"></i></button>
+                        <button type="button" class="editor-btn" onclick="formatTextReal('italic')" title="Italic"><i class="fas fa-italic"></i></button>
+                        <button type="button" class="editor-btn" onclick="formatTextReal('underline')" title="Underline"><i class="fas fa-underline"></i></button>
+                        <div class="editor-divider"></div>
+                        <button type="button" class="editor-btn" onclick="formatTextReal('justifyLeft')" title="Align Left"><i class="fas fa-align-left"></i></button>
+                        <button type="button" class="editor-btn" onclick="formatTextReal('justifyCenter')" title="Align Center"><i class="fas fa-align-center"></i></button>
+                        <button type="button" class="editor-btn" onclick="formatTextReal('justifyRight')" title="Align Right"><i class="fas fa-align-right"></i></button>
+                        <button type="button" class="editor-btn" onclick="formatTextReal('justifyFull')" title="Justify"><i class="fas fa-align-justify"></i></button>
+                        <div class="editor-divider"></div>
+                        <select class="editor-select" onchange="changeFontFamilyReal(this.value)">
+                            <option value="">Font Family</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Verdana">Verdana</option>
+                            <option value="Inter">Inter</option>
+                        </select>
+                        <select class="editor-select" onchange="changeFontSizeReal(this.value)">
+                            <option value="">Font Size</option>
+                            <option value="1">Small</option>
+                            <option value="3">Normal</option>
+                            <option value="5">Large</option>
+                            <option value="7">Extra Large</option>
+                        </select>
+                    </div>
+                    <div id="description" class="rich-textarea-editable" contenteditable="true" data-placeholder="Describe the role, responsibilities, and requirements..."></div>
+                    <input type="hidden" id="descriptionHidden" name="description" required>
+                </div>
+                <div class="form-group">
+                    <label>Skills Required (comma separated)</label>
+                    <input type="text" id="skills" placeholder="e.g., React, JavaScript, HTML/CSS, Node.js">
+                </div>
+            </div>
+
+            <!-- Course Selection Option -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-graduation-cap"></i>
+                    Prerequisite Course (Optional)
+                </h2>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" id="addCourse" onchange="toggleCourseSection()" style="width: auto;">
+                        <span>Attach a prerequisite course to this internship</span>
+                    </label>
+                </div>
+                <div id="courseSection" style="display: none;">
+                    <div class="form-group">
+                        <label>Pick Saved Course</label>
+                        <select id="coursePick"></select>
+                    </div>
+                    <div class="form-group">
+                        <small>Need to create a course? <a href="createcourse.html">Open course builder</a></small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Selection Option -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-clipboard-check"></i>
+                    Assessment Test (Optional)
+                </h2>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" id="addTest" onchange="toggleTestSection()" style="width: auto;">
+                        <span>Require applicants to take a saved test</span>
+                    </label>
+                </div>
+                <div id="testSection" style="display: none;">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Pick Saved Test</label>
+                            <select id="pickTest"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Time Limit (minutes)</label>
+                            <input type="number" id="testTimeLimit" min="5" step="5" value="60">
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Test Start (optional)</label>
+                            <input type="datetime-local" id="testStart">
+                        </div>
+                        <div class="form-group">
+                            <label>Test End (optional)</label>
+                            <input type="datetime-local" id="testEnd">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%; padding: 1.2rem; font-size: 1.1rem; margin-top: 2rem;">
+                <i class="fas fa-check-circle"></i> Post Internship
+            </button>
+        </form>
+    </div>
+
+    <script>
+        let moduleCount = 0;
+        let questionCount = 0;
+
+        function toggleCourseSection() {
+            document.getElementById('courseSection').style.display = 
+                document.getElementById('addCourse').checked ? 'block' : 'none';
+        }
+
+        function toggleTestSection() {
+            const testSection = document.getElementById('testSection');
+            const isChecked = document.getElementById('addTest').checked;
+            testSection.style.display = isChecked ? 'block' : 'none';
+            
+            // Refresh test dropdown when toggled on
+            if (isChecked) {
+                populateTests();
+            }
+        }
+
+        // Course builder removed here; selection from saved courses only
+
+        function toggleAssignmentFields(select) {
+            const assignmentFields = select.closest('.module-card').querySelector('.assignment-fields');
+            if (select.value === 'assignment') {
+                assignmentFields.style.display = 'block';
+            } else {
+                assignmentFields.style.display = 'none';
+            }
+        }
+
+        function addAssignmentQuestion(moduleNum) {
+            const container = document.getElementById(`mcqContainer${moduleNum}`);
+            const qNum = container.children.length + 1;
+            const questionDiv = document.createElement('div');
+            questionDiv.style.background = '#fff';
+            questionDiv.style.padding = '1.5rem';
+            questionDiv.style.border = '2px solid #c8e6c9';
+            questionDiv.style.borderRadius = '8px';
+            questionDiv.style.marginBottom = '1rem';
+            questionDiv.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <strong style="color: #2e7d32;">Question ${qNum}</strong>
+                    <button type="button" onclick="this.parentElement.parentElement.remove()" style="background: #ef4444; color: white; border: none; padding: 0.3rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                        Remove
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label>Question Text</label>
+                    <input type="text" class="assignment-q-text" placeholder="Enter question...">
+                </div>
+                <div class="grid-2" style="margin-bottom: 1rem;">
+                    <div class="form-group">
+                        <label>Option A</label>
+                        <input type="text" class="assignment-opt-a" placeholder="Option A">
+                    </div>
+                    <div class="form-group">
+                        <label>Option B</label>
+                        <input type="text" class="assignment-opt-b" placeholder="Option B">
+                    </div>
+                </div>
+                <div class="grid-2" style="margin-bottom: 1rem;">
+                    <div class="form-group">
+                        <label>Option C</label>
+                        <input type="text" class="assignment-opt-c" placeholder="Option C">
+                    </div>
+                    <div class="form-group">
+                        <label>Option D</label>
+                        <input type="text" class="assignment-opt-d" placeholder="Option D">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Correct Answer</label>
+                    <select class="assignment-correct">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                    </select>
+                </div>
+            `;
+            container.appendChild(questionDiv);
+        }
+
+        function addMCQQuestion() {
+            questionCount++;
+            const container = document.getElementById('questionsContainer');
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question-card';
+            questionDiv.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="color: #2e7d32; display: flex; align-items: center; gap: 10px;">
+                        <span class="badge">MCQ Question ${questionCount}</span>
+                    </h3>
+                    <button type="button" onclick="this.closest('.question-card').remove()" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+                <div class="marks-weightage" style="margin-bottom: 1.5rem;">
+                    <div class="form-group">
+                        <label>Marks per Question</label>
+                        <input type="number" class="question-marks" min="1" value="5" placeholder="e.g., 5">
+                    </div>
+                    <div class="form-group">
+                        <label>Weightage (%)</label>
+                        <input type="number" class="question-weightage" min="1" max="100" value="10" placeholder="e.g., 10">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Question Text *</label>
+                    <input type="text" class="question-text" placeholder="Enter the question">
+                </div>
+                ${['A', 'B', 'C', 'D'].map((opt, idx) => `
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="radio" name="correct-${questionCount}" value="${opt}" class="correct-answer" ${idx === 0 ? 'checked' : ''} style="width: auto;">
+                            <span>Option ${opt}</span>
+                        </label>
+                        <input type="text" class="option-${opt.toLowerCase()}" placeholder="Option ${opt}">
+                    </div>
+                `).join('')}
+            `;
+            container.appendChild(questionDiv);
+        }
+
+        function addCodingQuestion() {
+            questionCount++;
+            const container = document.getElementById('questionsContainer');
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question-card';
+            questionDiv.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="color: #2e7d32; display: flex; align-items: center; gap: 10px;">
+                        <span class="badge">Coding Question ${questionCount} (C Language)</span>
+                    </h3>
+                    <button type="button" onclick="this.closest('.question-card').remove()" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+                <div class="marks-weightage" style="margin-bottom: 1.5rem;">
+                    <div class="form-group">
+                        <label>Marks</label>
+                        <input type="number" class="coding-marks" min="1" value="25" placeholder="e.g., 25">
+                    </div>
+                    <div class="form-group">
+                        <label>Weightage (%)</label>
+                        <input type="number" class="coding-weightage" min="1" max="100" value="40" placeholder="e.g., 40">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Problem Statement *</label>
+                    <div class="editor-toolbar">
+                        <button type="button" class="editor-btn" onclick="formatTextDynamic(this, 'bold')" title="Bold"><i class="fas fa-bold"></i></button>
+                        <button type="button" class="editor-btn" onclick="formatTextDynamic(this, 'italic')" title="Italic"><i class="fas fa-italic"></i></button>
+                        <button type="button" class="editor-btn" onclick="formatTextDynamic(this, 'underline')" title="Underline"><i class="fas fa-underline"></i></button>
+                        <div class="editor-divider"></div>
+                        <button type="button" class="editor-btn" onclick="alignTextDynamic(this, 'left')" title="Align Left"><i class="fas fa-align-left"></i></button>
+                        <button type="button" class="editor-btn" onclick="alignTextDynamic(this, 'center')" title="Align Center"><i class="fas fa-align-center"></i></button>
+                        <button type="button" class="editor-btn" onclick="alignTextDynamic(this, 'right')" title="Align Right"><i class="fas fa-align-right"></i></button>
+                        <button type="button" class="editor-btn" onclick="alignTextDynamic(this, 'justify')" title="Justify"><i class="fas fa-align-justify"></i></button>
+                        <div class="editor-divider"></div>
+                        <select class="editor-select" onchange="changeFontFamilyDynamic(this, this.value)">
+                            <option value="">Font Family</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Verdana">Verdana</option>
+                            <option value="Inter">Inter</option>
+                        </select>
+                        <select class="editor-select" onchange="changeFontSizeDynamic(this, this.value)">
+                            <option value="">Font Size</option>
+                            <option value="12px">12px</option>
+                            <option value="14px">14px</option>
+                            <option value="16px">16px</option>
+                            <option value="18px">18px</option>
+                            <option value="20px">20px</option>
+                            <option value="24px">24px</option>
+                        </select>
+                    </div>
+                    <textarea class="problem-statement rich-textarea" rows="3" placeholder="Describe the coding problem..."></textarea>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Sample Test Case 1 Input</label>
+                        <input type="text" class="test-input-1" placeholder="e.g., 5 10">
+                    </div>
+                    <div class="form-group">
+                        <label>Sample Test Case 1 Output</label>
+                        <input type="text" class="test-output-1" placeholder="e.g., 15">
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Sample Test Case 2 Input</label>
+                        <input type="text" class="test-input-2" placeholder="e.g., 20 30">
+                    </div>
+                    <div class="form-group">
+                        <label>Sample Test Case 2 Output</label>
+                        <input type="text" class="test-output-2" placeholder="e.g., 50">
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Hidden Test Case Input</label>
+                        <input type="text" class="hidden-input" placeholder="e.g., 100 200">
+                    </div>
+                    <div class="form-group">
+                        <label>Hidden Test Case Output</label>
+                        <input type="text" class="hidden-output" placeholder="e.g., 300">
+                    </div>
+                </div>
+            `;
+            container.appendChild(questionDiv);
+        }
+
+        document.getElementById('postForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Check if hirer has a profile
+            const hirerProfile = JSON.parse(localStorage.getItem('hirerProfile') || 'null');
+            if (!hirerProfile || !hirerProfile.company || !hirerProfile.company.trim()) {
+                alert('Please create your hirer profile with company information before posting internships!\n\nYou will be redirected to the profile page.');
+                window.location.href = 'hirer-profile.html';
+                return;
+            }
+            
+            // Use company from profile
+            const companyName = hirerProfile.company;
+            
+            const internship = {
+                id: Date.now(),
+                position: document.getElementById('position').value,
+                company: companyName, // Use company from profile
+                hirerId: hirerProfile.id || Date.now(), // Link to hirer
+                location: document.getElementById('location').value,
+                stipend: document.getElementById('stipend').value,
+                description: document.getElementById('description').innerHTML,
+                skills: document.getElementById('skills').value.split(',').map(s => s.trim()).filter(s => s),
+                hasCourse: document.getElementById('addCourse').checked,
+                hasTest: document.getElementById('addTest').checked
+            };
+
+            // Save course data if added
+            if (internship.hasCourse) {
+                const modules = [];
+                document.querySelectorAll('.module-card').forEach(card => {
+                    const module = {
+                        title: card.querySelector('.module-title').value,
+                        type: card.querySelector('.module-type').value,
+                        content: card.querySelector('.module-content').value,
+                        video: card.querySelector('.module-video').value
+                    };
+                    
+                    // Add assignment questions if module type is assignment
+                    if (module.type === 'assignment') {
+                        module.numberOfQuestions = parseInt(card.querySelector('.assignment-questions').value) || 0;
+                        module.totalMarks = parseInt(card.querySelector('.assignment-marks').value) || 0;
+                        
+                        const questions = [];
+                        const mcqContainer = card.querySelector('[id^="mcqContainer"]');
+                        if (mcqContainer) {
+                            mcqContainer.querySelectorAll('[class*="assignment-"]').forEach((field, idx) => {
+                                const qDiv = field.closest('[style*="background"]');
+                                if (qDiv) {
+                                    questions.push({
+                                        question: field.querySelector('.assignment-q-text')?.value,
+                                        options: {
+                                            A: field.querySelector('.assignment-opt-a')?.value,
+                                            B: field.querySelector('.assignment-opt-b')?.value,
+                                            C: field.querySelector('.assignment-opt-c')?.value,
+                                            D: field.querySelector('.assignment-opt-d')?.value
+                                        },
+                                        correct: field.querySelector('.assignment-correct')?.value
+                                    });
+                                }
+                            });
+                        }
+                        module.questions = questions;
+                    }
+                    
+                    modules.push(module);
+                });
+                internship.course = {
+                    title: document.getElementById('courseTitle').value,
+                    description: document.getElementById('courseDescription').value,
+                    modules: modules
+                };
+            }
+
+            // Attach saved test selection if chosen
+            if (internship.hasTest) {
+                const tests = JSON.parse(localStorage.getItem('tests')||'[]');
+                const pick = document.getElementById('pickTest').value;
+                if (!pick || pick === '') {
+                    alert('Please select a test before posting the internship.');
+                    e.preventDefault();
+                    return;
+                }
+                const picked = tests.find(t=> String(t.id) === String(pick));
+                if (!picked) {
+                    alert('Selected test not found. Please select a valid test.');
+                    e.preventDefault();
+                    return;
+                }
+                internship.test = { 
+                    id: picked.id, 
+                    name: picked.name, 
+                    timeLimitMinutes: parseInt(document.getElementById('testTimeLimit').value)||picked.timeLimitSeconds ? Math.floor(picked.timeLimitSeconds / 60) : 60,
+                    start: document.getElementById('testStart').value || null, 
+                    end: document.getElementById('testEnd').value || null,
+                    questions: picked.questions || [],
+                    sections: picked.sections || null
+                };
+            } else {
+                internship.test = null;
+            }
+
+            // Save to localStorage
+            // Ensure attached course uses picker selection if enabled
+            if (internship.hasCourse) {
+                const courses = JSON.parse(localStorage.getItem('courses')||'[]');
+                const pickCourseEl = document.getElementById('coursePick');
+                if (pickCourseEl) {
+                    const picked = courses.find(c => String(c.id) === String(pickCourseEl.value));
+                    internship.course = picked ? { id: picked.id, title: picked.title } : null;
+                }
+            }
+
+            const internships = JSON.parse(localStorage.getItem('internships') || '[]');
+            internships.push(internship);
+            localStorage.setItem('internships', JSON.stringify(internships));
+
+            // Create a site notification
+            const notifications = JSON.parse(localStorage.getItem('notifications')||'[]');
+            notifications.unshift({ id: Date.now(), type:'job', title:'Internship Posted', message:`${internship.position} at ${internship.company}`, ts: new Date().toISOString() });
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            alert('Internship posted successfully! Notification created.');
+            window.location.href = 'hirer.html';
+        });
+
+        // Populate saved tests into picker
+        function populateTests(){
+            const select = document.getElementById('pickTest');
+            if (!select) {
+                console.error('pickTest select element not found');
+                return;
+            }
+            
+            try {
+                const testsJSON = localStorage.getItem('tests');
+                const tests = testsJSON ? JSON.parse(testsJSON) : [];
+                
+                console.log('Loading tests from localStorage:', tests.length, 'tests found');
+                
+                // Clear existing options
+                select.innerHTML = '';
+                
+                if (!tests || tests.length === 0) {
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = 'No saved tests found. Create a test in Test Builder first.';
+                    select.appendChild(option);
+                    console.warn('No tests found in localStorage');
+                    return;
+                }
+                
+                // Add all tests as options
+                tests.forEach((test, index) => {
+                    if (!test || !test.id || !test.name) {
+                        console.warn('Invalid test found at index', index, test);
+                        return;
+                    }
+                    
+                    const option = document.createElement('option');
+                    option.value = test.id;
+                    const questionCount = test.questions ? test.questions.length : 0;
+                    const timeLimit = test.timeLimitSeconds ? Math.floor(test.timeLimitSeconds / 60) : 60;
+                    option.textContent = `${test.name} (${questionCount} questions, ${timeLimit} min)`;
+                    select.appendChild(option);
+                });
+                
+                console.log('Successfully populated', select.options.length, 'test options');
+            } catch (error) {
+                console.error('Error populating tests:', error);
+                select.innerHTML = '<option value="">Error loading tests. Please refresh the page.</option>';
+            }
+        }
+        
+        // Populate tests immediately and on page load
+        (function() {
+            // Try immediately
+            setTimeout(populateTests, 100);
+            
+            // Also on DOMContentLoaded
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', populateTests);
+            } else {
+                populateTests();
+            }
+            
+            // Listen for storage changes (when tests are saved in another tab/page)
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'tests' || e.key === 'testSaveTimestamp') {
+                    console.log('Tests updated in localStorage, refreshing dropdown');
+                    populateTests();
+                }
+            });
+            
+            // Also listen for custom event when test is saved in same window
+            window.addEventListener('testSaved', function(e) {
+                console.log('Test saved event detected, refreshing dropdown', e.detail);
+                setTimeout(populateTests, 200);
+            });
+            
+            // Poll for testSaveTimestamp changes (for same-window updates)
+            let lastTestSaveTime = localStorage.getItem('testSaveTimestamp');
+            setInterval(function() {
+                const currentTestSaveTime = localStorage.getItem('testSaveTimestamp');
+                if (currentTestSaveTime && currentTestSaveTime !== lastTestSaveTime) {
+                    console.log('Test save timestamp changed, refreshing dropdown');
+                    lastTestSaveTime = currentTestSaveTime;
+                    populateTests();
+                }
+            }, 500);
+            
+            // Refresh when page becomes visible again
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    console.log('Page visible, checking for new tests');
+                    populateTests();
+                }
+            });
+            
+            // Refresh when test section checkbox is clicked
+            const addTestCheckbox = document.getElementById('addTest');
+            if (addTestCheckbox) {
+                addTestCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        console.log('Test checkbox checked, refreshing dropdown');
+                        setTimeout(populateTests, 100);
+                    }
+                });
+            }
+        })();
+        
+        // Make populateTests globally accessible for debugging
+        window.populateTests = populateTests;
+        window.debugTests = function() {
+            const tests = JSON.parse(localStorage.getItem('tests') || '[]');
+            console.log('All tests in localStorage:', tests);
+            console.log('Test count:', tests.length);
+            tests.forEach((test, i) => {
+                console.log(`Test ${i + 1}:`, {
+                    id: test.id,
+                    name: test.name,
+                    questions: test.questions?.length || 0,
+                    timeLimit: test.timeLimitSeconds ? Math.floor(test.timeLimitSeconds / 60) : 'N/A'
+                });
+            });
+        };
+
+        // Populate saved courses into picker
+        (function populateCourses(){
+            const select = document.getElementById('coursePick');
+            if (!select) return;
+            const courses = JSON.parse(localStorage.getItem('courses')||'[]');
+            select.innerHTML = courses.length ? courses.map(c=>`<option value="${c.id}">${c.title}</option>`).join('') : '<option value="">No saved courses found</option>';
+        })();
+        
+        // Load company from profile on page load
+        (function() {
+            const hirerProfile = JSON.parse(localStorage.getItem('hirerProfile') || 'null');
+            if (hirerProfile && hirerProfile.company) {
+                const companyInput = document.getElementById('company');
+                if (companyInput) {
+                    companyInput.value = hirerProfile.company;
+                }
+            } else {
+                // No profile, redirect to create profile
+                const companyInput = document.getElementById('company');
+                if (companyInput) {
+                    companyInput.value = 'Please create your profile first';
+                    companyInput.disabled = true;
+                }
+            }
+        })();
+    </script>
+    
+    <!-- Rich Text Editor Functions -->
+    <script>
+        // Real Rich Text Editor Functions using document.execCommand
+        function formatTextReal(command) {
+            document.execCommand(command, false, null);
+            document.getElementById('description').focus();
+        }
+        
+        function changeFontFamilyReal(fontName) {
+            if (!fontName) return;
+            document.execCommand('fontName', false, fontName);
+            document.getElementById('description').focus();
+        }
+        
+        function changeFontSizeReal(size) {
+            if (!size) return;
+            document.execCommand('fontSize', false, size);
+            document.getElementById('description').focus();
+        }
+        
+        // Dynamic versions for problem statements (contenteditable divs)
+        function formatTextDynamicReal(button, command) {
+            const toolbar = button.closest('.editor-toolbar');
+            const editable = toolbar.nextElementSibling;
+            
+            if (!editable) return;
+            
+            editable.focus();
+            document.execCommand(command, false, null);
+        }
+        
+        function alignTextDynamicReal(button, alignment) {
+            const toolbar = button.closest('.editor-toolbar');
+            const editable = toolbar.nextElementSibling;
+            
+            if (!editable) return;
+            
+            editable.focus();
+            document.execCommand(alignment, false, null);
+        }
+        
+        function changeFontFamilyDynamicReal(select, fontName) {
+            if (!fontName) return;
+            
+            const toolbar = select.closest('.editor-toolbar');
+            const editable = toolbar.nextElementSibling;
+            
+            if (!editable) return;
+            
+            editable.focus();
+            document.execCommand('fontName', false, fontName);
+            select.value = '';
+        }
+        
+        function changeFontSizeDynamicReal(select, size) {
+            if (!size) return;
+            
+            const toolbar = select.closest('.editor-toolbar');
+            const editable = toolbar.nextElementSibling;
+            
+            if (!editable) return;
+            
+            editable.focus();
+            document.execCommand('fontSize', false, size);
+            select.value = '';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Application Details - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #faf8f3;
+            --blue: #1e40af;
+            --dark-blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --border: #e5e7eb;
+            --success: #10b981;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: var(--cream);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .job-info {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid var(--border);
+        }
+
+        .job-info h2 {
+            color: var(--blue);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-info p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .autofill-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            border: 2px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .autofill-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .autofill-header i {
+            font-size: 1.5rem;
+            color: var(--success);
+        }
+
+        .autofill-header h3 {
+            color: var(--blue);
+            font-size: 1.1rem;
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--cream);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--blue);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .edit-btn {
+            background: none;
+            border: none;
+            color: var(--sea-blue);
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-decoration: underline;
+            padding: 0;
+            margin-top: 0.3rem;
+        }
+
+        .edit-btn:hover {
+            color: var(--blue);
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: var(--blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--blue);
+            border: 2px solid var(--blue);
+        }
+
+        .btn-secondary:hover {
+            background: var(--cream);
+        }
+
+        .or-divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .manual-link {
+            text-align: center;
+        }
+
+        .manual-link a {
+            color: var(--sea-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .manual-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-clipboard-check"></i> Confirm Your Application</h1>
+            <p>Review your details before applying</p>
+        </div>
+
+        <div class="job-info" id="jobInfo">
+            <h2 id="jobTitle">Loading...</h2>
+            <p id="jobCompany">...</p>
+        </div>
+
+        <div class="autofill-card">
+            <div class="autofill-header">
+                <i class="fas fa-user-check"></i>
+                <h3>Your Profile Information</h3>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label">Full Name</div>
+                        <div class="info-value" id="userName">Not logged in</div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label">Email</div>
+                        <div class="info-value" id="userEmail">Not logged in</div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label">Phone Number</div>
+                        <div class="info-value" id="userPhone">Not logged in</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i> Cancel
+                </button>
+                <button class="btn btn-primary" onclick="applyWithAutofill()">
+                    <i class="fas fa-paper-plane"></i> Apply Now
+                </button>
+            </div>
+
+            <div class="or-divider">
+                <span>OR</span>
+            </div>
+
+            <div class="manual-link">
+                <a href="javascript:void(0)" onclick="manualApplication()">
+                    <i class="fas fa-edit"></i> Fill Application Manually
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let internshipData = null;
+
+        window.addEventListener('load', function() {
+            // Get internship data from sessionStorage
+            const savedInternship = sessionStorage.getItem('applyInternship');
+            if (savedInternship) {
+                try {
+                    internshipData = JSON.parse(savedInternship);
+                    document.getElementById('jobTitle').textContent = internshipData.title || 'Internship Position';
+                    document.getElementById('jobCompany').textContent = internshipData.company || 'Company';
+                } catch (e) {
+                    console.error('Error parsing internship data:', e);
+                }
+            }
+
+            // Get user data
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            if (!currentUser.name) {
+                // Not logged in, redirect to login
+                alert('Please login to apply for internships');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Display user info
+            document.getElementById('userName').textContent = currentUser.name || 'Not provided';
+            document.getElementById('userEmail').textContent = currentUser.email || 'Not provided';
+            document.getElementById('userPhone').textContent = currentUser.phone || 'Not provided';
+        });
+
+        function applyWithAutofill() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            if (!internshipData) {
+                alert('Error: Internship data not found');
+                return;
+            }
+            
+            // Create application directly with user's profile data
+            const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+            const application = {
+                id: Date.now(),
+                internshipId: internshipData.id,
+                jobTitle: internshipData.title,
+                company: internshipData.company,
+                applicantName: currentUser.name,
+                applicantEmail: currentUser.email,
+                applicantPhone: currentUser.phone,
+                coverLetter: 'Applied via Quick Apply',
+                appliedDate: new Date().toISOString(),
+                status: 'Pending',
+                quickApply: true
+            };
+            
+            applications.push(application);
+            localStorage.setItem('applications', JSON.stringify(applications));
+            
+            // Clear session data
+            sessionStorage.removeItem('applyInternship');
+            
+            // Check if internship requires a test
+            const internships = JSON.parse(localStorage.getItem('internships') || '[]');
+            const fullInternshipData = internships.find(i => i.id == internshipData.id);
+            
+            if (fullInternshipData && (fullInternshipData.hasTest || (fullInternshipData.test && fullInternshipData.test.id))) {
+                // Show test requirement message
+                showTestRequiredModal(fullInternshipData);
+            } else {
+                // No test required, show success and redirect
+                showSuccessModal();
+            }
+        }
+        
+        function showTestRequiredModal(internship) {
+            const modal = `
+                <div id="testModal" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center;">
+                    <div style="background: white; padding: 2.5rem; border-radius: 16px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.4); text-align: center;">
+                        <div style="font-size: 4rem; color: #10b981; margin-bottom: 1rem;"><i class="fas fa-check-circle"></i></div>
+                        <h2 style="color: var(--blue); margin-bottom: 1rem; font-size: 1.5rem;">Application Submitted!</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.6;">Your application for <strong>${internship.title}</strong> at <strong>${internship.company}</strong> has been submitted successfully.</p>
+                        
+                        <div style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 12px; border: 2px solid #ef4444; margin-bottom: 2rem;">
+                            <div style="font-size: 2.5rem; color: #ef4444; margin-bottom: 0.5rem;"><i class="fas fa-clipboard-check"></i></div>
+                            <h3 style="color: #ef4444; margin-bottom: 0.5rem; font-size: 1.1rem;">Assessment Test Required</h3>
+                            <p style="color: #991b1b; font-size: 0.9rem;">You need to complete an assessment test to proceed with your application.</p>
+                        </div>
+                        
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 2rem;">Click below to start the test now. The test will open in fullscreen mode.</p>
+                        
+                        <button onclick="startTest()" style="width: 100%; padding: 1.2rem; background: var(--blue); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 1.1rem; cursor: pointer; margin-bottom: 0.8rem;">
+                            <i class="fas fa-play-circle"></i> START TEST NOW
+                        </button>
+                        <button onclick="skipTest()" style="width: 100%; padding: 0.8rem; background: white; color: var(--text-secondary); border: 2px solid var(--border); border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem;">
+                            Skip for Now
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modal);
+            
+            // Store test data for dotest.html
+            window.testData = {
+                testId: internship.test?.id || internship.testId,
+                internshipId: internship.id,
+                internshipTitle: internship.title,
+                company: internship.company
+            };
+        }
+        
+        function startTest() {
+            // Store test requirement data
+            sessionStorage.setItem('requiredTest', JSON.stringify(window.testData));
+            
+            // Redirect to test page
+            window.location.href = `dotest.html?testId=${window.testData.testId}&internshipId=${window.testData.internshipId}`;
+        }
+        
+        function skipTest() {
+            // Close modal and show success
+            document.getElementById('testModal').remove();
+            showSuccessModal();
+        }
+        
+        function showSuccessModal() {
+            const modal = `
+                <div id="successModal" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center;">
+                    <div style="background: white; padding: 2.5rem; border-radius: 16px; max-width: 450px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.4); text-align: center;">
+                        <div style="font-size: 4rem; color: #10b981; margin-bottom: 1rem;"><i class="fas fa-check-circle"></i></div>
+                        <h2 style="color: var(--blue); margin-bottom: 1rem; font-size: 1.5rem;">Application Submitted!</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.6;">Thank you for applying! We'll review your application and get back to you within 1-2 business days.</p>
+                        <button onclick="window.location.href='find-internships.html'" style="width: 100%; padding: 1rem; background: var(--blue); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer;">
+                            <i class="fas fa-search"></i> Browse More Internships
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modal);
+            
+            // Auto redirect after 3 seconds
+            setTimeout(() => {
+                window.location.href = 'find-internships.html';
+            }, 3000);
+        }
+
+        function manualApplication() {
+            // Pass data to apply page without autofill flag (for users who want to add more details)
+            sessionStorage.setItem('useAutofill', 'false');
+            window.location.href = 'apply.html';
+        }
+
+        function goBack() {
+            sessionStorage.removeItem('applyInternship');
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resources</title>
+</head>
+<body>
+  <header><h1>Resources</h1></header>
+  <main>
+    <section>
+      <ul>
+        <li>Resume tips</li>
+        <li>Interview questions</li>
+        <li>ATS guidance</li>
+      </ul>
+    </section>
+  </main>
+</main>
+  <style>
+    :root{--blue:#1e3a8a;--accent:#0ea5e9;--border:#e5e7eb}
+    body{font-family:Inter,Segoe UI,Roboto,sans-serif;background:#f6f1e7;color:var(--blue)}
+    header{padding:2rem 2rem}
+    main{max-width:1000px;margin:0 auto;padding:2rem}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+    .card{background:#fff;border:2px solid var(--border);border-radius:12px;padding:1rem}
+  </style>
+  <section class="grid" id="resGrid"></section>
+  <script>
+    (function(){
+      const defaults=[
+        {title:'Resume tips', desc:'How to write a job-ready resume'},
+        {title:'Interview questions', desc:'Practice common questions and answers'},
+        {title:'ATS guidance', desc:'Optimize keywords to pass ATS filters'},
+      ];
+      const data=JSON.parse(localStorage.getItem('resources')||'[]');
+      const list=data.length?data:defaults;
+      const grid=document.getElementById('resGrid');
+      grid.innerHTML=list.map(r=>`<article class="card"><h3>${r.title}</h3><p>${r.desc||''}</p></article>`).join('');
+    })();
+  </script>
+</body>
+</html>

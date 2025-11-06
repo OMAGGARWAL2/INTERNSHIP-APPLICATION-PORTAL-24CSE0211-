@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Press</title>
+</head>
+<body>
+  <header><h1>Press</h1></header>
+  <main>
+    <section>
+      <p>Press mentions and resources.</p>
+    </section>
+  </main>
+  <header></header>
+  <main class="ih-container" style="padding:2rem 0">
+    <section style="background:#fff;border:2px solid var(--border-color);border-radius:12px;padding:1.5rem;margin-bottom:1rem">
+      <h2>Press</h2>
+      <p>Press mentions and resources.</p>
+      <div id="pressList"></div>
+    </section>
+  </main>
+  <footer></footer>
+  <script src="market-enhancements.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded',()=>{
+      if(window.SharedComponents){ SharedComponents.injectHeaderFooter(); }
+      const data=JSON.parse(localStorage.getItem('pressMentions')||'[]');
+      const samples=[{title:'InternHub launches student-focused features', outlet:'TechDaily', date:'2025-09-01'},{title:'InternHub partners with local colleges', outlet:'CampusNews', date:'2025-10-11'}];
+      const list=data.length?data:samples;
+      const el=document.getElementById('pressList');
+      el.innerHTML=list.map(p=>`<article style="background:#fff;border:2px solid var(--border-color);border-radius:12px;padding:1rem;margin:.4rem 0"><strong>${p.title}</strong><p>${p.outlet} — ${p.date}</p></article>`).join('');
+    });
+  </script>
+  <style>
+    :root{--border-color:rgba(30,58,138,.15)}
+    body{font-family:Inter,Segoe UI,Roboto,sans-serif;background:#f6f1e7;color:#1e3a8a}
+    h2{margin-bottom:.6rem}
+  </style>
+  <style>
+    :root {
+      --cream:#f6f1e7; --blue:#1e3a8a; --sea:#0ea5e9; --border:rgba(30,58,138,.15);
+      --text:#1e3a8a; --text2:rgba(30,58,138,.8); --grad:linear-gradient(135deg,var(--blue),var(--sea));
+    }
+    body { background:var(--cream); color:var(--text); font-family:Inter,Segoe UI,Roboto,sans-serif; }
+    .toolbar { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:.8rem; background:#fff; border:2px solid var(--border); border-radius:12px; padding:1rem; }
+    .toolbar input,.toolbar select { padding:.6rem .8rem; border:2px solid var(--border); border-radius:10px; font-size:.95rem; }
+    .toolbar .actions { display:flex; gap:.6rem; flex-wrap:wrap; }
+    .tag { display:inline-block; background:#e0f2fe; color:#0369a1; border:2px solid #bae6fd; border-radius:999px; padding:.2rem .6rem; margin-right:.4rem; font-size:.85rem }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1rem }
+    .card { background:#fff; border:2px solid var(--border); border-radius:12px; padding:1rem; position:relative }
+    .card h3 { margin:0 0 .5rem 0; }
+    .card .meta { color:var(--text2); font-size:.9rem }
+    .card .fav { position:absolute; top:8px; right:8px; background:#fff; border:2px solid var(--border); border-radius:999px; padding:.3rem .5rem; cursor:pointer }
+    .table-wrap { overflow:auto; background:#fff; border:2px solid var(--border); border-radius:12px }
+    table { border-collapse:collapse; width:100% }
+    th,td { border-bottom:1px solid var(--border); padding:.7rem; text-align:left }
+    th { background:#f0f6ff }
+    .pagination { display:flex; gap:.6rem; align-items:center; justify-content:flex-end; margin-top:1rem }
+    .ih-btn { background:var(--grad); color:#fff; border:none; border-radius:999px; padding:.6rem 1rem; font-weight:700; cursor:pointer }
+    .ih-btn.alt { background:linear-gradient(135deg,#16a34a,#22c55e) }
+    .ih-btn.surf { background:linear-gradient(135deg,#8b5cf6,#a78bfa) }
+    .empty { background:#fff; border:2px solid var(--border); border-radius:12px; padding:2rem; text-align:center; color:var(--text2) }
+    /* Modal */
+    .modal { position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:10000 }
+    .modal.open { display:flex }
+    .modal-content { width:min(800px,90vw); background:#fff; border-radius:12px; box-shadow:0 12px 40px rgba(0,0,0,.25); border:2px solid var(--border) }
+    .modal-head { display:flex; align-items:center; justify-content:space-between; padding:1rem 1rem .5rem 1rem; border-bottom:1px solid var(--border) }
+    .modal-body { padding:1rem }
+    .modal-foot { display:flex; justify-content:flex-end; gap:.6rem; padding:1rem; border-top:1px solid var(--border) }
+    .close-x { background:#fff; border:2px solid var(--border); border-radius:999px; padding:.3rem .6rem; cursor:pointer }
+    /* Toast */
+    .toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(30px); background:#111827; color:#fff; padding:.7rem 1rem; border-radius:8px; opacity:0; transition:.3s; z-index:10001 }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0) }
+    .toast.ok { background:#10b981 } .toast.err { background:#ef4444 }
+    /* Skeleton */
+    .skeleton { background:#fff; border:2px solid var(--border); border-radius:12px; overflow:hidden }
+    .shimmer { height:140px; background:linear-gradient(90deg,#f3f4f6,#e5e7eb,#f3f4f6); background-size:200% 100%; animation:sh 1.2s infinite }
+    @keyframes sh { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    /* Responsive */
+    @media (max-width:600px) { .pagination { justify-content:center } }
+  </style>
+
+  <section class="ih-container" style="padding:2rem 0">
+    <div class="toolbar" role="region" aria-label="Press toolbar filters">
+      <input id="q" type="search" placeholder="Search articles" aria-label="Search articles" />
+      <select id="outlet" aria-label="Outlet filter"><option value="">All outlets</option></select>
+      <select id="year" aria-label="Year filter"><option value="">All years</option></select>
+      <select id="sort" aria-label="Sort by">
+        <option value="dateDesc">Newest first</option>
+        <option value="dateAsc">Oldest first</option>
+        <option value="titleAsc">Title A–Z</option>
+        <option value="titleDesc">Title Z–A</option>
+      </select>
+      <div class="actions">
+        <button class="ih-btn" id="viewCards">Cards</button>
+        <button class="ih-btn surf" id="viewTable">Table</button>
+        <button class="ih-btn alt" id="exportCsv">Export CSV</button>
+        <button class="ih-btn" id="printPage">Print</button>
+      </div>
+    </div>
+
+    <div id="pressStats" style="margin:.8rem 0; color:var(--text2)"></div>
+
+    <div id="gridWrap" class="grid" aria-live="polite"></div>
+    <div id="tableWrap" class="table-wrap" style="display:none" aria-live="polite">
+      <table>
+        <thead><tr><th>Title</th><th>Outlet</th><th>Date</th><th>Tags</th><th>Actions</th></tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="pagination" id="pager">
+      <button class="ih-btn" id="prevPage">Prev</button>
+      <span id="pageInfo" style="color:var(--text2)"></span>
+      <button class="ih-btn" id="nextPage">Next</button>
+    </div>
+  </section>
+
+  <div id="pressModal" class="modal" aria-hidden="true" aria-labelledby="modalTitle" aria-describedby="modalBody">
+    <div class="modal-content" role="dialog">
+      <div class="modal-head">
+        <h3 id="modalTitle" style="margin:0"></h3>
+        <button class="close-x" id="modalClose" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-foot">
+        <button class="ih-btn" id="shareBtn">Share</button>
+        <button class="ih-btn alt" id="favBtn">Favorite</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="market-enhancements.js"></script>
+  <script>
+    (function(){
+      // Shared header/footer
+      window.addEventListener('DOMContentLoaded',()=>{ if(window.SharedComponents){ SharedComponents.injectHeaderFooter(); } });
+      // State & storage
+      const KEY='pressMentions'; const FAV='pressFavorites';
+      const state={ q:'', outlet:'', year:'', sort:'dateDesc', view:'cards', page:1, pageSize:8 };
+      const el={ q:$('#q'), outlet:$('#outlet'), year:$('#year'), sort:$('#sort'), grid:$('#gridWrap'), table:$('#tableWrap'), tbody:$('#tableBody'), stats:$('#pressStats'), pager:$('#pager'), prev:$('#prevPage'), next:$('#nextPage'), info:$('#pageInfo') };
+      const modal={ root:$('#pressModal'), title:$('#modalTitle'), body:$('#modalBody'), close:$('#modalClose'), share:$('#shareBtn'), fav:$('#favBtn') };
+      function $(id){ return document.getElementById(id); }
+      function toast(text,type='ok'){ const t=document.createElement('div'); t.className='toast '+(type==='err'?'err':'ok'); t.textContent=text; document.body.appendChild(t); setTimeout(()=>t.classList.add('show'),10); setTimeout(()=>{t.classList.remove('show'); setTimeout(()=>t.remove(),300);},2500); }
+      function getData(){
+        try{ const raw=JSON.parse(localStorage.getItem(KEY)||'[]'); if(raw.length) return raw; }catch{}
+        const samples=[
+          {id:1, title:'InternHub launches student-focused features', outlet:'TechDaily', date:'2025-09-01', tags:['Launch','Students'], summary:'InternHub introduces quick tests and profile tools to help students stand out.'},
+          {id:2, title:'InternHub partners with local colleges', outlet:'CampusNews', date:'2025-10-11', tags:['Partnership','Education'], summary:'Strategic partnership to provide internship access for thousands of students.'},
+          {id:3, title:'Resume builder gets ATS upgrades', outlet:'TechDaily', date:'2025-10-21', tags:['Product','ATS'], summary:'New ATS scoring and keyword guidance to improve resume pass rates.'},
+          {id:4, title:'Hirer tools add screening questions', outlet:'HRWeekly', date:'2025-10-25', tags:['Hiring','Screening'], summary:'Posting wizard now supports rich text and customized screening.'},
+          {id:5, title:'Mobile improvements roll out', outlet:'AppWorld', date:'2025-10-28', tags:['Mobile','Performance'], summary:'Faster page loads and better accessibility on mobile devices.'},
+          {id:6, title:'Dark mode available site-wide', outlet:'TechDaily', date:'2025-11-01', tags:['UI','DarkMode'], summary:'User preference for dark mode now persists across pages.'},
+          {id:7, title:'InternHub wins innovation award', outlet:'StartupTimes', date:'2025-11-03', tags:['Award'], summary:'Recognized for practical student and hirer features with real outcomes.'},
+          {id:8, title:'Guided tours onboard users faster', outlet:'UXToday', date:'2025-11-04', tags:['UX','Onboarding'], summary:'Step-by-step tips help users discover features quickly.'}
+        ];
+        return samples;
+      }
+      function getFavs(){ try{ return JSON.parse(localStorage.getItem(FAV)||'[]'); }catch{ return []; } }
+      function setFavs(arr){ localStorage.setItem(FAV, JSON.stringify(arr)); }
+      function unique(list, key){ const s=new Set(); return list.filter(it=>{ const k=key?it[key]:JSON.stringify(it); if(s.has(k)) return false; s.add(k); return true; }); }
+
+      // Prepare filters
+      const all=getData();
+      const outlets=unique(all.map(a=>a.outlet)).sort();
+      const years=unique(all.map(a=>new Date(a.date).getFullYear())).sort((a,b)=>b-a);
+      el.outlet.innerHTML='<option value="">All outlets</option>'+outlets.map(o=>`<option>${o}</option>`).join('');
+      el.year.innerHTML='<option value="">All years</option>'+years.map(y=>`<option>${y}</option>`).join('');
+
+      // Filtering & sorting
+      function apply(list){
+        let res=[...list];
+        if(state.q){ const q=state.q.toLowerCase(); res=res.filter(a=> (a.title+a.outlet+a.summary+(a.tags||[]).join(' ')).toLowerCase().includes(q)); }
+        if(state.outlet){ res=res.filter(a=>a.outlet===state.outlet); }
+        if(state.year){ res=res.filter(a=>new Date(a.date).getFullYear()+''===state.year); }
+        if(state.sort==='dateDesc') res.sort((a,b)=>new Date(b.date)-new Date(a.date));
+        if(state.sort==='dateAsc') res.sort((a,b)=>new Date(a.date)-new Date(b.date));
+        if(state.sort==='titleAsc') res.sort((a,b)=>a.title.localeCompare(b.title));
+        if(state.sort==='titleDesc') res.sort((a,b)=>b.title.localeCompare(a.title));
+        return res;
+      }
+
+      // Render
+      function render(){
+        const favs=getFavs();
+        const filtered=apply(all);
+        const total=filtered.length; const pages=Math.max(1, Math.ceil(total/state.pageSize));
+        if(state.page>pages) state.page=pages;
+        const start=(state.page-1)*state.pageSize; const slice=filtered.slice(start,start+state.pageSize);
+        el.stats.textContent=`${total} articles • Page ${state.page}/${pages}`;
+        el.info.textContent=`${state.page} / ${pages}`;
+        el.prev.disabled=state.page<=1; el.next.disabled=state.page>=pages;
+        if(state.view==='cards'){
+          el.grid.style.display='grid'; el.table.style.display='none';
+          if(slice.length===0){ el.grid.innerHTML=`<div class="empty">No results. Try changing filters.</div>`; return; }
+          el.grid.innerHTML=slice.map(a=>{
+            const fav=favs.includes(a.id);
+            return `<article class="card" role="article" aria-label="${a.title}">
+              <button class="fav" data-id="${a.id}" aria-label="Favorite">${fav?'★':'☆'}</button>
+              <h3>${a.title}</h3>
+              <div class="meta">${a.outlet} • ${new Date(a.date).toLocaleDateString()}</div>
+              <p>${a.summary}</p>
+              <div>${(a.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+              <div style="margin-top:.6rem;display:flex;gap:.6rem">
+                <button class="ih-btn" data-open="${a.id}">Read</button>
+                <button class="ih-btn alt" data-share="${a.id}">Share</button>
+              </div>
+            </article>`;
+          }).join('');
+        } else {
+          el.grid.style.display='none'; el.table.style.display='block';
+          el.tbody.innerHTML=slice.map(a=>{
+            return `<tr>
+              <td>${a.title}</td>
+              <td>${a.outlet}</td>
+              <td>${new Date(a.date).toLocaleDateString()}</td>
+              <td>${(a.tags||[]).join(', ')}</td>
+              <td>
+                <button class="ih-btn" data-open="${a.id}">Read</button>
+                <button class="ih-btn alt" data-share="${a.id}">Share</button>
+              </td>
+            </tr>`;
+          }).join('');
+        }
+      }
+
+      // Modal
+      function openModal(item){
+        modal.title.textContent=item.title;
+        modal.body.innerHTML=`<p style="color:var(--text2)">${item.outlet} • ${new Date(item.date).toLocaleString()}</p><p>${item.summary}</p><div>${(item.tags||[]).map(t=>`<span class=tag>${t}</span>`).join('')}</div>`;
+        modal.root.classList.add('open'); modal.root.setAttribute('aria-hidden','false');
+        document.body.style.overflow='hidden';
+        const favs=getFavs(); modal.fav.textContent=favs.includes(item.id)?'Favorited':'Favorite';
+        modal.share.onclick=()=>{ try { navigator.clipboard.writeText(location.href.split('#')[0]+`#press-${item.id}`); toast('Link copied','ok'); } catch { toast('Copy failed','err'); } };
+        modal.fav.onclick=()=>{ const favs=getFavs(); const i=favs.indexOf(item.id); if(i>=0) favs.splice(i,1); else favs.push(item.id); setFavs(favs); render(); toast('Updated favorites'); modal.fav.textContent=favs.includes(item.id)?'Favorited':'Favorite'; };
+      }
+      function closeModal(){ modal.root.classList.remove('open'); modal.root.setAttribute('aria-hidden','true'); document.body.style.overflow='auto'; }
+
+      // Events
+      el.q.addEventListener('input',()=>{ state.q=el.q.value; state.page=1; render(); });
+      el.outlet.addEventListener('change',()=>{ state.outlet=el.outlet.value; state.page=1; render(); });
+      el.year.addEventListener('change',()=>{ state.year=el.year.value; state.page=1; render(); });
+      el.sort.addEventListener('change',()=>{ state.sort=el.sort.value; render(); });
+      $('#viewCards').addEventListener('click',()=>{ state.view='cards'; render(); });
+      $('#viewTable').addEventListener('click',()=>{ state.view='table'; render(); });
+      el.prev.addEventListener('click',()=>{ if(state.page>1){ state.page--; render(); } });
+      el.next.addEventListener('click',()=>{ state.page++; render(); });
+      document.addEventListener('click',(e)=>{
+        const idOpen=e.target.getAttribute('data-open'); if(idOpen){ const item=getData().find(a=>a.id+''===idOpen); if(item) openModal(item); }
+        const idShare=e.target.getAttribute('data-share'); if(idShare){ try { navigator.clipboard.writeText(location.href.split('#')[0]+`#press-${idShare}`); toast('Link copied'); } catch { toast('Copy failed','err'); } }
+        const idFav=e.target.getAttribute('data-id'); if(idFav){ const favs=getFavs(); const id=Number(idFav); const i=favs.indexOf(id); if(i>=0) favs.splice(i,1); else favs.push(id); setFavs(favs); render(); }
+      });
+      modal.close.addEventListener('click',closeModal);
+      modal.root.addEventListener('click',(e)=>{ if(e.target===modal.root) closeModal(); });
+      document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') closeModal(); });
+      $('#exportCsv').addEventListener('click',()=>{
+        const rows=apply(getData()).map(a=>[a.id,a.title,a.outlet,a.date,(a.tags||[]).join('|')]);
+        const csv=['id,title,outlet,date,tags', ...rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','))].join('\n');
+        const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob);
+        const a=document.createElement('a'); a.href=url; a.download='press.csv'; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},0);
+        toast('Exported CSV');
+      });
+      $('#printPage').addEventListener('click',()=>{ window.print(); });
+
+      // Initial render
+      render();
+    })();
+  </script>
+</body>
+</html>

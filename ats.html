@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS - Applicant Tracking System | InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--cream);
+            color: var(--blue);
+        }
+        
+        header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-bottom: 3px solid var(--sea-blue);
+        }
+        
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--blue);
+        }
+        
+        .stats-bar {
+            display: flex;
+            gap: 2rem;
+            padding: 1.5rem 2rem;
+            background: white;
+            margin: 1rem 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--sea-blue);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .filter-group select, .filter-group input {
+            padding: 0.6rem 1rem;
+            border: 2px solid rgba(30,58,138,0.15);
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .kanban-column {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            min-height: 500px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid rgba(30,58,138,0.1);
+        }
+        
+        .column-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+        
+        .column-count {
+            background: var(--sea-blue);
+            color: white;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        
+        .column-new .column-count { background: #6b7280; }
+        .column-screening .column-count { background: #f59e0b; }
+        .column-interview .column-count { background: #0ea5e9; }
+        .column-offer .column-count { background: #8b5cf6; }
+        .column-hired .column-count { background: #10b981; }
+        
+        .applicant-card {
+            background: #f9fafb;
+            border: 2px solid rgba(30,58,138,0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            cursor: grab;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .applicant-card.selected {
+            border-color: var(--sea-blue);
+            background: rgba(14, 165, 233, 0.05);
+        }
+        
+        .card-checkbox {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .applicant-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            border-color: var(--sea-blue);
+        }
+        
+        .applicant-card.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+        
+        .applicant-name {
+            font-weight: 700;
+            color: var(--blue);
+            font-size: 1rem;
+        }
+        
+        .match-score {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        
+        .match-score.medium { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .match-score.low { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        
+        .applicant-position {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+        
+        .applicant-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .skill-tag {
+            background: rgba(14, 165, 233, 0.15);
+            color: var(--sea-blue);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #9ca3af;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(30,58,138,0.1);
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            padding: 0.4rem 0.8rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .btn-view {
+            background: var(--sea-blue);
+            color: white;
+        }
+        
+        .btn-reject {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 10000;
+            overflow-y: auto;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        
+        .applicant-detail-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(30,58,138,0.1);
+        }
+        
+        .detail-section {
+            margin-bottom: 2rem;
+        }
+        
+        .detail-section h3 {
+            color: var(--blue);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .status-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        
+        .status-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        
+        .dragover {
+            background: rgba(14, 165, 233, 0.1);
+            border: 2px dashed var(--sea-blue);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #9ca3af;
+        }
+        
+        .bulk-actions {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .bulk-actions.active {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .bulk-btn {
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+            margin-left: 0.5rem;
+        }
+        
+        .notes-section {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 8px;
+        }
+        
+        .note-item {
+            background: white;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-users-cog"></i> ATS Dashboard
+            </div>
+            <div>
+                <a href="hirer.html" style="color: var(--blue); text-decoration: none; font-weight: 600;">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-number" id="totalApplicants">0</div>
+                <div class="stat-label">Total Applicants</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="newApplicants">0</div>
+                <div class="stat-label">New</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="interviewCount">0</div>
+                <div class="stat-label">In Interview</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="offerCount">0</div>
+                <div class="stat-label">Offers Made</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="hiredCount">0</div>
+                <div class="stat-label">Hired</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label><i class="fas fa-briefcase"></i></label>
+                <select id="filterPosition" onchange="applyFilters()">
+                    <option value="">All Positions</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-calendar"></i></label>
+                <input type="date" id="filterDate" onchange="applyFilters()">
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-search"></i></label>
+                <input type="text" id="searchApplicant" placeholder="Search applicants..." oninput="applyFilters()">
+            </div>
+            <div class="filter-group">
+                <button onclick="resetFilters()" style="padding: 0.6rem 1rem; background: #6b7280; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+            <div class="filter-group" style="margin-left: auto;">
+                <button onclick="exportToCSV()" style="padding: 0.6rem 1.5rem; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                    <i class="fas fa-download"></i> Export CSV
+                </button>
+                <button onclick="toggleBulkMode()" style="padding: 0.6rem 1.5rem; background: var(--sea-blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                    <i class="fas fa-tasks"></i> Bulk Actions
+                </button>
+            </div>
+        </div>
+
+        <div class="bulk-actions" id="bulkActions">
+            <div>
+                <span id="selectedCount" style="font-weight: 700; color: var(--blue);">0 selected</span>
+            </div>
+            <div>
+                <button class="bulk-btn" onclick="bulkMoveToStage('screening')" style="background: #f59e0b; color: white;">
+                    <i class="fas fa-filter"></i> Move to Screening
+                </button>
+                <button class="bulk-btn" onclick="bulkMoveToStage('interview')" style="background: #0ea5e9; color: white;">
+                    <i class="fas fa-comments"></i> Move to Interview
+                </button>
+                <button class="bulk-btn" onclick="bulkMoveToStage('offer')" style="background: #8b5cf6; color: white;">
+                    <i class="fas fa-handshake"></i> Move to Offer
+                </button>
+                <button class="bulk-btn" onclick="bulkReject()" style="background: #ef4444; color: white;">
+                    <i class="fas fa-times"></i> Reject All
+                </button>
+                <button class="bulk-btn" onclick="toggleBulkMode()" style="background: #6b7280; color: white;">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+
+        <div class="kanban-board">
+            <div class="kanban-column column-new" data-stage="new" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                <div class="column-header">
+                    <span class="column-title"><i class="fas fa-inbox"></i> New</span>
+                    <span class="column-count" id="count-new">0</span>
+                </div>
+                <div class="cards-container" id="cards-new"></div>
+            </div>
+
+            <div class="kanban-column column-screening" data-stage="screening" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                <div class="column-header">
+                    <span class="column-title"><i class="fas fa-filter"></i> Screening</span>
+                    <span class="column-count" id="count-screening">0</span>
+                </div>
+                <div class="cards-container" id="cards-screening"></div>
+            </div>
+
+            <div class="kanban-column column-interview" data-stage="interview" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                <div class="column-header">
+                    <span class="column-title"><i class="fas fa-comments"></i> Interview</span>
+                    <span class="column-count" id="count-interview">0</span>
+                </div>
+                <div class="cards-container" id="cards-interview"></div>
+            </div>
+
+            <div class="kanban-column column-offer" data-stage="offer" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                <div class="column-header">
+                    <span class="column-title"><i class="fas fa-handshake"></i> Offer</span>
+                    <span class="column-count" id="count-offer">0</span>
+                </div>
+                <div class="cards-container" id="cards-offer"></div>
+            </div>
+
+            <div class="kanban-column column-hired" data-stage="hired" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                <div class="column-header">
+                    <span class="column-title"><i class="fas fa-check-circle"></i> Hired</span>
+                    <span class="column-count" id="count-hired">0</span>
+                </div>
+                <div class="cards-container" id="cards-hired"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applicant Detail Modal -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i> Close</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+    
+    <!-- Email Template Modal -->
+    <div class="modal" id="emailModal">
+        <div class="modal-content" style="max-width: 700px;">
+            <button class="close-modal" onclick="closeEmailModal()"><i class="fas fa-times"></i> Close</button>
+            <h2 style="color: var(--blue); margin-bottom: 1.5rem;"><i class="fas fa-envelope"></i> Send Email</h2>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Email Template</label>
+                <select id="emailTemplate" onchange="loadEmailTemplate()" style="width: 100%; padding: 0.75rem; border: 2px solid rgba(30,58,138,0.15); border-radius: 8px;">
+                    <option value="">Select a template...</option>
+                    <option value="interview">Interview Invitation</option>
+                    <option value="offer">Job Offer</option>
+                    <option value="rejection">Rejection (Polite)</option>
+                    <option value="followup">Follow-up Request</option>
+                </select>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Subject</label>
+                <input type="text" id="emailSubject" style="width: 100%; padding: 0.75rem; border: 2px solid rgba(30,58,138,0.15); border-radius: 8px;">
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Message</label>
+                <textarea id="emailBody" rows="10" style="width: 100%; padding: 0.75rem; border: 2px solid rgba(30,58,138,0.15); border-radius: 8px; font-family: inherit;"></textarea>
+            </div>
+            <button onclick="sendEmail()" style="width: 100%; padding: 1rem; background: var(--sea-blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 1rem;">
+                <i class="fas fa-paper-plane"></i> Send Email
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let allApplications = [];
+        let filteredApplications = [];
+        let bulkModeActive = false;
+        let selectedApplicants = new Set();
+
+        // Load applications
+        function loadApplications() {
+            const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+            const internships = JSON.parse(localStorage.getItem('internships') || '[]');
+            
+            allApplications = applications.map(app => {
+                const internship = internships.find(i => i.id === app.internshipId);
+                const skillsMatch = calculateSkillMatch(app, internship);
+                
+                return {
+                    ...app,
+                    position: internship ? internship.position : 'Unknown Position',
+                    company: internship ? internship.company : 'Unknown Company',
+                    requiredSkills: internship ? internship.skills : [],
+                    skillsMatch: skillsMatch,
+                    stage: app.stage || 'new',
+                    appliedDate: app.appliedDate || new Date().toISOString()
+                };
+            });
+            
+            filteredApplications = [...allApplications];
+            renderKanban();
+            updateStats();
+            populatePositionFilter();
+        }
+
+        // Calculate skill match percentage
+        function calculateSkillMatch(application, internship) {
+            if (!internship || !internship.skills || internship.skills.length === 0) return 50;
+            
+            const appSkills = application.skills || [];
+            const reqSkills = internship.skills || [];
+            
+            if (appSkills.length === 0) return 0;
+            
+            const matches = appSkills.filter(skill => 
+                reqSkills.some(req => req.toLowerCase().includes(skill.toLowerCase()) || skill.toLowerCase().includes(req.toLowerCase()))
+            );
+            
+            return Math.round((matches.length / reqSkills.length) * 100);
+        }
+
+        // Render Kanban board
+        function renderKanban() {
+            const stages = ['new', 'screening', 'interview', 'offer', 'hired'];
+            
+            stages.forEach(stage => {
+                const container = document.getElementById(`cards-${stage}`);
+                const apps = filteredApplications.filter(app => app.stage === stage);
+                
+                if (apps.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><br>No applicants</div>';
+                } else {
+                    container.innerHTML = apps.map(app => createCard(app)).join('');
+                }
+                
+                document.getElementById(`count-${stage}`).textContent = apps.length;
+            });
+        }
+
+        // Create applicant card
+        function createCard(app) {
+            const matchClass = app.skillsMatch >= 70 ? 'high' : app.skillsMatch >= 40 ? 'medium' : 'low';
+            const skills = (app.skills || []).slice(0, 3);
+            const isSelected = selectedApplicants.has(app.id);
+            
+            return `
+                <div class="applicant-card ${isSelected ? 'selected' : ''}" draggable="true" data-id="${app.id}" ondragstart="drag(event)">
+                    ${bulkModeActive ? `<input type="checkbox" class="card-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelect(${app.id}, this.checked)">` : ''}
+                    <div class="card-header" style="${bulkModeActive ? 'margin-left: 2rem;' : ''}">
+                        <div class="applicant-name">${app.applicantName || 'Unknown'}</div>
+                        <div class="match-score ${matchClass}">${app.skillsMatch}%</div>
+                    </div>
+                    <div class="applicant-position" style="${bulkModeActive ? 'margin-left: 2rem;' : ''}">${app.position}</div>
+                    <div class="applicant-skills" style="${bulkModeActive ? 'margin-left: 2rem;' : ''}">
+                        ${skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                        ${(app.skills || []).length > 3 ? `<span class="skill-tag">+${(app.skills || []).length - 3}</span>` : ''}
+                    </div>
+                    <div class="card-meta" style="${bulkModeActive ? 'margin-left: 2rem;' : ''}">
+                        <span><i class="fas fa-calendar"></i> ${new Date(app.appliedDate).toLocaleDateString()}</span>
+                        ${app.notes && app.notes.length > 0 ? `<span><i class="fas fa-sticky-note" style="color: #f59e0b;"></i> ${app.notes.length}</span>` : ''}
+                    </div>
+                    ${!bulkModeActive ? `
+                    <div class="card-actions" style="margin-top: 0.75rem; display: flex; gap: 0.5rem;">
+                        <button class="action-btn btn-view" onclick="viewDetails(${app.id})">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        <button class="action-btn btn-reject" onclick="rejectApplicant(${app.id})">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Drag and drop functions
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('dragover');
+        }
+
+        function dragLeave(ev) {
+            ev.currentTarget.classList.remove('dragover');
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("applicationId", ev.target.getAttribute('data-id'));
+            ev.target.classList.add('dragging');
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('dragover');
+            
+            const applicationId = parseInt(ev.dataTransfer.getData("applicationId"));
+            const newStage = ev.currentTarget.getAttribute('data-stage');
+            
+            updateApplicationStage(applicationId, newStage);
+        }
+
+        // Update application stage
+        function updateApplicationStage(appId, newStage) {
+            const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+            const index = applications.findIndex(a => a.id === appId);
+            
+            if (index !== -1) {
+                const app = applications[index];
+                const oldStage = app.stage;
+                
+                applications[index].stage = newStage;
+                applications[index].stageUpdatedAt = new Date().toISOString();
+                localStorage.setItem('applications', JSON.stringify(applications));
+                
+                // Send notification to student for important stage changes
+                const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+                let notificationMessage = '';
+                let notificationType = 'info';
+                
+                if (newStage === 'interview') {
+                    notificationMessage = `Great news! Your application for ${app.position} at ${app.company} has been shortlisted for interview. We will contact you soon with details.`;
+                    notificationType = 'success';
+                } else if (newStage === 'offer') {
+                    notificationMessage = `Congratulations! We are pleased to extend an offer for ${app.position} at ${app.company}. Check your email for details.`;
+                    notificationType = 'success';
+                } else if (newStage === 'hired') {
+                    notificationMessage = `Welcome aboard! Your application for ${app.position} at ${app.company} is now confirmed. We look forward to working with you!`;
+                    notificationType = 'success';
+                } else if (newStage === 'screening') {
+                    notificationMessage = `Your application for ${app.position} at ${app.company} is under review. You will hear from us soon.`;
+                    notificationType = 'info';
+                }
+                
+                if (notificationMessage) {
+                    notifications.unshift({
+                        id: Date.now(),
+                        type: notificationType,
+                        title: `Application Status Update - ${newStage.charAt(0).toUpperCase() + newStage.slice(1)}`,
+                        message: notificationMessage,
+                        timestamp: new Date().toISOString(),
+                        read: false,
+                        userEmail: app.applicantEmail
+                    });
+                    localStorage.setItem('notifications', JSON.stringify(notifications));
+                }
+                
+                loadApplications();
+                
+                // Show notification
+                showNotification(`Moved to ${newStage.charAt(0).toUpperCase() + newStage.slice(1)} & notification sent`);
+            }
+        }
+
+        // View applicant details
+        function viewDetails(appId) {
+            const app = allApplications.find(a => a.id === appId);
+            if (!app) return;
+            
+            const modal = document.getElementById('detailModal');
+            const content = document.getElementById('modalContent');
+            
+            content.innerHTML = `
+                <div class="applicant-detail-header">
+                    <div style="flex: 1;">
+                        <h2 style="color: var(--blue); margin-bottom: 0.5rem;">${app.applicantName || 'Unknown'}</h2>
+                        <p style="color: #6b7280; font-size: 1.1rem;">${app.position}</p>
+                        <p style="color: #6b7280; margin-top: 0.5rem;">
+                            <i class="fas fa-envelope"></i> ${app.applicantEmail || 'N/A'}<br>
+                            <i class="fas fa-phone"></i> ${app.applicantPhone || 'N/A'}
+                        </p>
+                    </div>
+                    <div>
+                        <div class="match-score ${app.skillsMatch >= 70 ? 'high' : app.skillsMatch >= 40 ? 'medium' : 'low'}" 
+                             style="font-size: 2rem; padding: 1rem 1.5rem;">
+                            ${app.skillsMatch}%<br>
+                            <span style="font-size: 0.7rem;">Match</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3><i class="fas fa-briefcase"></i> Position Applied</h3>
+                    <p>${app.position} at ${app.company}</p>
+                    <p style="color: #6b7280; font-size: 0.9rem;">Applied: ${new Date(app.appliedDate).toLocaleString()}</p>
+                </div>
+                
+                <div class="detail-section">
+                    <h3><i class="fas fa-tools"></i> Skills</h3>
+                    <div class="applicant-skills">
+                        ${(app.skills || ['No skills listed']).map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3><i class="fas fa-comment"></i> Cover Letter</h3>
+                    <p style="line-height: 1.6;">${app.coverLetter || 'No cover letter provided'}</p>
+                </div>
+                
+                <div class="detail-section">
+                    <h3><i class="fas fa-timeline"></i> Current Stage</h3>
+                    <p style="font-weight: 700; color: var(--sea-blue); font-size: 1.1rem; text-transform: uppercase;">${app.stage}</p>
+                </div>
+                
+                <div class="detail-section">
+                    <h3><i class="fas fa-sticky-note"></i> Recruiter Notes</h3>
+                    <div class="notes-section">
+                        ${app.notes && app.notes.length > 0 ? app.notes.map(note => `
+                            <div class="note-item">
+                                <div class="note-header">
+                                    <span><strong>${note.author}</strong></span>
+                                    <span>${new Date(note.timestamp).toLocaleString()}</span>
+                                </div>
+                                <div>${note.text}</div>
+                            </div>
+                        `).join('') : '<p style="color: #6b7280; font-style: italic;">No notes yet</p>'}
+                        <div style="margin-top: 1rem;">
+                            <input type="text" id="newNote" placeholder="Add a note..." style="width: 100%; padding: 0.75rem; border: 2px solid rgba(30,58,138,0.15); border-radius: 8px;">
+                            <button onclick="addNote(${app.id}, document.getElementById('newNote').value); document.getElementById('newNote').value = ''; viewDetails(${app.id});" 
+                                    style="margin-top: 0.5rem; padding: 0.5rem 1rem; background: #f59e0b; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                                <i class="fas fa-plus"></i> Add Note
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="status-buttons">
+                    <button class="status-btn" onclick="moveToStage(${app.id}, 'screening')" 
+                            style="background: #f59e0b; color: white;">
+                        <i class="fas fa-filter"></i> Move to Screening
+                    </button>
+                    <button class="status-btn" onclick="moveToStage(${app.id}, 'interview')" 
+                            style="background: #0ea5e9; color: white;">
+                        <i class="fas fa-comments"></i> Schedule Interview
+                    </button>
+                    <button class="status-btn" onclick="moveToStage(${app.id}, 'offer')" 
+                            style="background: #8b5cf6; color: white;">
+                        <i class="fas fa-handshake"></i> Make Offer
+                    </button>
+                    <button class="status-btn" onclick="moveToStage(${app.id}, 'hired')" 
+                            style="background: #10b981; color: white;">
+                        <i class="fas fa-check-circle"></i> Mark as Hired
+                    </button>
+                    <button class="status-btn" onclick="openEmailModal(${app.id})" 
+                            style="background: var(--sea-blue); color: white;">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </button>
+                    <button class="status-btn" onclick="rejectApplicant(${app.id})" 
+                            style="background: #ef4444; color: white;">
+                        <i class="fas fa-times-circle"></i> Reject
+                    </button>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        function moveToStage(appId, stage) {
+            updateApplicationStage(appId, stage);
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        // Reject applicant
+        function rejectApplicant(appId, isBulk = false) {
+            if (!isBulk && !confirm('Are you sure you want to reject this applicant?')) {
+                return;
+            }
+            
+            const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+            const index = applications.findIndex(a => a.id === appId);
+            
+            if (index !== -1) {
+                const app = applications[index];
+                
+                // Send rejection notification to student
+                const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+                notifications.unshift({
+                    id: Date.now(),
+                    type: 'rejection',
+                    title: 'Application Rejected',
+                    message: `Your application for ${app.position} at ${app.company} has been reviewed. Unfortunately, we have decided to move forward with other candidates. Thank you for your interest.`,
+                    timestamp: new Date().toISOString(),
+                    read: false,
+                    userEmail: app.applicantEmail
+                });
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                
+                // Update application status
+                applications[index].status = 'Rejected';
+                applications[index].rejectedAt = new Date().toISOString();
+                applications.splice(index, 1); // Remove from ATS
+                localStorage.setItem('applications', JSON.stringify(applications));
+                
+                loadApplications();
+                if (!isBulk) {
+                    closeModal();
+                    showNotification('Applicant rejected & notification sent', 'success');
+                }
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalApplicants').textContent = allApplications.length;
+            document.getElementById('newApplicants').textContent = allApplications.filter(a => a.stage === 'new').length;
+            document.getElementById('interviewCount').textContent = allApplications.filter(a => a.stage === 'interview').length;
+            document.getElementById('offerCount').textContent = allApplications.filter(a => a.stage === 'offer').length;
+            document.getElementById('hiredCount').textContent = allApplications.filter(a => a.stage === 'hired').length;
+        }
+
+        // Filter functions
+        function populatePositionFilter() {
+            const positions = [...new Set(allApplications.map(a => a.position))];
+            const select = document.getElementById('filterPosition');
+            select.innerHTML = '<option value="">All Positions</option>' + 
+                positions.map(pos => `<option value="${pos}">${pos}</option>`).join('');
+        }
+
+        function applyFilters() {
+            const position = document.getElementById('filterPosition').value;
+            const date = document.getElementById('filterDate').value;
+            const search = document.getElementById('searchApplicant').value.toLowerCase();
+            
+            filteredApplications = allApplications.filter(app => {
+                const posMatch = !position || app.position === position;
+                const dateMatch = !date || new Date(app.appliedDate).toDateString() === new Date(date).toDateString();
+                const searchMatch = !search || 
+                    app.applicantName.toLowerCase().includes(search) ||
+                    app.applicantEmail.toLowerCase().includes(search) ||
+                    app.position.toLowerCase().includes(search);
+                
+                return posMatch && dateMatch && searchMatch;
+            });
+            
+            renderKanban();
+        }
+
+        function resetFilters() {
+            document.getElementById('filterPosition').value = '';
+            document.getElementById('filterDate').value = '';
+            document.getElementById('searchApplicant').value = '';
+            applyFilters();
+        }
+
+        // Notification
+        function showNotification(message, type = 'success') {
+            const notif = document.createElement('div');
+            notif.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'error' ? '#ef4444' : '#10b981'};
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 8px;
+                font-weight: 700;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 10001;
+            `;
+            notif.textContent = message;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        }
+
+        // Initialize
+        loadApplications();
+        
+        // Bulk Actions Functions
+        function toggleBulkMode() {
+            bulkModeActive = !bulkModeActive;
+            selectedApplicants.clear();
+            document.getElementById('bulkActions').classList.toggle('active', bulkModeActive);
+            renderKanban();
+            updateSelectedCount();
+        }
+        
+        function toggleSelect(appId, checked) {
+            if (checked) {
+                selectedApplicants.add(appId);
+            } else {
+                selectedApplicants.delete(appId);
+            }
+            updateSelectedCount();
+            renderKanban();
+        }
+        
+        function updateSelectedCount() {
+            document.getElementById('selectedCount').textContent = `${selectedApplicants.size} selected`;
+        }
+        
+        function bulkMoveToStage(stage) {
+            if (selectedApplicants.size === 0) {
+                alert('Please select applicants first');
+                return;
+            }
+            
+            if (confirm(`Move ${selectedApplicants.size} applicants to ${stage}?`)) {
+                selectedApplicants.forEach(appId => {
+                    updateApplicationStage(appId, stage);
+                });
+                selectedApplicants.clear();
+                toggleBulkMode();
+                showNotification(`${selectedApplicants.size} applicants moved`);
+            }
+        }
+        
+        function bulkReject() {
+            if (selectedApplicants.size === 0) {
+                alert('Please select applicants first');
+                return;
+            }
+            
+            if (confirm(`Reject ${selectedApplicants.size} applicants? This cannot be undone.`)) {
+                const count = selectedApplicants.size;
+                selectedApplicants.forEach(appId => {
+                    rejectApplicant(appId, true);
+                });
+                selectedApplicants.clear();
+                toggleBulkMode();
+                showNotification(`${count} applicants rejected`, 'error');
+            }
+        }
+        
+        // Export to CSV
+        function exportToCSV() {
+            if (allApplications.length === 0) {
+                alert('No data to export');
+                return;
+            }
+            
+            const csvHeaders = ['Name', 'Email', 'Phone', 'Position', 'Company', 'Stage', 'Match %', 'Applied Date', 'Skills'];
+            const csvRows = allApplications.map(app => [
+                app.applicantName || '',
+                app.applicantEmail || '',
+                app.applicantPhone || '',
+                app.position || '',
+                app.company || '',
+                app.stage || '',
+                app.skillsMatch || 0,
+                new Date(app.appliedDate).toLocaleDateString(),
+                (app.skills || []).join('; ')
+            ]);
+            
+            let csvContent = csvHeaders.join(',') + '\n';
+            csvRows.forEach(row => {
+                csvContent += row.map(field => `"${field}"`).join(',') + '\n';
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `applicants_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification(`Exported ${allApplications.length} applicants to CSV`);
+        }
+        
+        // Notes System
+        function addNote(appId, noteText) {
+            const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+            const index = applications.findIndex(a => a.id === appId);
+            
+            if (index !== -1) {
+                if (!applications[index].notes) {
+                    applications[index].notes = [];
+                }
+                applications[index].notes.unshift({
+                    text: noteText,
+                    timestamp: new Date().toISOString(),
+                    author: 'Recruiter'
+                });
+                localStorage.setItem('applications', JSON.stringify(applications));
+                loadApplications();
+            }
+        }
+        
+        // Email Templates
+        let currentEmailAppId = null;
+        
+        const emailTemplates = {
+            interview: {
+                subject: 'Interview Invitation - {position}',
+                body: `Dear {name},
+
+We are pleased to invite you for an interview for the {position} position at {company}.
+
+Interview Details:
+Date: [Please specify]
+Time: [Please specify]
+Location/Link: [Please specify]
+
+Please confirm your availability at your earliest convenience.
+
+Best regards,
+{company} Recruitment Team`
+            },
+            offer: {
+                subject: 'Job Offer - {position} at {company}',
+                body: `Dear {name},
+
+Congratulations! We are delighted to extend an offer for the {position} position at {company}.
+
+Offer Details:
+Position: {position}
+Stipend: [Please specify]
+Start Date: [Please specify]
+
+Please review the attached offer letter and respond within 48 hours.
+
+We look forward to welcoming you to our team!
+
+Best regards,
+{company} HR Team`
+            },
+            rejection: {
+                subject: 'Application Status - {position}',
+                body: `Dear {name},
+
+Thank you for your interest in the {position} position at {company} and for taking the time to interview with us.
+
+After careful consideration, we have decided to move forward with other candidates whose experience more closely matches our current needs.
+
+We were impressed by your qualifications and encourage you to apply for future opportunities that match your skills.
+
+We wish you the best in your career search.
+
+Best regards,
+{company} Recruitment Team`
+            },
+            followup: {
+                subject: 'Follow-up on Your Application - {position}',
+                body: `Dear {name},
+
+Thank you for applying for the {position} position at {company}.
+
+We are currently reviewing applications and wanted to update you on the status of your candidacy. We will be in touch within the next [X days] with next steps.
+
+If you have any questions, please don't hesitate to reach out.
+
+Best regards,
+{company} Recruitment Team`
+            }
+        };
+        
+        function openEmailModal(appId) {
+            currentEmailAppId = appId;
+            document.getElementById('emailTemplate').value = '';
+            document.getElementById('emailSubject').value = '';
+            document.getElementById('emailBody').value = '';
+            document.getElementById('emailModal').classList.add('active');
+        }
+        
+        function closeEmailModal() {
+            document.getElementById('emailModal').classList.remove('active');
+            currentEmailAppId = null;
+        }
+        
+        function loadEmailTemplate() {
+            const templateType = document.getElementById('emailTemplate').value;
+            if (!templateType || !currentEmailAppId) return;
+            
+            const app = allApplications.find(a => a.id === currentEmailAppId);
+            if (!app) return;
+            
+            const template = emailTemplates[templateType];
+            const subject = template.subject
+                .replace('{position}', app.position)
+                .replace('{company}', app.company);
+            const body = template.body
+                .replace(/{name}/g, app.applicantName)
+                .replace(/{position}/g, app.position)
+                .replace(/{company}/g, app.company);
+            
+            document.getElementById('emailSubject').value = subject;
+            document.getElementById('emailBody').value = body;
+        }
+        
+        function sendEmail() {
+            const subject = document.getElementById('emailSubject').value;
+            const body = document.getElementById('emailBody').value;
+            
+            if (!subject || !body) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            const app = allApplications.find(a => a.id === currentEmailAppId);
+            if (!app) return;
+            
+            // Simulate email sending (in real app, this would call backend API)
+            const emails = JSON.parse(localStorage.getItem('sentEmails') || '[]');
+            emails.unshift({
+                to: app.applicantEmail,
+                subject: subject,
+                body: body,
+                sentAt: new Date().toISOString(),
+                applicantId: currentEmailAppId
+            });
+            localStorage.setItem('sentEmails', JSON.stringify(emails));
+            
+            // Add note to application
+            addNote(currentEmailAppId, `Email sent: ${subject}`);
+            
+            closeEmailModal();
+            showNotification(`Email sent to ${app.applicantName}`);
+        }
+    </script>
+</body>
+</html>

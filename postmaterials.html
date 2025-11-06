@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Study Materials - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700;800;900&family=SF+Pro+Text:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #e0f2fe 100%);
+            --header-bg: rgba(30, 58, 138, 0.95);
+            --accent-color: #2563eb;
+            --accent-light: #3b82f6;
+            --text-primary: #1e3a8a;
+            --success: #10b981;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-bg);
+            background-attachment: fixed;
+            color: var(--text-primary);
+        }
+
+        header {
+            background: var(--header-bg);
+            padding: 1rem 0;
+            border-bottom: 3px solid var(--accent-light);
+            box-shadow: 0 4px 20px rgba(30, 58, 138, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border-radius: 16px;
+            color: #ffffff;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(30, 58, 138, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .form-section h2 {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        /* Rich Text Editable Div */
+        .rich-textarea-editable {
+            width: 100%;
+            min-height: 120px;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 0 0 8px 8px;
+            border-top: none;
+            font-size: 1rem;
+            font-family: inherit;
+            background: white;
+            overflow-y: auto;
+            outline: none;
+        }
+        
+        .rich-textarea-editable:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .rich-textarea-editable[contenteditable="true"]:empty:before {
+            content: attr(data-placeholder);
+            color: #9ca3af;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .file-upload-area {
+            border: 2px dashed var(--accent-color);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .file-upload-area:hover {
+            background: #e0f2fe;
+            border-color: var(--accent-light);
+        }
+
+        .file-upload-area.dragover {
+            background: #dbeafe;
+            border-color: var(--success);
+        }
+
+        .file-upload-area i {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-list {
+            margin-top: 1rem;
+        }
+
+        .file-item {
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-item-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .file-item i {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+        }
+
+        .remove-file {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group input {
+            width: auto;
+        }
+        
+        /* Rich Text Editor Toolbar */
+        .editor-toolbar {
+            background: #f3f4f6;
+            border: 2px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            border-radius: 8px 8px 0 0;
+            padding: 0.75rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .editor-btn {
+            padding: 0.5rem 0.75rem;
+            background: white;
+            border: 1px solid rgba(30,58,138,0.2);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        .editor-btn:hover {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        .editor-divider {
+            width: 1px;
+            height: 24px;
+            background: rgba(30,58,138,0.2);
+        }
+        .editor-select {
+            padding: 0.4rem 0.6rem;
+            border: 1px solid rgba(30,58,138,0.2);
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .rich-textarea {
+            border-radius: 0 0 8px 8px !important;
+            border-top: none !important;
+            min-height: 120px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">
+                <i class="fas fa-rocket"></i>
+                <span>InternHub</span>
+            </a>
+            <div class="nav-links">
+                <a href="hirer.html">Dashboard</a>
+                <a href="postmaterials.html" style="color: #60a5fa;">Post Materials</a>
+                <a href="index.html">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <div class="page-header">
+            <h1><i class="fas fa-graduation-cap"></i> Post Study Materials</h1>
+            <p>Share practice questions, interview questions, books, and notes with students</p>
+        </div>
+
+        <div class="form-section">
+            <h2><i class="fas fa-upload"></i> Upload Material</h2>
+            <form id="materialForm" onsubmit="handleSubmit(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="materialType">Material Type *</label>
+                        <select id="materialType" required>
+                            <option value="">Select type</option>
+                            <option value="practice">Practice Questions</option>
+                            <option value="interview">Interview Questions</option>
+                            <option value="books">Books & E-Books</option>
+                            <option value="notes">Notes & Study Material</option>
+                            <option value="syllabus">Syllabus & Curriculum</option>
+                            <option value="other">Other Resources</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject/Topic *</label>
+                        <input type="text" id="subject" required placeholder="e.g., Data Structures, DBMS, OS">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="year">Year *</label>
+                        <select id="year" required>
+                            <option value="">Select year</option>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="trimester">Trimester/Semester</label>
+                        <select id="trimester">
+                            <option value="">Select trimester</option>
+                            <option value="T1">Trimester 1 (Jan-Apr)</option>
+                            <option value="T2">Trimester 2 (May-Aug)</option>
+                            <option value="T3">Trimester 3 (Sep-Dec)</option>
+                            <option value="S1">Semester 1</option>
+                            <option value="S2">Semester 2</option>
+                            <option value="Summer">Summer Term</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="title">Title *</label>
+                    <input type="text" id="title" required placeholder="e.g., Advanced Data Structures - Practice Set 1">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description *</label>
+                    <div class="editor-toolbar">
+                        <button type="button" class="editor-btn" onclick="formatTextReal('bold')" title="Bold"><i class="fas fa-bold"></i></button>
+                        <button type="button" class="editor-btn" onclick="formatTextReal('italic')" title="Italic"><i class="fas fa-italic"></i></button>
+                        <button type="button" class="editor-btn" onclick="formatTextReal('underline')" title="Underline"><i class="fas fa-underline"></i></button>
+                        <div class="editor-divider"></div>
+                        <button type="button" class="editor-btn" onclick="formatTextReal('justifyLeft')" title="Align Left"><i class="fas fa-align-left"></i></button>
+                        <button type="button" class="editor-btn" onclick="formatTextReal('justifyCenter')" title="Align Center"><i class="fas fa-align-center"></i></button>
+                        <button type="button" class="editor-btn" onclick="formatTextReal('justifyRight')" title="Align Right"><i class="fas fa-align-right"></i></button>
+                        <button type="button" class="editor-btn" onclick="formatTextReal('justifyFull')" title="Justify"><i class="fas fa-align-justify"></i></button>
+                        <div class="editor-divider"></div>
+                        <select class="editor-select" onchange="changeFontFamilyReal(this.value)">
+                            <option value="">Font Family</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Verdana">Verdana</option>
+                            <option value="Inter">Inter</option>
+                        </select>
+                        <select class="editor-select" onchange="changeFontSizeReal(this.value)">
+                            <option value="">Font Size</option>
+                            <option value="1">Small</option>
+                            <option value="3">Normal</option>
+                            <option value="5">Large</option>
+                            <option value="7">Extra Large</option>
+                        </select>
+                    </div>
+                    <div id="description" class="rich-textarea-editable" contenteditable="true" data-placeholder="Provide detailed description of the material..."></div>
+                    <input type="hidden" id="descriptionHidden" name="description" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="difficulty">Difficulty Level</label>
+                        <select id="difficulty">
+                            <option value="">Select difficulty</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="company">Company/Organization</label>
+                        <input type="text" id="company" placeholder="e.g., Google, Microsoft (for interview questions)">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Files (PDF, DOC, DOCX, TXT) *</label>
+                    <div class="file-upload-area" onclick="document.getElementById('fileInput').click()" 
+                         ondrop="handleDrop(event)" 
+                         ondragover="handleDragOver(event)" 
+                         ondragleave="handleDragLeave(event)">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p style="font-weight: 600; margin-bottom: 0.5rem;">Click to upload or drag and drop</p>
+                        <small style="color: #6b7280;">Supported: PDF, DOC, DOCX, TXT (Max 10MB per file)</small>
+                    </div>
+                    <input type="file" id="fileInput" class="file-input" multiple accept=".pdf,.doc,.docx,.txt" onchange="handleFileSelect(event)">
+                    <div class="file-list" id="fileList"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">Tags (comma separated)</label>
+                    <input type="text" id="tags" placeholder="e.g., algorithms, arrays, interview prep, coding">
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="makePublic" checked>
+                        <label for="makePublic">Make this material publicly available to all students</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Post Material
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Authorization check and auto-fill company
+        const hirerCompany = sessionStorage.getItem('hirerCompany');
+        if (hirerCompany) {
+            document.addEventListener('DOMContentLoaded', () => {
+                document.getElementById('company').value = hirerCompany;
+                document.getElementById('company').readOnly = true;
+                document.getElementById('company').style.background = '#f3f4f6';
+            });
+        }
+
+        // Notification function
+        function showNotification(type, title, message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                min-width: 300px;
+                background: white;
+                padding: 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+                z-index: 10000;
+                border-left: 4px solid ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                animation: slideIn 0.3s ease;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: start; gap: 1rem;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}" style="font-size: 1.5rem; color: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};"></i>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 700; color: #1e3a8a; margin-bottom: 0.25rem;">${title}</div>
+                        <div style="color: #6b7280; font-size: 0.9rem;">${message}</div>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 1.2rem;">
+                        &times;
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 4000);
+        }
+
+        let selectedFiles = [];
+
+        function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+            files.forEach(file => {
+                if (!selectedFiles.find(f => f.name === file.name)) {
+                    selectedFiles.push(file);
+                }
+            });
+            updateFileList();
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.currentTarget.classList.remove('dragover');
+            
+            const files = Array.from(event.dataTransfer.files);
+            files.forEach(file => {
+                if (file.type.match('application|text')) {
+                    if (!selectedFiles.find(f => f.name === file.name)) {
+                        selectedFiles.push(file);
+                    }
+                }
+            });
+            updateFileList();
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(event) {
+            event.currentTarget.classList.remove('dragover');
+        }
+
+        function removeFile(fileName) {
+            selectedFiles = selectedFiles.filter(f => f.name !== fileName);
+            updateFileList();
+        }
+
+        function updateFileList() {
+            const fileList = document.getElementById('fileList');
+            if (selectedFiles.length === 0) {
+                fileList.innerHTML = '';
+                return;
+            }
+
+            fileList.innerHTML = selectedFiles.map(file => `
+                <div class="file-item">
+                    <div class="file-item-info">
+                        <i class="fas fa-file-alt"></i>
+                        <div>
+                            <div style="font-weight: 600;">${file.name}</div>
+                            <div style="font-size: 0.85rem; color: #6b7280;">${(file.size / 1024).toFixed(2)} KB</div>
+                        </div>
+                    </div>
+                    <button type="button" class="remove-file" onclick="removeFile('${file.name}')">
+                        <i class="fas fa-times"></i> Remove
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            if (selectedFiles.length === 0) {
+                showNotification('error', 'No Files', 'Please upload at least one file');
+                return;
+            }
+            
+            // Get content from contenteditable div
+            const descriptionDiv = document.getElementById('description');
+            const descriptionContent = descriptionDiv.innerHTML;
+            
+            if (!descriptionContent.trim()) {
+                showNotification('error', 'Missing Description', 'Please provide a description');
+                return;
+            }
+
+            const material = {
+                id: Date.now(),
+                type: document.getElementById('materialType').value,
+                subject: document.getElementById('subject').value,
+                year: document.getElementById('year').value,
+                trimester: document.getElementById('trimester').value,
+                title: document.getElementById('title').value,
+                description: descriptionContent,
+                difficulty: document.getElementById('difficulty').value,
+                company: document.getElementById('company').value,
+                tags: document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t),
+                files: selectedFiles.map(f => ({
+                    name: f.name,
+                    size: f.size,
+                    type: f.type
+                })),
+                public: document.getElementById('makePublic').checked,
+                postedDate: new Date().toISOString(),
+                postedBy: hirerCompany || 'Hirer'
+            };
+
+            // Save to localStorage
+            const materials = JSON.parse(localStorage.getItem('studyMaterials') || '[]');
+            materials.unshift(material);
+            localStorage.setItem('studyMaterials', JSON.stringify(materials));
+
+            // Show success
+            showNotification('success', 'Success!', `Material "${material.title}" posted successfully!`);
+            
+            // Reset form
+            document.getElementById('materialForm').reset();
+            descriptionDiv.innerHTML = '';
+            selectedFiles = [];
+            updateFileList();
+            
+            // Auto-fill company again after reset
+            if (hirerCompany) {
+                setTimeout(() => {
+                    document.getElementById('company').value = hirerCompany;
+                    document.getElementById('company').readOnly = true;
+                    document.getElementById('company').style.background = '#f3f4f6';
+                }, 100);
+            }
+        }
+        
+        // Real Rich Text Editor Functions using document.execCommand
+        function formatTextReal(command) {
+            document.execCommand(command, false, null);
+            document.getElementById('description').focus();
+        }
+        
+        function changeFontFamilyReal(fontName) {
+            if (!fontName) return;
+            document.execCommand('fontName', false, fontName);
+            document.getElementById('description').focus();
+        }
+        
+        function changeFontSizeReal(size) {
+            if (!size) return;
+            document.execCommand('fontSize', false, size);
+            document.getElementById('description').focus();
+        }
+    </script>
+</body>
+</html>

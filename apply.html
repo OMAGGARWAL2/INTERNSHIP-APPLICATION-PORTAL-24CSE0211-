@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Internship - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            --secondary-gradient: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            --success-gradient: linear-gradient(135deg, #81c784 0%, #a5d6a7 100%);
+            --dark-bg: #fbfbfb;
+            --card-bg: #ffffff;
+            --text-primary: #1b5e20;
+            --text-secondary: #4caf50;
+            --accent-color: #2e7d32;
+            --hover-color: #2e7d32;
+            --border-color: rgba(0, 0, 0, 0.06);
+            --shadow: 0 10px 30px rgba(46, 125, 50, 0.15);
+        }
+
+        [data-theme="dark"] {
+            --primary-gradient: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+            --secondary-gradient: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+            --success-gradient: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            --dark-bg: #1e293b;
+            --card-bg: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --accent-color: #ec4899;
+            --hover-color: #f43f5e;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .application-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .file-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload:hover {
+            border-color: var(--accent-color);
+            background: rgba(46, 125, 50, 0.05);
+        }
+
+        .file-upload i {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .file-upload p {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload small {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-name {
+            margin-top: 1rem;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--secondary-gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 1.5rem 2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 350px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-message {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .application-card {
+                padding: 2rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <style>
+        /* Three-color professional theme: Cream, Blue, Sea Blue */
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+
+            --dark-bg: var(--cream);
+            --card-bg: #ffffff;
+            --text-primary: var(--blue);
+            --text-secondary: rgba(30, 58, 138, 0.8);
+            --accent-color: var(--sea-blue);
+            --border-color: rgba(30, 58, 138, 0.15);
+            --primary-gradient: linear-gradient(135deg, var(--blue), var(--sea-blue));
+            --secondary-gradient: linear-gradient(135deg, var(--sea-blue), var(--blue));
+        }
+
+        body { background: var(--dark-bg) !important; color: var(--text-primary) !important; }
+        .application-card { background: #ffffff !important; border-color: var(--border-color) !important; }
+        .btn-primary { background: var(--primary-gradient) !important; color: #ffffff !important; border: none !important; }
+        .btn-secondary { border-color: var(--accent-color) !important; color: var(--accent-color) !important; background: transparent !important; }
+        input, select, textarea { background: #ffffff !important; border-color: var(--border-color) !important; color: var(--text-primary) !important; }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent-color) !important; box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25) !important; outline: none !important; }
+        .file-upload i { color: var(--accent-color) !important; }
+        .file-upload:hover { background: rgba(14, 165, 233, 0.06) !important; border-color: var(--accent-color) !important; }
+        .notification { background: #ffffff !important; border-color: var(--border-color) !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Apply for Internship</h1>
+            <p>Fill out the form below to submit your application</p>
+        </div>
+
+        <div class="application-card">
+            <form id="applicationForm">
+                <div class="form-group">
+                    <label for="fullName">
+                        Full Name *
+                        <span id="autoFillBadgeName" style="display: none; margin-left: 0.5rem; padding: 0.2rem 0.5rem; background: var(--sea-blue); color: white; font-size: 0.7rem; border-radius: 4px; font-weight: 600;">AUTO-FILLED</span>
+                    </label>
+                    <input type="text" id="fullName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">
+                        Email *
+                        <span id="autoFillBadgeEmail" style="display: none; margin-left: 0.5rem; padding: 0.2rem 0.5rem; background: var(--sea-blue); color: white; font-size: 0.7rem; border-radius: 4px; font-weight: 600;">AUTO-FILLED</span>
+                    </label>
+                    <input type="email" id="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">
+                        Phone Number *
+                        <span id="autoFillBadgePhone" style="display: none; margin-left: 0.5rem; padding: 0.2rem 0.5rem; background: var(--sea-blue); color: white; font-size: 0.7rem; border-radius: 4px; font-weight: 600;">AUTO-FILLED</span>
+                    </label>
+                    <input type="tel" id="phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="currentEducation">Current Education *</label>
+                    <input type="text" id="currentEducation" placeholder="e.g., B.Tech Computer Science, 3rd Year" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="university">University/College *</label>
+                    <input type="text" id="university" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="skills">Relevant Skills *</label>
+                    <input type="text" id="skills" placeholder="e.g., JavaScript, Python, React, etc." required>
+                </div>
+
+                <div class="form-group">
+                    <label>Resume/CV *</label>
+                    <div class="file-upload" onclick="document.getElementById('resume').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to upload your resume</p>
+                        <small>PDF, DOC, or DOCX (Max 5MB)</small>
+                        <input type="file" id="resume" accept=".pdf,.doc,.docx" required>
+                    </div>
+                    <div id="fileName" class="file-name" style="display: none;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="coverLetter">
+                        Why do you want to apply? (Description) *
+                        <span style="margin-left: 0.5rem; padding: 0.2rem 0.5rem; background: #10b981; color: white; font-size: 0.7rem; border-radius: 4px; font-weight: 600;">REQUIRED</span>
+                    </label>
+                    <textarea id="coverLetter" placeholder="Tell us why you're interested in this position and what makes you a good fit..." required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Application</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="notificationContainer"></div>
+
+    <script>
+        // Auto-fill user details from localStorage on page load
+        window.addEventListener('load', function() {
+            const useAutofill = sessionStorage.getItem('useAutofill');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            // Check if autofill should be used
+            if (useAutofill === 'true') {
+                // Auto-fill mode
+                if (currentUser.name) {
+                    document.getElementById('fullName').value = currentUser.name;
+                    document.getElementById('fullName').readOnly = true;
+                    document.getElementById('fullName').style.background = '#f3f4f6';
+                    document.getElementById('fullName').style.cursor = 'not-allowed';
+                    document.getElementById('autoFillBadgeName').style.display = 'inline-block';
+                }
+                
+                if (currentUser.email) {
+                    document.getElementById('email').value = currentUser.email;
+                    document.getElementById('email').readOnly = true;
+                    document.getElementById('email').style.background = '#f3f4f6';
+                    document.getElementById('email').style.cursor = 'not-allowed';
+                    document.getElementById('autoFillBadgeEmail').style.display = 'inline-block';
+                }
+                
+                if (currentUser.phone) {
+                    document.getElementById('phone').value = currentUser.phone;
+                    document.getElementById('phone').readOnly = true;
+                    document.getElementById('phone').style.background = '#f3f4f6';
+                    document.getElementById('phone').style.cursor = 'not-allowed';
+                    document.getElementById('autoFillBadgePhone').style.display = 'inline-block';
+                }
+                
+                // If user profile has additional info, auto-fill those too (but keep them editable)
+                if (currentUser.education) {
+                    document.getElementById('currentEducation').value = currentUser.education;
+                }
+                
+                if (currentUser.university) {
+                    document.getElementById('university').value = currentUser.university;
+                }
+                
+                if (currentUser.skills) {
+                    document.getElementById('skills').value = currentUser.skills;
+                }
+            } else if (useAutofill === 'false') {
+                // Manual mode - don't auto-fill, keep everything editable
+                // Fields are already empty and editable by default
+            }
+            
+            // Clear the flag
+            sessionStorage.removeItem('useAutofill');
+        });
+        
+        // File upload display
+        document.getElementById('resume').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('fileName').style.display = 'block';
+                document.getElementById('fileName').textContent = '✓ ' + file.name;
+            }
+        });
+
+        // Form submission
+        document.getElementById('applicationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            
+            showNotification('success', 'Application Submitted!', `Thank you ${fullName}! Your application has been submitted successfully. We'll get back to you within 1-2 working days.`);
+
+                // Reset form and redirect to messages with confirmation thread
+                setTimeout(() => {
+                const title = 'Internship Application';
+                const company = 'Company';
+                try { sessionStorage.setItem('newConversation', JSON.stringify({ title, company, internshipId: null })); } catch(e){}
+                document.getElementById('applicationForm').reset();
+                document.getElementById('fileName').style.display = 'none';
+                window.location.href = 'messages.html';
+            }, 2000);
+        });
+
+        // Notification system
+        function showNotification(type, title, message) {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            notification.innerHTML = `
+                <div class="notification-icon">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        // Load theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+</body>
+</html>

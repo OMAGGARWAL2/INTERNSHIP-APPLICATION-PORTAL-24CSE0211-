@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FAQ</title>
+</head>
+<body>
+  <header><h1>Frequently Asked Questions</h1></header>
+  <main>
+    <section>
+      <input id="faq-search" type="search" placeholder="Search FAQs" aria-label="Search FAQs" />
+      <details>
+        <summary>How do I apply?</summary>
+        <p>Use Find Internships and Apply pages.</p>
+      </details>
+      <details>
+        <summary>Is it free?</summary>
+        <p>Students can use most features for free.</p>
+      </details>
+    </section>
+  </main>
+  <style>
+    :root{--blue:#1e3a8a;--accent:#0ea5e9;--border:#e5e7eb}
+    body{font-family:Inter,Segoe UI,Roboto,sans-serif;background:#f6f1e7;color:var(--blue)}
+    header{padding:2rem 2rem}
+    main{max-width:900px;margin:0 auto;padding:2rem}
+    #faq-search{width:100%;padding:.7rem .9rem;border:2px solid var(--border);border-radius:12px;margin-bottom:1rem}
+    details{background:#fff;border:2px solid var(--border);border-radius:12px;padding:1rem;margin:.6rem 0}
+    summary{cursor:pointer;font-weight:700;color:var(--blue)}
+  </style>
+  <script>
+    (function(){
+      const search=document.getElementById('faq-search');
+      const items=[...document.querySelectorAll('details')];
+      const KEY='faqOpen';
+      // restore open state
+      try{const openIds=JSON.parse(localStorage.getItem(KEY)||'[]'); items.forEach((d,i)=>{d.open=openIds.includes(i);});}catch{}
+      items.forEach((d,i)=>d.addEventListener('toggle',()=>{
+        const openIds=items.reduce((arr,el,idx)=>{if(el.open) arr.push(idx); return arr;},[]);
+        localStorage.setItem(KEY,JSON.stringify(openIds));
+      }));
+      search.addEventListener('input',()=>{
+        const q=search.value.toLowerCase();
+        items.forEach(d=>{
+          const text=(d.querySelector('summary').textContent+' '+d.textContent).toLowerCase();
+          d.style.display=text.includes(q)?'block':'none';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

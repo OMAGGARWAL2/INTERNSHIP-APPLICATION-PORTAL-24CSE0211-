@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://example.com/index.html</loc></url>
+  <url><loc>https://example.com/about.html</loc></url>
+  <url><loc>https://example.com/login.html</loc></url>
+  <url><loc>https://example.com/signup.html</loc></url>
+  <url><loc>https://example.com/find-internships.html</loc></url>
+  <url><loc>https://example.com/post-internship.html</loc></url>
+  <url><loc>https://example.com/student-dashboard.html</loc></url>
+  <url><loc>https://example.com/track-applications.html</loc></url>
+  <url><loc>https://example.com/privacy.html</loc></url>
+  <url><loc>https://example.com/terms.html</loc></url>
+  <url><loc>https://example.com/cookies.html</loc></url>
+  <url><loc>https://example.com/accessibility.html</loc></url>
+  <url><loc>https://example.com/security.html</loc></url>
+  <url><loc>https://example.com/contact.html</loc></url>
+  <url><loc>https://example.com/report-issue.html</loc></url>
+  <url><loc>https://example.com/testimonials.html</loc></url>
+  <url><loc>https://example.com/partners.html</loc></url>
+  <url><loc>https://example.com/press.html</loc></url>
+  <url><loc>https://example.com/media-kit.html</loc></url>
+  <url><loc>https://example.com/pricing.html</loc></url>
+  <url><loc>https://example.com/features.html</loc></url>
+  <url><loc>https://example.com/careers.html</loc></url>
+  <url><loc>https://example.com/faq.html</loc></url>
+  <url><loc>https://example.com/resources.html</loc></url>
+  <url><loc>https://example.com/internship-details.html</loc></url>
+  <url><loc>https://example.com/company-profile.html</loc></url>
+</urlset>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Partners</title>
+</head>
+<body>
+  <header><h1>Partners</h1></header>
+  <main>
+    <section>
+      <p>We collaborate with companies and institutions to offer internships.</p>
+      <ul>
+        <li>Partner One</li>
+        <li>Partner Two</li>
+      </ul>
+    </section>
+  </main>
+</main>
+  <style>
+    :root{--blue:#1e3a8a;--accent:#0ea5e9;--border:#e5e7eb}
+    body{font-family:Inter,Segoe UI,Roboto,sans-serif;background:#f6f1e7;color:var(--blue)}
+    header{padding:2rem 2rem}
+    main{max-width:1100px;margin:0 auto;padding:2rem}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem}
+    .card{background:#fff;border:2px solid var(--border);border-radius:12px;padding:1rem;text-align:center}
+  </style>
+  <section class="grid" id="pGrid"></section>
+  <script>
+    (function(){
+      const data=JSON.parse(localStorage.getItem('partners')||'[]');
+      const list=data.length?data:[{name:'Partner One'},{name:'Partner Two'},{name:'Partner Three'}];
+      const grid=document.getElementById('pGrid');
+      grid.innerHTML=list.map(p=>`<article class="card"><strong>${p.name}</strong></article>`).join('');
+    })();
+  </script>
+</body>
+</html>

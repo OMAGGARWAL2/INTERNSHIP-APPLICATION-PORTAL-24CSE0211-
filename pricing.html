@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pricing</title>
+</head>
+<body>
+  <header><h1>Pricing</h1></header>
+  <main>
+    <section>
+      <h2>For Hirers</h2>
+      <ul>
+        <li>Free: Post 1 role</li>
+        <li>Pro: Advanced filters</li>
+      </ul>
+    </section>
+  </main>
+</main>
+  <style>
+    :root{--blue:#1e3a8a;--accent:#0ea5e9;--border:#e5e7eb}
+    body{font-family:Inter,Segoe UI,Roboto,sans-serif;background:#f6f1e7;color:var(--blue)}
+    header{padding:2rem 2rem}
+    main{max-width:1000px;margin:0 auto;padding:2rem}
+    .plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+    .card{background:#fff;border:2px solid var(--border);border-radius:12px;padding:1rem}
+    .card.active{border-color:var(--accent);box-shadow:0 8px 20px rgba(14,165,233,.15)}
+    .btn{background:linear-gradient(135deg,var(--blue),var(--accent));color:#fff;border:none;border-radius:999px;padding:.6rem 1rem;font-weight:700;cursor:pointer}
+    .toggle{display:flex;gap:.6rem;align-items:center;margin-bottom:1rem}
+  </style>
+  <section>
+    <div class="toggle"><label><input type="checkbox" id="annual"> Annual billing (save 20%)</label></div>
+    <div class="plans" id="plans"></div>
+  </section>
+  <script>
+    (function(){
+      const plansEl=document.getElementById('plans');
+      const annual=document.getElementById('annual');
+      const base=[
+        {name:'Free', price:0, features:['Post 1 role','Basic filters']},
+        {name:'Pro', price:29, features:['Unlimited postings','Advanced filters','CSV export']},
+        {name:'Business', price:99, features:['Team seats','Priority placement','Dedicated support']},
+      ];
+      function render(){
+        const factor=annual.checked?0.8:1;
+        plansEl.innerHTML=base.map((p,i)=>`<article class="card ${i===1?'active':''}"><h3>${p.name}</h3><p><strong>$${Math.round(p.price*factor)}</strong> / month</p><ul>${p.features.map(f=>`<li>${f}</li>`).join('')}</ul><button class="btn" onclick="selectPlan('${p.name}')">Choose ${p.name}</button></article>`).join('');
+      }
+      annual.addEventListener('change',render);
+      render();
+      window.selectPlan=function(name){
+        localStorage.setItem('selectedPlan', JSON.stringify({name, selectedAt:new Date().toISOString(), annual:annual.checked}));
+        alert(`Selected: ${name}`);
+      }
+    })();
+  </script>
+</body>
+</html>

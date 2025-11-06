@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Media Kit</title>
+</head>
+<body>
+  <header><h1>Media Kit</h1></header>
+  <main>
+    <section>
+      <p>Brand assets and guidelines.</p>
+    </section>
+  </main>
+  <header></header>
+  <main class="ih-container" style="padding:2rem 0">
+    <section style="background:#fff;border:2px solid var(--border-color);border-radius:12px;padding:1.5rem;margin-bottom:1rem">
+      <h2>Media Kit</h2>
+      <p>Brand assets and guidelines.</p>
+      <div id="assetGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem"></div>
+      <article style="background:#fff;border:2px solid var(--border-color);border-radius:12px;padding:1rem;margin-top:1rem">
+        <h3>Brand Guidelines</h3>
+        <ul>
+          <li>Use the graduation cap icon with blue/sea-blue gradient</li>
+          <li>Primary font: Inter; Primary color: #1e3a8a</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+  <footer></footer>
+  <script src="market-enhancements.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded',()=>{
+      if(window.SharedComponents){ SharedComponents.injectHeaderFooter(); }
+      const data=JSON.parse(localStorage.getItem('brandAssets')||'[]');
+      const samples=[{name:'Logo SVG', url:'#'},{name:'Logo PNG', url:'#'},{name:'App Icon', url:'#'}];
+      const list=data.length?data:samples;
+      const el=document.getElementById('assetGrid');
+      el.innerHTML=list.map(a=>`<div style="background:#fff;border:2px solid var(--border-color);border-radius:12px;padding:1rem;text-align:center"><strong>${a.name}</strong><br><a href="${a.url}">Download</a></div>`).join('');
+    });
+  </script>
+  <style>
+    :root{--border-color:rgba(30,58,138,.15)}
+    body{font-family:Inter,Segoe UI,Roboto,sans-serif;background:#f6f1e7;color:#1e3a8a}
+    h2,h3{margin-bottom:.6rem}
+  </style>
+</body>
+</html>

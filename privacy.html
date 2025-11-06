@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy</title>
+</head>
+<body>
+  <header><h1>Privacy Policy</h1></header>
+  <main>
+    <section>
+      <p>Your privacy matters. This page explains what data we collect, how we use it, and your rights.</p>
+      <h2>Data We Collect</h2>
+      <ul>
+        <li>Account information you provide</li>
+        <li>Usage data to improve the experience</li>
+      </ul>
+      <h2>Your Rights</h2>
+      <ul>
+        <li>Access, correction, and deletion of your data</li>
+      </ul>
+      <p>For questions, see Contact.</p>
+    </section>
+  </main>
+  <header id="top"></header>
+  <main class="ih-container" style="padding:2rem 0">
+    <aside style="background:#fff;border:2px solid var(--border-color);border-radius:12px;padding:1rem;margin-bottom:1rem">
+      <h2 style="margin-bottom:.6rem">Privacy Policy</h2>
+      <p style="color:var(--text-secondary)">Your privacy matters. This page explains what data we collect, how we use it, and your rights.</p>
+      <nav style="display:flex;gap:.8rem;flex-wrap:wrap">
+        <a href="#data" class="ih-btn" style="padding:.4rem .8rem">Data We Collect</a>
+        <a href="#use" class="ih-btn" style="padding:.4rem .8rem">How We Use Data</a>
+        <a href="#cookies" class="ih-btn" style="padding:.4rem .8rem">Cookies</a>
+        <a href="#retention" class="ih-btn" style="padding:.4rem .8rem">Retention</a>
+        <a href="#rights" class="ih-btn" style="padding:.4rem .8rem">Your Rights</a>
+        <a href="#contact" class="ih-btn" style="padding:.4rem .8rem">Contact</a>
+      </nav>
+    </aside>
+    <section id="data" style="background:#fff;border:2px solid var(--border-color);border-radius:12px;padding:1.5rem;margin-bottom:1rem">
+      <h3>Data We Collect</h3>
+      <ul>
+        <li>Account information you provide (name, email)</li>
+        <li>Profile data (skills, resume, bio)</li>
+        <li>Usage data (pages viewed, actions) used to improve the experience</li>
+      </ul>
+    </section>
+    <section id="use" style="background:#fff;border:2px solid var(--border-color);border-radius:12px;padding:1.5rem;margin-bottom:1rem">
+      <h3>How We Use Data</h3>
+      <ul>
+        <li>To provide core features (applications, tracking, recommendations)</li>
+        <li>To improve performance and reliability</li>
+        <li>To communicate important updates</li>
+      </ul>
+    </section>
+    <section id="cookies" style="background:#fff;border:2px solid var(--border-color);border-radius:12px;padding:1.5rem;margin-bottom:1rem">
+      <h3>Cookies & Tracking</h3>
+      <p>We use essential cookies for functionality and optional analytics/marketing cookies with your consent. Manage preferences on the <a href="cookies.html">Cookies</a> page.</p>
+    </section>
+    <section id="retention" style="background:#fff;border:2px solid var(--border-color);border-radius:12px;padding:1.5rem;margin-bottom:1rem">
+      <h3>Data Retention</h3>
+      <p>We retain data only as long as necessary to provide services. You may request deletion at any time.</p>
+    </section>
+    <section id="rights" style="background:#fff;border:2px solid var(--border-color);border-radius:12px;padding:1.5rem;margin-bottom:1rem">
+      <h3>Your Rights</h3>
+      <ul>
+        <li>Access, correction, and deletion of your data</li>
+        <li>Opt-out of non-essential tracking</li>
+      </ul>
+    </section>
+    <section id="contact" style="background:#fff;border:2px solid var(--border-color);border-radius:12px;padding:1.5rem">
+      <h3>Contact</h3>
+      <p>For questions, contact us via the <a href="contact.html">Contact</a> page.</p>
+      <p style="color:var(--text-secondary)">Last updated: <span id="lastUpdated">—</span></p>
+    </section>
+  </main>
+  <footer></footer>
+  <script src="market-enhancements.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded',()=>{
+      if(window.SharedComponents){ SharedComponents.injectHeaderFooter(); }
+      document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString('en-US', {year:'numeric', month:'short', day:'2-digit'});
+    });
+  </script>
+  <style>
+    :root{--border-color:rgba(30,58,138,.15);--text-secondary:rgba(30,58,138,.8)}
+    body{font-family:Inter,Segoe UI,Roboto,sans-serif;background:#f6f1e7;color:#1e3a8a}
+    h3{margin-bottom:.6rem}
+  </style>
+</body>
+</html>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+            --primary-bg: var(--cream);
+            --secondary-bg: #ffffff;
+            --header-bg: rgba(246, 241, 231, 0.95);
+            --text-primary: var(--blue);
+            --text-secondary: rgba(30, 58, 138, 0.8);
+            --accent-color: var(--sea-blue);
+            --hover-color: var(--blue);
+            --border-color: rgba(30, 58, 138, 0.15);
+            --shadow-color: rgba(30, 58, 138, 0.12);
+            --tag-bg: rgba(14, 165, 233, 0.12);
+            --primary-gradient: linear-gradient(135deg, var(--blue), var(--sea-blue));
+            --border-radius-main: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: var(--header-bg);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--accent-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .btn-logout {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        /* Main Dashboard */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .welcome-section {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 3rem;
+            border-radius: var(--border-radius-main);
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 25px var(--shadow-color);
+        }
+
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-section p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .action-card {
+            background: var(--secondary-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 1rem;
+        }
+
+        .action-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px var(--shadow-color);
+            border-color: var(--accent-color);
+        }
+
+        .action-icon {
+            font-size: 3rem;
+            color: var(--accent-color);
+        }
+
+        .action-card h3 {
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .action-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--secondary-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Recent Activities */
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .activity-list {
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            padding: 2rem;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-item:hover {
+            background: var(--tag-bg);
+            border-radius: 8px;
+        }
+
+        .activity-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--tag-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-content h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .activity-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .activity-time {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 0 1rem;
+            }
+
+            .welcome-section h1 {
+                font-size: 2rem;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">
+                <i class="fas fa-rocket"></i>
+                <span>InternHub</span>
+            </a>
+            <div class="nav-links">
+                <a href="student-dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="find-internships.html"><i class="fas fa-briefcase"></i> Find Internships</a>
+                <a href="track-applications.html"><i class="fas fa-chart-line"></i> Applications</a>
+                <a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a>
+                <button class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1>Welcome back, <span id="studentName">Student</span>! 👋</h1>
+            <p>Ready to take your career to the next level? Explore opportunities tailored for you.</p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-number" id="applicationsCount">0</div>
+                <div class="stat-label">Applications Submitted</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="interviewsCount">0</div>
+                <div class="stat-label">Interviews Scheduled</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="savedCount">0</div>
+                <div class="stat-label">Saved Internships</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="profileViews">0</div>
+                <div class="stat-label">Profile Views</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="quick-actions">
+            <a href="find-internships.html" class="action-card">
+                <i class="fas fa-search action-icon"></i>
+                <h3>Find Internships</h3>
+                <p>Browse thousands of internship opportunities</p>
+            </a>
+            <a href="track-applications.html" class="action-card">
+                <i class="fas fa-tasks action-icon"></i>
+                <h3>Track Applications</h3>
+                <p>Monitor your application status</p>
+            </a>
+            <a href="resume-builder.html" class="action-card">
+                <i class="fas fa-file-alt action-icon"></i>
+                <h3>Build Resume</h3>
+                <p>Create a professional resume</p>
+            </a>
+            <a href="viewpostedmaterials.html" class="action-card">
+                <i class="fas fa-book-open action-icon"></i>
+                <h3>Study Materials</h3>
+                <p>Access practice questions and resources</p>
+            </a>
+            <a href="notifications.html" class="action-card">
+                <i class="fas fa-bell action-icon"></i>
+                <h3>Notifications</h3>
+                <p>View updates and alerts</p>
+            </a>
+        </div>
+
+        <!-- Recent Activities -->
+        <h2 class="section-title">Recent Activities</h2>
+        <div class="activity-list" id="activityList">
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="activity-content">
+                    <h4>Welcome to InternHub!</h4>
+                    <p>Start exploring internship opportunities and build your career</p>
+                </div>
+                <div class="activity-time">Just now</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load user data
+        window.addEventListener('DOMContentLoaded', () => {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (currentUser && currentUser.name) {
+                document.getElementById('studentName').textContent = currentUser.name;
+            }
+
+            // Load stats
+            loadStats();
+            loadActivities();
+        });
+
+        function loadStats() {
+            const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+            const savedInternships = JSON.parse(localStorage.getItem('savedInternships') || '[]');
+            
+            document.getElementById('applicationsCount').textContent = applications.length;
+            document.getElementById('savedCount').textContent = savedInternships.length;
+            document.getElementById('interviewsCount').textContent = applications.filter(app => app.status === 'interview').length;
+            document.getElementById('profileViews').textContent = Math.floor(Math.random() * 50) + 10;
+        }
+
+        function loadActivities() {
+            const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+            const activityList = document.getElementById('activityList');
+            
+            if (applications.length === 0) return;
+
+            // Show recent applications
+            const recentApps = applications.slice(-5).reverse();
+            const activities = recentApps.map(app => `
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>Applied to ${app.internshipTitle || 'Internship'}</h4>
+                        <p>at ${app.company || 'Company'}</p>
+                    </div>
+                    <div class="activity-time">${getTimeAgo(app.timestamp)}</div>
+                </div>
+            `).join('');
+
+            activityList.innerHTML = activities || activityList.innerHTML;
+        }
+
+        function getTimeAgo(timestamp) {
+            if (!timestamp) return new Date().toLocaleString('en-US', {year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit', hour12:true});
+            try {
+                const dt = new Date(timestamp);
+                return dt.toLocaleString('en-US', {year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit', hour12:true});
+            } catch (e) {
+                return 'Unknown time';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+    </script>
+    <!-- Profile Completeness Widget -->
+    <style>
+      .pcw-card{max-width:1400px;margin:2rem auto;padding:0 2rem}
+      .pcw{background:var(--secondary-bg);border:2px solid var(--border-color);border-radius:var(--border-radius-main);padding:2rem;box-shadow:0 8px 25px var(--shadow-color)}
+      .pcw h2{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem}
+      .pcw .bar{height:14px;background:var(--tag-bg);border-radius:999px;overflow:hidden;margin:.6rem 0 1rem}
+      .pcw .bar > span{display:block;height:100%;width:0;background:var(--primary-gradient)}
+      .pcw.success .bar > span{background:linear-gradient(135deg,#16a34a,#22c55e)}
+      .pcw .meta{display:flex;justify-content:space-between;align-items:center;color:var(--text-secondary);margin-bottom:1rem}
+      .pcw-list{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+      .pcw-item{border:1px dashed var(--border-color);border-radius:12px;padding:1rem;display:flex;gap:.8rem;align-items:flex-start}
+      .pcw-item input{margin-top:.2rem}
+      .pcw-item.done{border-color:var(--accent-color);background:rgba(14,165,233,.06)}
+    </style>
+    <div class="pcw-card">
+      <div class="pcw" id="pcw">
+        <h2><i class="fas fa-trophy" style="color:var(--accent-color)"></i> Profile Completeness</h2>
+        <div class="meta"><span id="pcw-percent">0% complete</span><span id="pcw-status">Let's get you standout-ready</span></div>
+        <div class="bar"><span id="pcw-bar"></span></div>
+        <ul class="pcw-list" id="pcw-list"></ul>
+      </div>
+    </div>
+    <script>
+      (function(){
+        const TASKS=[
+          {id:'hasPhoto',label:'Add a profile photo',weight:20},
+          {id:'hasResume',label:'Upload your resume',weight:20},
+          {id:'hasSkills',label:'Add 5+ skills',weight:20},
+          {id:'hasQuickTest',label:'Complete a quick test',weight:20},
+          {id:'hasAbout',label:'Write a short bio',weight:20},
+        ];
+        const KEY='profileTasks';
+        const state=JSON.parse(localStorage.getItem(KEY)||'{}');
+        const list=document.getElementById('pcw-list');
+        const percentEl=document.getElementById('pcw-percent');
+        const barEl=document.getElementById('pcw-bar');
+        const statusEl=document.getElementById('pcw-status');
+        const pcwEl=document.getElementById('pcw');
+        function save(){localStorage.setItem(KEY,JSON.stringify(state));}
+        function render(){
+          list.innerHTML='';
+          let total=TASKS.reduce((s,t)=>s+t.weight,0),score=0;
+          TASKS.forEach(t=>{
+            const done=!!state[t.id];
+            if(done) score+=t.weight;
+            const li=document.createElement('li');
+            li.className='pcw-item'+(done?' done':'');
+            li.innerHTML=`<input type="checkbox" ${done?'checked':''} id="${t.id}"><label for="${t.id}">${t.label}</label>`;
+            const cb=li.querySelector('input');
+            cb.addEventListener('change',()=>{state[t.id]=cb.checked;save();render();});
+            list.appendChild(li);
+          });
+          const pct=Math.round((score/total)*100);
+          percentEl.textContent=pct+"% complete";
+          barEl.style.width=pct+"%";
+          pcwEl.classList.toggle('success', pct===100);
+          statusEl.textContent=pct===100?"Success! Your profile is standout-ready":"Incomplete — complete tasks to stand out";
+        }
+        render();
+      })();
+    </script>
+</body>
+</html>

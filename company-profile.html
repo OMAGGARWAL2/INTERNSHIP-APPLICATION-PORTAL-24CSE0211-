@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Company Profile</title>
+</head>
+<body>
+  <header><h1>Company Profile</h1></header>
+  <main>
+    <section>
+      <h2 id="company-name">Company Name</h2>
+      <p id="company-about">About the company.</p>
+      <h3>Open Roles</h3>
+      <ul id="open-roles">
+        <li>Role 1</li>
+      </ul>
+    </section>
+  </main>
+</main>
+  <style>
+    :root{--blue:#1e3a8a;--accent:#0ea5e9;--border:#e5e7eb}
+    body{font-family:Inter,Segoe UI,Roboto,sans-serif;background:#f6f1e7;color:var(--blue)}
+    header{padding:2rem 2rem}
+    main{max-width:1000px;margin:0 auto;padding:2rem}
+    #company-about{background:#fff;border:2px solid var(--border);border-radius:16px;padding:1rem;margin:.5rem 0 1rem}
+    #open-roles{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;padding:0}
+    #open-roles li{background:#fff;border:2px solid var(--border);border-radius:12px;padding:1rem}
+    .btn{background:linear-gradient(135deg,var(--blue),var(--accent));color:#fff;border:none;border-radius:999px;padding:.6rem 1rem;font-weight:700;cursor:pointer}
+  </style>
+  <script>
+    (function(){
+      const qs=new URLSearchParams(location.search);
+      const company=qs.get('company')||'Company Name';
+      const about=qs.get('about')||'About the company.';
+      document.getElementById('company-name').textContent=company;
+      document.getElementById('company-about').textContent=about;
+      const open=document.getElementById('open-roles');
+      const roles = JSON.parse(localStorage.getItem('internships')||'[]').filter(r=>!company || (r.company||'').toLowerCase()===(company||'').toLowerCase());
+      if(roles.length===0){ open.innerHTML='<li>No open roles currently.</li>'; return; }
+      open.innerHTML = roles.slice(0,8).map(r=>`<li><strong>${r.position}</strong><br><span>${r.location||''}</span><br><button class="btn" onclick="location.href='internship-details.html?id=${encodeURIComponent(r.id)}&title=${encodeURIComponent(r.position)}&company=${encodeURIComponent(r.company||company)}&location=${encodeURIComponent(r.location||'')}'">View</button></li>`).join('');
+    })();
+  </script>
+</body>
+</html>

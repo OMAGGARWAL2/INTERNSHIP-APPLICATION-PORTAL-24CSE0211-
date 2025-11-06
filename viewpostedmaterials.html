@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Materials - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700;800;900&family=SF+Pro+Text:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #e0f2fe 100%);
+            --header-bg: rgba(30, 58, 138, 0.95);
+            --accent-color: #2563eb;
+            --success: #10b981;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-bg);
+            background-attachment: fixed;
+            color: #1e3a8a;
+        }
+
+        header {
+            background: var(--header-bg);
+            padding: 1rem 0;
+            border-bottom: 3px solid #3b82f6;
+            box-shadow: 0 4px 20px rgba(30, 58, 138, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border-radius: 16px;
+            color: #ffffff;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(30, 58, 138, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1e3a8a;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-color), #3b82f6);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .material-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            border-left: 4px solid var(--success);
+        }
+
+        .material-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .material-type {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: var(--success);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .material-type.practice { background: #3b82f6; }
+        .material-type.interview { background: #8b5cf6; }
+        .material-type.books { background: #f59e0b; }
+        .material-type.notes { background: #10b981; }
+        .material-type.syllabus { background: #ec4899; }
+        .material-type.other { background: #6b7280; }
+
+        .material-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 0.5rem;
+        }
+
+        .material-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .material-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .material-description {
+            color: #4b5563;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .material-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            padding: 0.3rem 0.8rem;
+            background: #e0f2fe;
+            color: #1e3a8a;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .material-files {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            background: white;
+            border-radius: 6px;
+        }
+
+        .file-item i {
+            color: var(--accent-color);
+        }
+
+        .download-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 16px;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #d1d5db;
+            margin-bottom: 1rem;
+        }
+
+        .stats-section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+            border-radius: 12px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1e3a8a;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* Full Screen Modal */
+        .fullscreen-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            overflow-y: auto;
+        }
+
+        .fullscreen-modal.active {
+            display: block;
+        }
+
+        .fullscreen-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .close-fullscreen {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .close-fullscreen:hover {
+            background: #dc2626;
+        }
+
+        .fullscreen-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .fullscreen-title {
+            font-size: 2.5rem;
+            color: #1e3a8a;
+            margin-bottom: 1rem;
+        }
+
+        .fullscreen-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-top: 1rem;
+        }
+
+        .fullscreen-body {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #374151;
+        }
+
+        .fullscreen-section {
+            margin-bottom: 2rem;
+        }
+
+        .fullscreen-section h3 {
+            color: #1e3a8a;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .material-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .view-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, var(--accent-color), #3b82f6);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">
+                <i class="fas fa-rocket"></i>
+                <span>InternHub</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="find-internships.html">Find Internships</a>
+                <a href="viewpostedmaterials.html" style="color: #60a5fa;">Study Materials</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <div class="page-header">
+            <h1><i class="fas fa-book-open"></i> Study Materials Library</h1>
+            <p>Access practice questions, interview materials, books, and notes</p>
+        </div>
+
+        <div class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalMaterials">0</div>
+                    <div class="stat-label">Total Materials</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="practiceCount">0</div>
+                    <div class="stat-label">Practice Questions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="interviewCount">0</div>
+                    <div class="stat-label">Interview Questions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="booksCount">0</div>
+                    <div class="stat-label">Books & Notes</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <h3 style="margin-bottom: 1rem; color: #1e3a8a;"><i class="fas fa-filter"></i> Filter Materials</h3>
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label>Material Type</label>
+                    <select id="filterType">
+                        <option value="">All Types</option>
+                        <option value="practice">Practice Questions</option>
+                        <option value="interview">Interview Questions</option>
+                        <option value="books">Books & E-Books</option>
+                        <option value="notes">Notes & Study Material</option>
+                        <option value="syllabus">Syllabus & Curriculum</option>
+                        <option value="other">Other Resources</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Year</label>
+                    <select id="filterYear">
+                        <option value="">All Years</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Trimester</label>
+                    <select id="filterTrimester">
+                        <option value="">All Trimesters</option>
+                        <option value="T1">Trimester 1</option>
+                        <option value="T2">Trimester 2</option>
+                        <option value="T3">Trimester 3</option>
+                        <option value="S1">Semester 1</option>
+                        <option value="S2">Semester 2</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Search</label>
+                    <input type="text" id="searchInput" placeholder="Search by title or subject...">
+                </div>
+            </div>
+            <div class="filter-buttons">
+                <button class="btn btn-primary" onclick="applyFilters()">
+                    <i class="fas fa-search"></i> Apply Filters
+                </button>
+                <button class="btn btn-secondary" onclick="clearFilters()">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+        </div>
+
+        <div class="materials-grid" id="materialsGrid">
+            <!-- Materials will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Full Screen Modal -->
+    <div class="fullscreen-modal" id="fullscreenModal">
+        <div class="fullscreen-content">
+            <button class="close-fullscreen" onclick="closeFullscreen()">
+                <i class="fas fa-times"></i> Close
+            </button>
+            <div id="fullscreenData">
+                <!-- Material details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allMaterials = [];
+
+        function loadMaterials() {
+            allMaterials = JSON.parse(localStorage.getItem('studyMaterials') || '[]');
+            updateStats();
+            displayMaterials(allMaterials);
+        }
+
+        function updateStats() {
+            document.getElementById('totalMaterials').textContent = allMaterials.length;
+            document.getElementById('practiceCount').textContent = allMaterials.filter(m => m.type === 'practice').length;
+            document.getElementById('interviewCount').textContent = allMaterials.filter(m => m.type === 'interview').length;
+            document.getElementById('booksCount').textContent = allMaterials.filter(m => m.type === 'books' || m.type === 'notes').length;
+        }
+
+        function displayMaterials(materials) {
+            const grid = document.getElementById('materialsGrid');
+            
+            if (materials.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <i class="fas fa-book-open"></i>
+                        <h3>No materials found</h3>
+                        <p style="color: #6b7280; margin-top: 0.5rem;">Try adjusting your filters or check back later</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = materials.map(material => `
+                <div class="material-card">
+                    <span class="material-type ${material.type}">${getTypeName(material.type)}</span>
+                    <div class="material-title">${material.title}</div>
+                    
+                    <div class="material-meta">
+                        <span><i class="fas fa-book"></i> ${material.subject}</span>
+                        <span><i class="fas fa-calendar"></i> ${material.year}</span>
+                        ${material.trimester ? `<span><i class="fas fa-clock"></i> ${material.trimester}</span>` : ''}
+                        ${material.difficulty ? `<span><i class="fas fa-signal"></i> ${material.difficulty}</span>` : ''}
+                    </div>
+
+                    <div class="material-description">${material.description}</div>
+
+                    ${material.company ? `<div style="margin-bottom: 1rem;"><strong>Company:</strong> ${material.company}</div>` : ''}
+
+                    ${material.tags && material.tags.length > 0 ? `
+                        <div class="material-tags">
+                            ${material.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                    ` : ''}
+
+                    <div class="material-files">
+                        <strong style="display: block; margin-bottom: 0.5rem; color: #1e3a8a;">
+                            <i class="fas fa-paperclip"></i> Files (${material.files.length})
+                        </strong>
+                        ${material.files.map(file => `
+                            <div class="file-item">
+                                <i class="fas fa-file-pdf"></i>
+                                <span style="font-size: 0.9rem;">${file.name}</span>
+                                <span style="font-size: 0.8rem; color: #6b7280;">(${(file.size / 1024).toFixed(2)} KB)</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="material-actions">
+                        <button class="view-btn" onclick="viewFullscreen(${material.id})">
+                            <i class="fas fa-expand"></i> View Full Screen
+                        </button>
+                        <button class="download-btn" onclick="downloadMaterial(${material.id})">
+                            <i class="fas fa-download"></i> Download Files
+                        </button>
+                    </div>
+
+                    <div style="margin-top: 1rem; font-size: 0.85rem; color: #6b7280; text-align: center;">
+                        Posted on ${new Date(material.postedDate).toLocaleDateString()}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getTypeName(type) {
+            const names = {
+                'practice': 'Practice Questions',
+                'interview': 'Interview Questions',
+                'books': 'Books & E-Books',
+                'notes': 'Notes & Study Material',
+                'syllabus': 'Syllabus',
+                'other': 'Other Resources'
+            };
+            return names[type] || type;
+        }
+
+        function applyFilters() {
+            const typeFilter = document.getElementById('filterType').value;
+            const yearFilter = document.getElementById('filterYear').value;
+            const trimesterFilter = document.getElementById('filterTrimester').value;
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+
+            let filtered = allMaterials.filter(material => {
+                const typeMatch = !typeFilter || material.type === typeFilter;
+                const yearMatch = !yearFilter || material.year === yearFilter;
+                const trimesterMatch = !trimesterFilter || material.trimester === trimesterFilter;
+                const searchMatch = !searchText || 
+                    material.title.toLowerCase().includes(searchText) ||
+                    material.subject.toLowerCase().includes(searchText) ||
+                    material.description.toLowerCase().includes(searchText);
+
+                return typeMatch && yearMatch && trimesterMatch && searchMatch;
+            });
+
+            displayMaterials(filtered);
+        }
+
+        function clearFilters() {
+            document.getElementById('filterType').value = '';
+            document.getElementById('filterYear').value = '';
+            document.getElementById('filterTrimester').value = '';
+            document.getElementById('searchInput').value = '';
+            displayMaterials(allMaterials);
+        }
+
+        function downloadMaterial(id) {
+            const material = allMaterials.find(m => m.id === id);
+            if (!material || !material.files || material.files.length === 0) {
+                alert('No files available to download');
+                return;
+            }
+
+            // Download each file
+            material.files.forEach((file, index) => {
+                setTimeout(() => {
+                    // Create a blob from the file data
+                    const blob = new Blob([file.data || 'Sample file content'], { type: file.type || 'application/octet-stream' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    // Create temporary link and trigger download
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = file.name;
+                    document.body.appendChild(a);
+                    a.click();
+                    
+                    // Cleanup
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, index * 500); // Delay each download by 500ms
+            });
+
+            // Show success notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 8px;
+                font-weight: 700;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 10001;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.innerHTML = `
+                <i class="fas fa-check-circle"></i> Downloading ${material.files.length} file(s)...
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function viewFullscreen(id) {
+            const material = allMaterials.find(m => m.id === id);
+            if (!material) return;
+
+            const modal = document.getElementById('fullscreenModal');
+            const content = document.getElementById('fullscreenData');
+
+            content.innerHTML = `
+                <div class="fullscreen-header">
+                    <span class="material-type ${material.type}" style="font-size: 1rem; padding: 0.5rem 1.5rem;">
+                        ${getTypeName(material.type)}
+                    </span>
+                    <div class="fullscreen-title">${material.title}</div>
+                    <div class="fullscreen-meta">
+                        <span><i class="fas fa-book"></i> <strong>Subject:</strong> ${material.subject}</span>
+                        <span><i class="fas fa-calendar"></i> <strong>Year:</strong> ${material.year}</span>
+                        ${material.trimester ? `<span><i class="fas fa-clock"></i> <strong>Trimester:</strong> ${material.trimester}</span>` : ''}
+                        ${material.difficulty ? `<span><i class="fas fa-signal"></i> <strong>Difficulty:</strong> ${material.difficulty}</span>` : ''}
+                        ${material.company ? `<span><i class="fas fa-building"></i> <strong>Company:</strong> ${material.company}</span>` : ''}
+                    </div>
+                </div>
+
+                <div class="fullscreen-body">
+                    <div class="fullscreen-section">
+                        <h3><i class="fas fa-info-circle"></i> Description</h3>
+                        <p style="white-space: pre-wrap;">${material.description}</p>
+                    </div>
+
+                    ${material.tags && material.tags.length > 0 ? `
+                        <div class="fullscreen-section">
+                            <h3><i class="fas fa-tags"></i> Tags</h3>
+                            <div class="material-tags">
+                                ${material.tags.map(tag => `<span class="tag" style="padding: 0.5rem 1rem; font-size: 1rem;">${tag}</span>`).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <div class="fullscreen-section">
+                        <h3><i class="fas fa-paperclip"></i> Attached Files (${material.files.length})</h3>
+                        <div style="background: #f9fafb; padding: 1.5rem; border-radius: 12px;">
+                            ${material.files.map((file, idx) => `
+                                <div class="file-item" style="margin-bottom: 1rem; padding: 1rem; font-size: 1.1rem;">
+                                    <i class="fas fa-file-pdf" style="font-size: 1.5rem;"></i>
+                                    <span style="flex: 1;"><strong>${idx + 1}.</strong> ${file.name}</span>
+                                    <span style="color: #6b7280;">(${(file.size / 1024).toFixed(2)} KB)</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="fullscreen-section">
+                        <button class="download-btn" onclick="downloadMaterial(${material.id})" style="font-size: 1.1rem; padding: 1rem;">
+                            <i class="fas fa-download"></i> Download All Files
+                        </button>
+                    </div>
+
+                    <div style="margin-top: 2rem; padding-top: 1rem; border-top: 2px solid var(--border); text-align: center; color: #6b7280;">
+                        <p><i class="fas fa-clock"></i> Posted on ${new Date(material.postedDate).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        })}</p>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeFullscreen() {
+            const modal = document.getElementById('fullscreenModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeFullscreen();
+            }
+        });
+
+        // Initialize on page load
+        loadMaterials();
+    </script>
+</body>
+</html>

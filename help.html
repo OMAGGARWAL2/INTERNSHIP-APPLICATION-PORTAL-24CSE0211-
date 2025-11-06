@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            --secondary-gradient: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            --info-gradient: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            --pink-gradient: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+            --dark-bg: #fef9f0;
+            --card-bg: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+            --accent-color: #10b981;
+            --hover-color: #059669;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary-gradient: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            --secondary-gradient: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+            --info-gradient: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+            --pink-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --dark-bg: #1e293b;
+            --card-bg: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --accent-color: #06b6d4;
+            --hover-color: #0891b2;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        [data-theme="dark"] header {
+            background: rgba(51, 65, 85, 0.95);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            -webkit-text-fill-color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .theme-toggle {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 0.7rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--primary-gradient);
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            margin-bottom: 2rem;
+        }
+
+        .search-help {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-help input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-primary);
+        }
+
+        .search-help button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-color);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Quick Help Section */
+        .quick-help {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .help-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .help-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.2);
+        }
+
+        .help-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        .help-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .help-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .help-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .help-link:hover {
+            color: var(--hover-color);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            margin-bottom: 4rem;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .faq-question.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-color);
+        }
+
+        .faq-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-answer.active {
+            max-height: 200px;
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .faq-answer p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .contact-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .contact-section p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .contact-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-option {
+            padding: 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .contact-option:hover {
+            border-color: var(--accent-color);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .contact-option i {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .contact-option h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-option p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 1.5rem 2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 350px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .notification.info {
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-message {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .notification-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .help-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <style>
+        /* Three-color professional theme: Cream, Blue, Sea Blue */
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+
+            --dark-bg: var(--cream);
+            --card-bg: #ffffff;
+            --text-primary: var(--blue);
+            --text-secondary: rgba(30, 58, 138, 0.8);
+            --accent-color: var(--sea-blue);
+            --hover-color: var(--blue);
+            --border-color: rgba(30, 58, 138, 0.15);
+            --primary-gradient: linear-gradient(135deg, var(--blue), var(--sea-blue));
+            --secondary-gradient: linear-gradient(135deg, var(--sea-blue), var(--blue));
+        }
+
+        body { background: var(--dark-bg) !important; color: var(--text-primary) !important; }
+        header { background: rgba(246, 241, 231, 0.95) !important; }
+        .logo { color: var(--text-primary) !important; -webkit-text-fill-color: var(--text-primary) !important; background: none !important; }
+        .hero { background: var(--primary-gradient) !important; color: #ffffff !important; }
+        .section-title { color: var(--text-primary) !important; background: none !important; -webkit-text-fill-color: var(--text-primary) !important; }
+        .help-card, .faq-item, .contact-section { background: #ffffff !important; border-color: var(--border-color) !important; }
+        .help-icon { background: var(--primary-gradient) !important; }
+        .contact-section h2 { color: var(--text-primary) !important; background: none !important; -webkit-text-fill-color: var(--text-primary) !important; }
+        .contact-option:hover { border-color: var(--accent-color) !important; background: rgba(14,165,233,0.08) !important; }
+        .notification { background: #ffffff !important; border-color: var(--border-color) !important; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo">
+                <i class="fas fa-rocket"></i>
+                <span>InternHub</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="find-internships.html">Find Internships</a>
+                <a href="about.html">About</a>
+                <a href="help.html" class="active">Help</a>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-sun"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>How Can We Help You?</h1>
+            <p>Find answers to your questions and get the support you need</p>
+            <div class="search-help">
+                <input type="text" placeholder="Search for help topics..." id="helpSearch">
+                <button onclick="searchHelp()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Quick Help Section -->
+        <section class="quick-help">
+            <h2 class="section-title">Quick Help</h2>
+            <div class="help-grid">
+                <div class="help-card" onclick="scrollToFAQ('getting-started')">
+                    <div class="help-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                    <h3>Getting Started</h3>
+                    <p>Learn how to create your profile and start applying for internships</p>
+                    <a href="#" class="help-link">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="help-card" onclick="scrollToFAQ('applications')">
+                    <div class="help-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Application Process</h3>
+                    <p>Understand how to apply for internships and track your applications</p>
+                    <a href="#" class="help-link">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="help-card" onclick="scrollToFAQ('profile')">
+                    <div class="help-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h3>Profile Management</h3>
+                    <p>Tips on creating an attractive profile that stands out to employers</p>
+                    <a href="#" class="help-link">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="help-card" onclick="scrollToFAQ('technical')">
+                    <div class="help-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <h3>Technical Support</h3>
+                    <p>Get help with technical issues and troubleshooting</p>
+                    <a href="#" class="help-link">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="help-card" onclick="scrollToFAQ('companies')">
+                    <div class="help-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>For Companies</h3>
+                    <p>Information for companies looking to post internship opportunities</p>
+                    <a href="#" class="help-link">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="help-card" onclick="scrollToFAQ('safety')">
+                    <div class="help-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Safety & Security</h3>
+                    <p>Learn about our safety measures and how to stay secure</p>
+                    <a href="#" class="help-link">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-container">
+                <div class="faq-item" data-category="getting-started">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>How do I create an account on InternHub?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Creating an account is simple! Click on the "Sign Up" button, fill in your details including your name, email, university information, and upload a profile photo. Once you verify your email, you'll be ready to start exploring internships.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="applications">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>How do I apply for an internship?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Browse through our internship listings, click on any position that interests you, and hit the "Apply Now" button. Make sure your profile is complete as employers will review your information when considering your application.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="applications">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Can I track my application status?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! Once logged in, you can view all your applications and their current status in your dashboard. You'll also receive notifications when there are updates to your applications.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="profile">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>What should I include in my profile?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Include a professional photo, your educational background, relevant skills, any previous experience, and a brief bio. The more complete your profile, the better your chances of getting noticed by employers.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="technical">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>I'm having trouble uploading my profile photo. What should I do?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Make sure your photo is in JPG, PNG, or GIF format and is less than 5MB in size. If you're still having issues, try using a different browser or clearing your browser cache.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="companies">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>How can my company post internship opportunities?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Companies can post internships by clicking "Post Internship" in the menu. You'll need to provide details about the position, requirements, and company information. All postings are reviewed before going live.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="safety">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>How do you verify companies on the platform?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We thoroughly verify all companies before they can post internships. This includes checking business registration, website verification, and reviewing company credentials to ensure legitimacy.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="getting-started">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Is InternHub free to use for students?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! InternHub is completely free for students. You can create a profile, browse internships, and apply to as many positions as you'd like without any charges.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section">
+            <h2>Still Need Help?</h2>
+            <p>Can't find what you're looking for? Our support team is here to help!</p>
+            
+            <div class="contact-options">
+                <a href="mailto:support@internhub.com" class="contact-option">
+                    <i class="fas fa-envelope"></i>
+                    <h4>Email Support</h4>
+                    <p>support@internhub.com</p>
+                </a>
+                
+                <a href="chat.html" class="contact-option">
+                    <i class="fas fa-comments"></i>
+                    <h4>Live Chat</h4>
+                    <p>Available 24/7</p>
+                </a>
+                
+                <a href="tel:+1234567890" class="contact-option">
+                    <i class="fas fa-phone"></i>
+                    <h4>Phone Support</h4>
+                    <p>+1 (234) 567-8900</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+
+    <script>
+        // FAQ Toggle
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const icon = element.querySelector('.faq-icon');
+            
+            // Close all other FAQs
+            document.querySelectorAll('.faq-question').forEach(q => {
+                if (q !== element) {
+                    q.classList.remove('active');
+                    q.nextElementSibling.classList.remove('active');
+                    q.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+                }
+            });
+            
+            // Toggle current FAQ
+            element.classList.toggle('active');
+            answer.classList.toggle('active');
+        }
+
+        // Scroll to FAQ category
+        function scrollToFAQ(category) {
+            const faqItem = document.querySelector(`[data-category="${category}"]`);
+            if (faqItem) {
+                faqItem.scrollIntoView({ behavior: 'smooth' });
+                // Auto-open the first FAQ in that category
+                setTimeout(() => {
+                    const question = faqItem.querySelector('.faq-question');
+                    if (!question.classList.contains('active')) {
+                        toggleFAQ(question);
+                    }
+                }, 500);
+            }
+        }
+
+        // Search help
+        function searchHelp() {
+            const query = document.getElementById('helpSearch').value.toLowerCase();
+            if (query.trim() === '') {
+                showNotification('info', 'Search Help', 'Please enter a search term');
+                return;
+            }
+            
+            const faqItems = document.querySelectorAll('.faq-item');
+            let found = false;
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer p').textContent.toLowerCase();
+                
+                if (question.includes(query) || answer.includes(query)) {
+                    item.style.display = 'block';
+                    if (!found) {
+                        item.scrollIntoView({ behavior: 'smooth' });
+                        setTimeout(() => {
+                            const questionEl = item.querySelector('.faq-question');
+                            if (!questionEl.classList.contains('active')) {
+                                toggleFAQ(questionEl);
+                            }
+                        }, 500);
+                        found = true;
+                    }
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            if (!found) {
+                showNotification('info', 'No Results', 'No help topics found for your search. Try different keywords.');
+                // Reset display
+                faqItems.forEach(item => {
+                    item.style.display = 'block';
+                });
+            }
+        }
+
+        // Search on Enter key
+        document.getElementById('helpSearch').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchHelp();
+            }
+        });
+
+        // Notification system
+        function showNotification(type, title, message) {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const icons = {
+                success: '<i class="fas fa-check-circle" style="color: #10b981;"></i>',
+                error: '<i class="fas fa-exclamation-circle" style="color: #ef4444;"></i>',
+                info: '<i class="fas fa-info-circle" style="color: var(--accent-color);"></i>'
+            };
+            
+            notification.innerHTML = `
+                <div class="notification-icon">${icons[type]}</div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+                <button class="notification-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const icon = document.querySelector('.theme-toggle i');
+            icon.className = newTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        const themeIcon = document.querySelector('.theme-toggle i');
+        themeIcon.className = savedTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder - InternHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+        }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--cream);
+            color: var(--blue);
+        }
+        header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-bottom: 3px solid var(--sea-blue);
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .editor {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        .preview {
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            max-height: 842px; /* A4 height */
+            overflow-y: auto;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--blue);
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid rgba(30,58,138,0.15);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--sea-blue);
+        }
+        .btn {
+            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, var(--blue), var(--sea-blue));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: transform 0.3s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .resume-score {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .score-number {
+            font-size: 3rem;
+            font-weight: 800;
+        }
+        .preview h1 {
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+        .preview h2 {
+            color: var(--sea-blue);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.3rem;
+            border-bottom: 2px solid var(--sea-blue);
+            padding-bottom: 0.5rem;
+        }
+        .preview p {
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+        .contact-info {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+        .skill-tag {
+            display: inline-block;
+            background: rgba(14,165,233,0.15);
+            color: var(--sea-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto;">
+            <h1 style="color: var(--blue); margin: 0;"><i class="fas fa-file-alt"></i> Resume Builder</h1>
+            <a href="index.html" style="color: var(--sea-blue); text-decoration: none; font-weight: 600;">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="editor">
+            <div class="resume-score">
+                <div class="score-number" id="resumeScore">0</div>
+                <div>Resume Score</div>
+                <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.9;">Complete all sections to reach 100</div>
+            </div>
+
+            <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-edit"></i> Edit Your Resume</h3>
+
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" id="name" placeholder="John Doe" oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" id="email" placeholder="john@example.com" oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+                <label>Phone *</label>
+                <input type="tel" id="phone" placeholder="+91 9876543210" oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+                <label>LinkedIn</label>
+                <input type="text" id="linkedin" placeholder="linkedin.com/in/johndoe" oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+                <label>Summary *</label>
+                <textarea id="summary" rows="4" placeholder="Brief professional summary..." oninput="updatePreview()"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Education *</label>
+                <textarea id="education" rows="3" placeholder="B.Tech in Computer Science\nXYZ University, 2020-2024" oninput="updatePreview()"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Experience</label>
+                <textarea id="experience" rows="4" placeholder="Software Developer Intern\nABC Company, Jun 2023 - Aug 2023\n- Built features using React..." oninput="updatePreview()"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Skills * (comma separated)</label>
+                <input type="text" id="skills" placeholder="JavaScript, React, Python, SQL" oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+                <label>Projects</label>
+                <textarea id="projects" rows="4" placeholder="E-commerce Website\n- Developed using MERN stack..." oninput="updatePreview()"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Certifications</label>
+                <textarea id="certifications" rows="2" placeholder="AWS Certified Developer\nGoogle Cloud Associate" oninput="updatePreview()"></textarea>
+            </div>
+
+            <button class="btn" onclick="downloadResume()">
+                <i class="fas fa-download"></i> Download PDF
+            </button>
+        </div>
+
+        <div class="preview" id="resumePreview">
+            <h1 id="prev-name">Your Name</h1>
+            <div class="contact-info" id="prev-contact">
+                <i class="fas fa-envelope"></i> your@email.com &nbsp; | &nbsp;
+                <i class="fas fa-phone"></i> +91 1234567890
+            </div>
+
+            <h2>Summary</h2>
+            <p id="prev-summary">Your professional summary will appear here...</p>
+
+            <h2>Education</h2>
+            <p id="prev-education">Your education details...</p>
+
+            <h2>Experience</h2>
+            <p id="prev-experience">Your work experience...</p>
+
+            <h2>Skills</h2>
+            <div id="prev-skills"></div>
+
+            <h2>Projects</h2>
+            <p id="prev-projects">Your projects...</p>
+
+            <h2>Certifications</h2>
+            <p id="prev-certifications">Your certifications...</p>
+        </div>
+    </div>
+
+    <script>
+        function updatePreview() {
+            // Update preview
+            document.getElementById('prev-name').textContent = document.getElementById('name').value || 'Your Name';
+            
+            const email = document.getElementById('email').value || 'your@email.com';
+            const phone = document.getElementById('phone').value || '+91 1234567890';
+            const linkedin = document.getElementById('linkedin').value;
+            document.getElementById('prev-contact').innerHTML = `
+                <i class="fas fa-envelope"></i> ${email} &nbsp; | &nbsp;
+                <i class="fas fa-phone"></i> ${phone}
+                ${linkedin ? `&nbsp; | &nbsp; <i class="fab fa-linkedin"></i> ${linkedin}` : ''}
+            `;
+            
+            document.getElementById('prev-summary').textContent = document.getElementById('summary').value || 'Your professional summary...';
+            document.getElementById('prev-education').innerHTML = (document.getElementById('education').value || 'Your education...').replace(/\n/g, '<br>');
+            document.getElementById('prev-experience').innerHTML = (document.getElementById('experience').value || 'Your experience...').replace(/\n/g, '<br>');
+            document.getElementById('prev-projects').innerHTML = (document.getElementById('projects').value || 'Your projects...').replace(/\n/g, '<br>');
+            document.getElementById('prev-certifications').innerHTML = (document.getElementById('certifications').value || 'Your certifications...').replace(/\n/g, '<br>');
+            
+            // Skills
+            const skills = document.getElementById('skills').value.split(',').map(s => s.trim()).filter(s => s);
+            document.getElementById('prev-skills').innerHTML = skills.map(s => `<span class="skill-tag">${s}</span>`).join('');
+            
+            // Calculate score
+            calculateScore();
+        }
+
+        function calculateScore() {
+            let score = 0;
+            const fields = {
+                name: 15,
+                email: 15,
+                phone: 10,
+                summary: 20,
+                education: 15,
+                skills: 15,
+                experience: 10
+            };
+            
+            for (let field in fields) {
+                if (document.getElementById(field).value.trim()) {
+                    score += fields[field];
+                }
+            }
+            
+            document.getElementById('resumeScore').textContent = score;
+        }
+
+        function downloadResume() {
+            alert('In production, this would generate a PDF using jsPDF library.\n\nFor now, use Print (Ctrl+P) to save as PDF!');
+            window.print();
+        }
+
+        // Load saved data
+        window.addEventListener('load', () => {
+            const profile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            if (profile.name) document.getElementById('name').value = profile.name;
+            if (profile.email) document.getElementById('email').value = profile.email;
+            if (profile.phone) document.getElementById('phone').value = profile.phone;
+            if (profile.bio) document.getElementById('summary').value = profile.bio;
+            if (profile.skills) document.getElementById('skills').value = profile.skills.join(', ');
+            updatePreview();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Test - Teacher Dashboard - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text',Segoe UI,Roboto,Helvetica,Arial,sans-serif:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+            --bg: var(--cream);
+            --card-bg: #ffffff;
+            --text-primary: var(--blue);
+            --text-secondary: rgba(30, 58, 138, 0.8);
+            --accent: var(--sea-blue);
+            --border: rgba(30, 58, 138, 0.15);
+            --success: var(--sea-blue);
+            --error: #ff3b30;
+            --warning: #ffb020;
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', Segoe UI, Roboto, sans-serif; 
+            background: var(--bg); 
+            color: var(--text-primary); 
+            overflow-y: auto;
+            min-height: 100vh;
+        }
+        .test-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 280px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        .test-header {
+            margin-bottom: 2rem;
+        }
+        .test-header h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--blue), var(--sea-blue));
+            color: white;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .questions-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .question-nav-item {
+            padding: 0.8rem;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 600;
+        }
+        .question-nav-item:hover { border-color: var(--accent); background: rgba(14,165,233,0.12); }
+        .question-nav-item.active {
+            background: linear-gradient(135deg, var(--blue), var(--sea-blue));
+            color: white;
+            border-color: transparent;
+        }
+        .question-nav-item.answered {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .top-bar {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .test-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+        .question-section {
+            margin-bottom: 2rem;
+        }
+        .question-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .mcq-option {
+            background: var(--card-bg);
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .mcq-option:hover { border-color: var(--accent); background: rgba(14,165,233,0.08); }
+        .mcq-option.selected { border-color: var(--accent); background: rgba(14,165,233,0.12); }
+        .coding-section {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .code-header {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .code-editor {
+            font-family: 'Monaco', 'Menlo', monospace;
+            width: 100%;
+            height: 400px;
+            padding: 1rem;
+            border: none;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .code-editor:focus {
+            outline: none;
+        }
+        .btn-submit-test {
+            padding: 0.8rem 2rem;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .toolbar { display:flex; gap:.5rem; align-items:center; }
+        .rich-text-editor {
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: white;
+        }
+        .editor-toolbar {
+            display: flex;
+            gap: 0.25rem;
+            padding: 0.5rem;
+            background: #f9fafb;
+            border-bottom: 1px solid var(--border);
+            border-radius: 8px 8px 0 0;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .toolbar-btn {
+            padding: 0.4rem 0.6rem;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        .toolbar-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        .toolbar-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        .toolbar-divider {
+            width: 1px;
+            height: 20px;
+            background: var(--border);
+            margin: 0 0.25rem;
+        }
+        .editor-content {
+            min-height: 150px;
+            padding: 0.8rem;
+            border-radius: 0 0 8px 8px;
+            outline: none;
+            font-family: inherit;
+            line-height: 1.6;
+        }
+        .editor-content[data-placeholder]:not(:focus):empty::before {
+            content: attr(data-placeholder);
+            color: #999;
+            pointer-events: none;
+        }
+        .editor-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+        }
+        .editor-content ul, .editor-content ol {
+            margin: 0.5rem 0;
+            padding-left: 2rem;
+        }
+        .image-upload-input {
+            display: none;
+        }
+        .warning-badge {
+            background: var(--warning);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .section-badge {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+        .section-controls {
+            background: rgba(139, 92, 246, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 2px solid rgba(139, 92, 246, 0.3);
+        }
+        .section-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            border: 2px solid var(--border);
+        }
+        .otp-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        .otp-modal.active {
+            display: flex;
+        }
+        .otp-modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .code-settings {
+            background: rgba(14, 165, 233, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+        .lock-icon {
+            color: #ef4444;
+            margin-left: 0.5rem;
+        }
+        .copy-paste-disabled {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container" id="testContainer">
+        <div class="sidebar">
+            <div class="test-header">
+                <h2 id="testNameHeader">Test Builder</h2>
+                <div style="background: linear-gradient(135deg, var(--blue), var(--sea-blue)); color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <div style="font-size: 0.9rem; opacity: 0.9;">Create and Save Tests</div>
+                </div>
+                <div style="background: rgba(14, 165, 233, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Total Questions</div>
+                    <div id="totalQuestionsCount" style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">0</div>
+                </div>
+            </div>
+            <div style="margin-top: 1.5rem;">
+                <h4 style="margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);">Quick Actions</h4>
+                <button onclick="addMCQQuestion()" style="width: 100%; padding: 0.6rem; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; margin-bottom: 0.5rem; font-weight: 600;">
+                    <i class="fas fa-plus-circle"></i> Add MCQ
+                </button>
+                <button onclick="addCodingQuestion()" style="width: 100%; padding: 0.6rem; background: #8b5cf6; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-code"></i> Add Coding
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="top-bar" style="background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 style="margin: 0; color: var(--text-primary);">Test Builder - Create Your Assessment</h3>
+                </div>
+                <div>
+                    <a href="hirer.html" style="padding: 0.5rem 1rem; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <div class="test-content" id="testContent" style="padding: 2rem;">
+                <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--text-primary);">
+                        <i class="fas fa-cog"></i> Test Settings
+                    </h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1rem;">
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Test Name</label>
+                            <input type="text" id="testName" placeholder="Enter test name" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border); border-radius: 8px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Time Limit (minutes)</label>
+                            <input type="number" id="testTimeLimit" min="5" max="180" value="60" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border); border-radius: 8px;">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1rem;">
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Minimum Score Required (%)</label>
+                            <input type="number" id="testMinScore" min="0" max="100" value="70" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border); border-radius: 8px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Result Disclosure</label>
+                            <select id="testResultDisclosure" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border); border-radius: 8px;">
+                                <option value="manual">Manual Review</option>
+                                <option value="immediate">Immediate Results</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="background: rgba(14, 165, 233, 0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-weight: 600;">
+                            <input type="checkbox" id="testNegativeMarking" style="width: auto;">
+                            Enable Negative Marking
+                        </label>
+                        <div id="testNegativeMarkSection" style="display: none; margin-top: 0.5rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Negative Mark Percentage</label>
+                            <input type="number" id="testNegativeMarkPercentage" min="0" max="100" value="25" style="width: 200px; padding: 0.5rem; border: 2px solid var(--border); border-radius: 6px;">
+                        </div>
+                    </div>
+                    <div class="section-controls">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h4 style="margin: 0; color: var(--text-primary);">
+                                <i class="fas fa-layer-group"></i> Test Sections
+                            </h4>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="enableSections" style="width: auto;">
+                                <span style="font-weight: 600;">Enable Section-Based Test</span>
+                            </label>
+                        </div>
+                        <div id="sectionsContainer" style="display: none;">
+                            <div id="sectionsList">
+                                <div class="section-item" data-section="A">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                                        <h5 style="margin: 0;">
+                                            <span class="section-badge">Section A</span>
+                                        </h5>
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" class="section-otp-required" checked>
+                                                <span>Require OTP for Submission</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                        <div>
+                                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Section Name</label>
+                                            <input type="text" class="section-name" value="Section A" placeholder="Section name" style="width: 100%; padding: 0.6rem; border: 2px solid var(--border); border-radius: 6px;">
+                                        </div>
+                                        <div>
+                                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Default Marks per Question</label>
+                                            <input type="number" class="section-marks" value="1" min="0.5" step="0.5" style="width: 100%; padding: 0.6rem; border: 2px solid var(--border); border-radius: 6px;">
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border);">
+                                        <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                                            <i class="fas fa-info-circle"></i> Students must submit this section before accessing the next section.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button onclick="addNewSection()" style="width: 100%; padding: 0.6rem; background: #8b5cf6; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 0.5rem;">
+                                <i class="fas fa-plus"></i> Add Another Section
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="questionsBuilderPanel" style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="margin: 0; color: var(--text-primary);">
+                            <i class="fas fa-question-circle"></i> Questions
+                        </h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button onclick="addMCQQuestion()" style="padding: 0.6rem 1.2rem; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                                <i class="fas fa-plus"></i> Add MCQ
+                            </button>
+                            <button onclick="addCodingQuestion()" style="padding: 0.6rem 1.2rem; background: #8b5cf6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                                <i class="fas fa-code"></i> Add Coding
+                            </button>
+                        </div>
+                    </div>
+                    <div id="questionsList">
+                        <p style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                            <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; display: block;"></i>
+                            No questions added yet. Click "Add MCQ" or "Add Coding" to start building your test.
+                        </p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 1rem;">
+                    <button onclick="saveNewTest()" style="padding: 1rem 3rem; background: linear-gradient(135deg, var(--blue), var(--sea-blue)); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1rem;">
+                        <i class="fas fa-save"></i> Save Test
+                    </button>
+                    <button onclick="clearTestBuilder()" style="padding: 1rem 2rem; background: white; color: var(--text-primary); border: 2px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        <i class="fas fa-redo"></i> Clear All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let testQuestions = [];
+
+        // Initialize test builder
+        window.addEventListener('load', () => {
+            initializeTestBuilder();
+            setupEditorSync();
+        });
+
+        function initializeTestBuilder() {
+            // Set up negative marking toggle
+            const negativeMarkCheckbox = document.getElementById('testNegativeMarking');
+            const negativeMarkSection = document.getElementById('testNegativeMarkSection');
+            if (negativeMarkCheckbox && negativeMarkSection) {
+                negativeMarkCheckbox.addEventListener('change', function() {
+                    negativeMarkSection.style.display = this.checked ? 'block' : 'none';
+                });
+            }
+
+            // Reset test builder
+            testQuestions = [];
+            updateQuestionsList();
+        }
+
+        let questionCounter = 0;
+
+        function addMCQQuestion() {
+            questionCounter++;
+            const questionNum = questionCounter;
+            const mcqHTML = `
+                <div class="question-card" data-question-id="${questionNum}" style="background: #f9fafb; padding: 1.5rem; margin-bottom: 1rem; border-radius: 10px; border: 2px solid var(--border);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <h4 style="margin: 0; color: var(--text-primary);">Question ${questionNum} - MCQ</h4>
+                        <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <label style="font-size: 0.9rem; font-weight: 600;">Section:</label>
+                                <select class="question-section" style="padding: 0.4rem; border: 2px solid var(--border); border-radius: 6px; font-size: 0.9rem;">
+                                    <option value="">No Section</option>
+                                    <option value="A">Section A</option>
+                                    <option value="B">Section B</option>
+                                    <option value="C">Section C</option>
+                                    <option value="D">Section D</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <label style="font-size: 0.9rem; font-weight: 600;">Marks:</label>
+                                <input type="number" class="question-marks" min="0.5" step="0.5" value="1" style="width: 70px; padding: 0.4rem; border: 2px solid var(--border); border-radius: 6px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Question Text</label>
+                        <div class="rich-text-editor">
+                            <div class="editor-toolbar" id="toolbar-q${questionNum}">
+                                <button type="button" class="toolbar-btn" onclick="formatText('bold', 'q${questionNum}')" title="Bold">
+                                    <i class="fas fa-bold"></i>
+                                </button>
+                                <button type="button" class="toolbar-btn" onclick="formatText('italic', 'q${questionNum}')" title="Italic">
+                                    <i class="fas fa-italic"></i>
+                                </button>
+                                <button type="button" class="toolbar-btn" onclick="formatText('underline', 'q${questionNum}')" title="Underline">
+                                    <i class="fas fa-underline"></i>
+                                </button>
+                                <div class="toolbar-divider"></div>
+                                <button type="button" class="toolbar-btn" onclick="formatText('justifyLeft', 'q${questionNum}')" title="Align Left">
+                                    <i class="fas fa-align-left"></i>
+                                </button>
+                                <button type="button" class="toolbar-btn" onclick="formatText('justifyCenter', 'q${questionNum}')" title="Align Center">
+                                    <i class="fas fa-align-center"></i>
+                                </button>
+                                <button type="button" class="toolbar-btn" onclick="formatText('justifyRight', 'q${questionNum}')" title="Align Right">
+                                    <i class="fas fa-align-right"></i>
+                                </button>
+                                <div class="toolbar-divider"></div>
+                                <button type="button" class="toolbar-btn" onclick="formatText('insertUnorderedList', 'q${questionNum}')" title="Bullet List">
+                                    <i class="fas fa-list-ul"></i>
+                                </button>
+                                <button type="button" class="toolbar-btn" onclick="formatText('insertOrderedList', 'q${questionNum}')" title="Numbered List">
+                                    <i class="fas fa-list-ol"></i>
+                                </button>
+                                <div class="toolbar-divider"></div>
+                                <button type="button" class="toolbar-btn" onclick="document.getElementById('imageUpload-q${questionNum}').click()" title="Insert Image">
+                                    <i class="fas fa-image"></i>
+                                </button>
+                                <input type="file" id="imageUpload-q${questionNum}" class="image-upload-input" accept="image/*" onchange="insertImage(event, 'q${questionNum}')">
+                            </div>
+                            <div class="editor-content" contenteditable="true" id="editor-q${questionNum}" data-placeholder="Enter question here. Use toolbar for formatting."></div>
+                            <input type="hidden" class="question-text" id="hidden-q${questionNum}">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 0.5rem;">
+                        <label style="font-weight: 600;">Options:</label>
+                        ${['A', 'B', 'C', 'D'].map(opt => `
+                            <div style="margin-top: 0.5rem; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem; background: white;">
+                                <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.25rem;">
+                                    <strong style="min-width: 60px;">Option ${opt}:</strong>
+                                    <input type="radio" name="correct-${questionNum}" value="${opt}" class="correct-answer" id="correct-${questionNum}-${opt}">
+                                    <label for="correct-${questionNum}-${opt}" style="font-size: 0.9rem; cursor: pointer; margin: 0;">Mark as Correct</label>
+                                </div>
+                                <div class="rich-text-editor" style="margin-top: 0.5rem;">
+                                    <div class="editor-toolbar" style="padding: 0.3rem; gap: 0.2rem;">
+                                        <button type="button" class="toolbar-btn" onclick="formatText('bold', 'opt-${questionNum}-${opt}')" title="Bold" style="padding: 0.3rem 0.4rem;">
+                                            <i class="fas fa-bold" style="font-size: 0.8rem;"></i>
+                                        </button>
+                                        <button type="button" class="toolbar-btn" onclick="formatText('italic', 'opt-${questionNum}-${opt}')" title="Italic" style="padding: 0.3rem 0.4rem;">
+                                            <i class="fas fa-italic" style="font-size: 0.8rem;"></i>
+                                        </button>
+                                        <button type="button" class="toolbar-btn" onclick="document.getElementById('imageUpload-opt-${questionNum}-${opt}').click()" title="Image" style="padding: 0.3rem 0.4rem;">
+                                            <i class="fas fa-image" style="font-size: 0.8rem;"></i>
+                                        </button>
+                                        <input type="file" id="imageUpload-opt-${questionNum}-${opt}" class="image-upload-input" accept="image/*" onchange="insertImage(event, 'opt-${questionNum}-${opt}')">
+                                    </div>
+                                    <div class="editor-content" contenteditable="true" id="editor-opt-${questionNum}-${opt}" data-placeholder="Enter option ${opt} text here" style="min-height: 50px; padding: 0.5rem;"></div>
+                                    <input type="hidden" class="mcq-option" id="hidden-opt-${questionNum}-${opt}">
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="removeQuestion(this)" style="padding: 0.5rem 1rem; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 0.5rem;">
+                        <i class="fas fa-trash"></i> Remove Question
+                    </button>
+                </div>
+            `;
+            
+            const questionsList = document.getElementById('questionsList');
+            if (questionsList.innerHTML.includes('No questions added yet')) {
+                questionsList.innerHTML = '';
+            }
+            questionsList.insertAdjacentHTML('beforeend', mcqHTML);
+            updateQuestionsList();
+            updateSectionOptionsInQuestions();
+            
+            // Setup editor sync for new editors
+            const newEditor = document.getElementById(`editor-q${questionNum}`);
+            if (newEditor) {
+                newEditor.addEventListener('input', function() {
+                    const hidden = document.getElementById(`hidden-q${questionNum}`);
+                    if (hidden) hidden.value = this.innerHTML;
+                });
+            }
+            
+            // Setup option editors
+            ['A', 'B', 'C', 'D'].forEach(opt => {
+                const optEditor = document.getElementById(`editor-opt-${questionNum}-${opt}`);
+                if (optEditor) {
+                    optEditor.addEventListener('input', function() {
+                        const hidden = document.getElementById(`hidden-opt-${questionNum}-${opt}`);
+                        if (hidden) hidden.value = this.innerHTML;
+                    });
+                }
+            });
+        }
+
+        function addCodingQuestion() {
+            questionCounter++;
+            const questionNum = questionCounter;
+            const codingHTML = `
+                <div class="question-card" data-question-id="${questionNum}" style="background: #f9fafb; padding: 1.5rem; margin-bottom: 1rem; border-radius: 10px; border: 2px solid var(--border);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <h4 style="margin: 0; color: var(--text-primary);">Question ${questionNum} - Coding</h4>
+                        <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <label style="font-size: 0.9rem; font-weight: 600;">Section:</label>
+                                <select class="question-section" style="padding: 0.4rem; border: 2px solid var(--border); border-radius: 6px; font-size: 0.9rem;">
+                                    <option value="">No Section</option>
+                                    <option value="A">Section A</option>
+                                    <option value="B">Section B</option>
+                                    <option value="C">Section C</option>
+                                    <option value="D">Section D</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <label style="font-size: 0.9rem; font-weight: 600;">Language:</label>
+                                <select class="coding-language" style="padding: 0.4rem; border: 2px solid var(--border); border-radius: 6px; font-size: 0.9rem;" onchange="updateLanguageLabel(this, ${questionNum})">
+                                    <option value="c">C</option>
+                                    <option value="cpp">C++</option>
+                                    <option value="java">Java</option>
+                                    <option value="python3">Python 3</option>
+                                    <option value="python2">Python 2</option>
+                                    <option value="javascript">JavaScript</option>
+                                    <option value="csharp">C#</option>
+                                    <option value="php">PHP</option>
+                                    <option value="ruby">Ruby</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <label style="font-size: 0.9rem; font-weight: 600;">Marks:</label>
+                                <input type="number" class="question-marks" min="1" step="1" value="5" style="width: 70px; padding: 0.4rem; border: 2px solid var(--border); border-radius: 6px;">
+                                </div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Problem Statement</label>
+                        <div class="rich-text-editor">
+                            <div class="editor-toolbar" id="toolbar-code${questionNum}">
+                                <button type="button" class="toolbar-btn" onclick="formatText('bold', 'code${questionNum}')" title="Bold">
+                                    <i class="fas fa-bold"></i>
+                                </button>
+                                <button type="button" class="toolbar-btn" onclick="formatText('italic', 'code${questionNum}')" title="Italic">
+                                    <i class="fas fa-italic"></i>
+                                </button>
+                                <button type="button" class="toolbar-btn" onclick="formatText('underline', 'code${questionNum}')" title="Underline">
+                                    <i class="fas fa-underline"></i>
+                                </button>
+                                <div class="toolbar-divider"></div>
+                                <button type="button" class="toolbar-btn" onclick="formatText('justifyLeft', 'code${questionNum}')" title="Align Left">
+                                    <i class="fas fa-align-left"></i>
+                                </button>
+                                <button type="button" class="toolbar-btn" onclick="formatText('justifyCenter', 'code${questionNum}')" title="Align Center">
+                                    <i class="fas fa-align-center"></i>
+                                </button>
+                                <button type="button" class="toolbar-btn" onclick="formatText('justifyRight', 'code${questionNum}')" title="Align Right">
+                                    <i class="fas fa-align-right"></i>
+                                </button>
+                                <div class="toolbar-divider"></div>
+                                <button type="button" class="toolbar-btn" onclick="formatText('insertUnorderedList', 'code${questionNum}')" title="Bullet List">
+                                    <i class="fas fa-list-ul"></i>
+                                </button>
+                                <button type="button" class="toolbar-btn" onclick="formatText('insertOrderedList', 'code${questionNum}')" title="Numbered List">
+                                    <i class="fas fa-list-ol"></i>
+                                </button>
+                                <div class="toolbar-divider"></div>
+                                <button type="button" class="toolbar-btn" onclick="document.getElementById('imageUpload-code${questionNum}').click()" title="Insert Image">
+                                    <i class="fas fa-image"></i>
+                                </button>
+                                <input type="file" id="imageUpload-code${questionNum}" class="image-upload-input" accept="image/*" onchange="insertImage(event, 'code${questionNum}')">
+                            </div>
+                            <div class="editor-content" contenteditable="true" id="editor-code${questionNum}" data-placeholder="Describe the coding problem in detail. Use toolbar for formatting."></div>
+                            <input type="hidden" class="coding-problem" id="hidden-code${questionNum}">
+                        </div>
+                    </div>
+                    <div class="code-settings">
+                        <h5 style="margin: 0 0 0.75rem 0; color: var(--text-primary); font-size: 0.95rem;">
+                            <i class="fas fa-cog"></i> Code Editor Settings
+                        </h5>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0.75rem;">
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Case Sensitivity</label>
+                                <select class="code-case-sensitivity" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border); border-radius: 6px; font-size: 0.9rem;">
+                                    <option value="case-sensitive">Case Sensitive (Exact Match)</option>
+                                    <option value="case-insensitive">Case Insensitive</option>
+                                    <option value="lowercase">Convert to Lowercase</option>
+                                    <option value="uppercase">Convert to Uppercase</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.9rem; margin-top: 1.75rem;">
+                                    <input type="checkbox" class="code-allow-copy-paste" checked>
+                                    <span>Allow Copy-Paste in Code Editor</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); padding: 0.5rem; background: rgba(14, 165, 233, 0.1); border-radius: 6px;">
+                            <i class="fas fa-info-circle"></i> Case sensitivity affects how student code output is compared with expected output. Copy-paste control determines if students can use clipboard operations.
+                        </div>
+                    </div>
+                    <div style="background: rgba(14, 165, 233, 0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <h5 style="margin: 0; color: var(--accent);">
+                                <i class="fas fa-flask"></i> Sample Test Cases (Visible to students)
+                            </h5>
+                            <button type="button" onclick="addSampleTestCase(${questionNum})" style="padding: 0.4rem 0.8rem; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">
+                                <i class="fas fa-plus"></i> Add Test Case
+                            </button>
+                        </div>
+                        <div id="sample-test-cases-${questionNum}" class="test-cases-container">
+                            <div class="sample-test-case" style="background: white; padding: 1rem; border-radius: 6px; margin-bottom: 0.75rem; border: 1px solid var(--border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <strong style="font-size: 0.9rem;">Sample Test Case 1</strong>
+                                    <button type="button" onclick="removeSampleTestCase(this, ${questionNum})" style="padding: 0.25rem 0.5rem; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem;">
+                                        <i class="fas fa-trash"></i> Remove
+                                    </button>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                                    <div>
+                                        <label style="display: block; margin-bottom: 0.25rem; font-weight: 600; font-size: 0.85rem;">Input</label>
+                                        <textarea class="sample-test-input" rows="2" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border); border-radius: 6px; font-family: monospace; font-size: 0.85rem;" placeholder="Input"></textarea>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; margin-bottom: 0.25rem; font-weight: 600; font-size: 0.85rem;">Expected Output</label>
+                                        <textarea class="sample-test-output" rows="2" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border); border-radius: 6px; font-family: monospace; font-size: 0.85rem;" placeholder="Expected output"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background: rgba(255, 59, 48, 0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 2px dashed rgba(255, 59, 48, 0.3);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <h5 style="margin: 0; color: var(--error);">
+                                <i class="fas fa-eye-slash"></i> Hidden Test Cases (For evaluation)
+                            </h5>
+                            <button type="button" onclick="addHiddenTestCase(${questionNum})" style="padding: 0.4rem 0.8rem; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">
+                                <i class="fas fa-plus"></i> Add Hidden Test Case
+                            </button>
+                        </div>
+                        <div id="hidden-test-cases-${questionNum}" class="test-cases-container">
+                            <div class="hidden-test-case" style="background: white; padding: 1rem; border-radius: 6px; margin-bottom: 0.75rem; border: 1px solid rgba(255, 59, 48, 0.3);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                                    <strong style="font-size: 0.9rem;">Hidden Test Case 1</strong>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <label style="font-size: 0.85rem; font-weight: 600;">Marks:</label>
+                                        <input type="number" class="hidden-test-marks" min="0" step="0.5" value="1" style="width: 70px; padding: 0.3rem; border: 2px solid var(--border); border-radius: 4px; font-size: 0.85rem;">
+                                        <button type="button" onclick="removeHiddenTestCase(this, ${questionNum})" style="padding: 0.25rem 0.5rem; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem;">
+                                            <i class="fas fa-trash"></i> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                                    <div>
+                                        <label style="display: block; margin-bottom: 0.25rem; font-weight: 600; font-size: 0.85rem;">Input</label>
+                                        <textarea class="hidden-test-input" rows="3" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border); border-radius: 6px; font-family: monospace; font-size: 0.85rem;" placeholder="Hidden input"></textarea>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; margin-bottom: 0.25rem; font-weight: 600; font-size: 0.85rem;">Expected Output</label>
+                                        <textarea class="hidden-test-output" rows="3" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border); border-radius: 6px; font-family: monospace; font-size: 0.85rem;" placeholder="Expected output"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="removeQuestion(this)" style="padding: 0.5rem 1rem; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                        <i class="fas fa-trash"></i> Remove Question
+                    </button>
+                        </div>
+                    `;
+            
+            const questionsList = document.getElementById('questionsList');
+            if (questionsList.innerHTML.includes('No questions added yet')) {
+                questionsList.innerHTML = '';
+            }
+            questionsList.insertAdjacentHTML('beforeend', codingHTML);
+            updateQuestionsList();
+            updateSectionOptionsInQuestions();
+            
+            // Initialize test case counter for this question
+            testCaseCounters[questionNum] = { sample: 1, hidden: 1 };
+            
+            // Setup editor sync for new coding editor
+            const newEditor = document.getElementById(`editor-code${questionNum}`);
+            if (newEditor) {
+                newEditor.addEventListener('input', function() {
+                    const hidden = document.getElementById(`hidden-code${questionNum}`);
+                    if (hidden) hidden.value = this.innerHTML;
+                });
+            }
+        }
+
+        // Language template generators
+        const languageTemplates = {
+            'c': `#include <stdio.h>
+
+int main() {
+    // Your code here
+    return 0;
+}`,
+            'cpp': `#include <iostream>
+using namespace std;
+
+int main() {
+    // Your code here
+    return 0;
+}`,
+            'java': `import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        // Your code here
+        sc.close();
+    }
+}`,
+            'python3': `# Your code here
+`,
+            'python2': `# Your code here
+`,
+            'javascript': `// Your code here
+`,
+            'csharp': `using System;
+
+class Program {
+    static void Main(string[] args) {
+        // Your code here
+    }
+}`,
+            'php': `<?php
+// Your code here
+?>`,
+            'ruby': `# Your code here
+`
+        };
+
+        function updateLanguageLabel(select, questionNum) {
+            const langNames = {
+                'c': 'C',
+                'cpp': 'C++',
+                'java': 'Java',
+                'python3': 'Python 3',
+                'python2': 'Python 2',
+                'javascript': 'JavaScript',
+                'csharp': 'C#',
+                'php': 'PHP',
+                'ruby': 'Ruby'
+            };
+            const card = select.closest('.question-card');
+            const h4 = card.querySelector('h4');
+            if (h4) {
+                const questionNumText = h4.textContent.match(/Question \d+/)?.[0] || '';
+                h4.textContent = questionNumText ? `${questionNumText} - Coding (${langNames[select.value]})` : `Question ${questionNum} - Coding (${langNames[select.value]})`;
+            }
+        }
+
+        let testCaseCounters = {};
+
+        function addSampleTestCase(questionNum) {
+            if (!testCaseCounters[questionNum]) {
+                testCaseCounters[questionNum] = { sample: 1, hidden: 1 };
+            }
+            testCaseCounters[questionNum].sample++;
+            const caseNum = testCaseCounters[questionNum].sample;
+            
+            const container = document.getElementById(`sample-test-cases-${questionNum}`);
+            const newCase = document.createElement('div');
+            newCase.className = 'sample-test-case';
+            newCase.style.cssText = 'background: white; padding: 1rem; border-radius: 6px; margin-bottom: 0.75rem; border: 1px solid var(--border);';
+            newCase.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <strong style="font-size: 0.9rem;">Sample Test Case ${caseNum}</strong>
+                    <button type="button" onclick="removeSampleTestCase(this, ${questionNum})" style="padding: 0.25rem 0.5rem; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem;">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.25rem; font-weight: 600; font-size: 0.85rem;">Input</label>
+                        <textarea class="sample-test-input" rows="2" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border); border-radius: 6px; font-family: monospace; font-size: 0.85rem;" placeholder="Input"></textarea>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.25rem; font-weight: 600; font-size: 0.85rem;">Expected Output</label>
+                        <textarea class="sample-test-output" rows="2" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border); border-radius: 6px; font-family: monospace; font-size: 0.85rem;" placeholder="Expected output"></textarea>
+                    </div>
+                </div>
+            `;
+            container.appendChild(newCase);
+            updateTestCaseNumbers(questionNum, 'sample');
+        }
+
+        function removeSampleTestCase(btn, questionNum) {
+            const cases = document.querySelectorAll(`#sample-test-cases-${questionNum} .sample-test-case`);
+            if (cases.length <= 1) {
+                alert('You must have at least one sample test case!');
+                return;
+            }
+            btn.closest('.sample-test-case').remove();
+            updateTestCaseNumbers(questionNum, 'sample');
+        }
+
+        function addHiddenTestCase(questionNum) {
+            if (!testCaseCounters[questionNum]) {
+                testCaseCounters[questionNum] = { sample: 1, hidden: 1 };
+            }
+            testCaseCounters[questionNum].hidden++;
+            const caseNum = testCaseCounters[questionNum].hidden;
+            
+            const container = document.getElementById(`hidden-test-cases-${questionNum}`);
+            const newCase = document.createElement('div');
+            newCase.className = 'hidden-test-case';
+            newCase.style.cssText = 'background: white; padding: 1rem; border-radius: 6px; margin-bottom: 0.75rem; border: 1px solid rgba(255, 59, 48, 0.3);';
+            newCase.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <strong style="font-size: 0.9rem;">Hidden Test Case ${caseNum}</strong>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <label style="font-size: 0.85rem; font-weight: 600;">Marks:</label>
+                        <input type="number" class="hidden-test-marks" min="0" step="0.5" value="1" style="width: 70px; padding: 0.3rem; border: 2px solid var(--border); border-radius: 4px; font-size: 0.85rem;">
+                        <button type="button" onclick="removeHiddenTestCase(this, ${questionNum})" style="padding: 0.25rem 0.5rem; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem;">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.25rem; font-weight: 600; font-size: 0.85rem;">Input</label>
+                        <textarea class="hidden-test-input" rows="3" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border); border-radius: 6px; font-family: monospace; font-size: 0.85rem;" placeholder="Hidden input"></textarea>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.25rem; font-weight: 600; font-size: 0.85rem;">Expected Output</label>
+                        <textarea class="hidden-test-output" rows="3" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border); border-radius: 6px; font-family: monospace; font-size: 0.85rem;" placeholder="Expected output"></textarea>
+                    </div>
+                </div>
+            `;
+            container.appendChild(newCase);
+            updateTestCaseNumbers(questionNum, 'hidden');
+        }
+
+        function removeHiddenTestCase(btn, questionNum) {
+            const cases = document.querySelectorAll(`#hidden-test-cases-${questionNum} .hidden-test-case`);
+            if (cases.length <= 1) {
+                alert('You must have at least one hidden test case!');
+                return;
+            }
+            btn.closest('.hidden-test-case').remove();
+            updateTestCaseNumbers(questionNum, 'hidden');
+        }
+
+        function updateTestCaseNumbers(questionNum, type) {
+            const container = document.getElementById(`${type}-test-cases-${questionNum}`);
+            const cases = container.querySelectorAll(`.${type}-test-case`);
+            cases.forEach((caseEl, index) => {
+                const strong = caseEl.querySelector('strong');
+                if (strong) {
+                    const typeLabel = type === 'sample' ? 'Sample' : 'Hidden';
+                    strong.textContent = `${typeLabel} Test Case ${index + 1}`;
+                }
+            });
+        }
+
+        function removeQuestion(btn) {
+            if (confirm('Are you sure you want to remove this question?')) {
+                const card = btn.closest('.question-card');
+                const questionNum = parseInt(card.dataset.questionId || card.querySelector('h4')?.textContent.match(/\d+/)?.[0] || 0);
+                if (questionNum && testCaseCounters[questionNum]) {
+                    delete testCaseCounters[questionNum];
+                }
+                card.remove();
+                updateQuestionsList();
+            }
+        }
+
+        function updateQuestionsList() {
+            const questionsList = document.getElementById('questionsList');
+            const questionCards = questionsList.querySelectorAll('.question-card');
+            const totalCount = questionCards.length;
+            
+            // Update counter in sidebar
+            const totalCountEl = document.getElementById('totalQuestionsCount');
+            if (totalCountEl) {
+                totalCountEl.textContent = totalCount;
+            }
+
+            // Update question numbers
+            questionCards.forEach((card, index) => {
+                const h4 = card.querySelector('h4');
+                if (h4) {
+                    const questionType = h4.textContent.includes('MCQ') ? 'MCQ' : 'Coding';
+                    h4.textContent = `Question ${index + 1} - ${questionType}`;
+                }
+            });
+
+            if (totalCount === 0) {
+                questionsList.innerHTML = `
+                    <p style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; display: block;"></i>
+                        No questions added yet. Click "Add MCQ" or "Add Coding" to start building your test.
+                    </p>
+                `;
+            }
+        }
+
+        function clearTestBuilder() {
+            if (confirm('Are you sure you want to clear all questions? This cannot be undone.')) {
+                document.getElementById('questionsList').innerHTML = `
+                    <p style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; display: block;"></i>
+                        No questions added yet. Click "Add MCQ" or "Add Coding" to start building your test.
+                    </p>
+                `;
+                questionCounter = 0;
+                document.getElementById('testName').value = '';
+            }
+        }
+
+        function saveNewTest() {
+            // Collect all questions
+            const questions = [];
+            const questionCards = document.querySelectorAll('.question-card');
+            
+            let validationError = false;
+            
+            questionCards.forEach((card, index) => {
+                if (validationError) return;
+                
+                // Get editor content (rich text) or fallback to hidden input
+                const questionEditor = card.querySelector('[id^="editor-q"]');
+                const codingEditor = card.querySelector('[id^="editor-code"]');
+                const questionHidden = card.querySelector('[id^="hidden-q"]');
+                const codingHidden = card.querySelector('[id^="hidden-code"]');
+                
+                const questionText = questionEditor ? questionEditor.innerHTML : (questionHidden ? questionHidden.value : null);
+                const codingProblem = codingEditor ? codingEditor.innerHTML : (codingHidden ? codingHidden.value : null);
+                const marksInput = card.querySelector('.question-marks');
+                const marks = marksInput ? parseFloat(marksInput.value) : (questionText ? 1 : 5);
+                
+                if (questionText || questionEditor) {
+                    // MCQ Question validation
+                    const questionContent = questionEditor ? questionEditor.innerHTML.trim() : (questionText || '').trim();
+                    // Check if content is empty (handles empty strings, <br>, <br/>, whitespace-only)
+                    const isEmpty = !questionContent || 
+                                   questionContent === '' || 
+                                   questionContent === '<br>' || 
+                                   questionContent === '<br/>' || 
+                                   questionContent.replace(/<[^>]*>/g, '').trim() === '';
+                    if (isEmpty) {
+                        alert(`Question ${index + 1}: Please enter the question text`);
+                        validationError = true;
+                        return;
+                    }
+                    
+                    // Get options from rich text editors
+                    const optionInputs = card.querySelectorAll('[id^="hidden-opt-"]');
+                    const options = [];
+                    const optionsHTML = [];
+                    optionInputs.forEach(input => {
+                        const editorId = input.id.replace('hidden-', 'editor-');
+                        const editor = document.getElementById(editorId);
+                        const content = editor ? editor.innerHTML.trim() : input.value.trim();
+                        // Check if content has actual text (not just HTML tags or <br>)
+                        const hasContent = content && 
+                                          content !== '<br>' && 
+                                          content !== '<br/>' && 
+                                          content.replace(/<[^>]*>/g, '').trim() !== '';
+                        if (hasContent) {
+                            optionsHTML.push(content);
+                            options.push(content.replace(/<[^>]*>/g, '').trim());
+                        }
+                    });
+                    
+                    if (options.length < 2) {
+                        alert(`Question ${index + 1}: Please provide at least 2 options with content`);
+                        validationError = true;
+                        return;
+                    }
+                    const correctAnswer = card.querySelector('.correct-answer:checked')?.value;
+                    if (!correctAnswer) {
+                        alert(`Question ${index + 1}: Please select the correct answer`);
+                        validationError = true;
+                        return;
+                    }
+                    const correctIndex = ['A', 'B', 'C', 'D'].indexOf(correctAnswer);
+                    
+                    // Get section assignment
+                    const sectionSelect = card.querySelector('.question-section');
+                    const section = sectionSelect ? sectionSelect.value : '';
+                    
+                    questions.push({
+                        id: Date.now() + Math.random() + index,
+                        type: 'mcq',
+                        question: questionContent.replace(/<[^>]*>/g, '').trim(), // Plain text version
+                        questionHTML: questionContent, // Store HTML version
+                        options: options, // Plain text versions
+                        optionsHTML: optionsHTML, // Store HTML versions of options
+                        correct: correctIndex >= 0 ? correctIndex : 0,
+                        marks: marks,
+                        section: section || null // Section assignment
+                    });
+                } else if (codingProblem || codingEditor) {
+                    // Coding Question validation
+                    const problemContent = codingEditor ? codingEditor.innerHTML.trim() : (codingProblem || '').trim();
+                    // Check if content is empty (handles empty strings, <br>, <br/>, whitespace-only)
+                    const isEmpty = !problemContent || 
+                                   problemContent === '' || 
+                                   problemContent === '<br>' || 
+                                   problemContent === '<br/>' || 
+                                   problemContent.replace(/<[^>]*>/g, '').trim() === '';
+                    if (isEmpty) {
+                        alert(`Question ${index + 1}: Please enter the problem statement`);
+                        validationError = true;
+                        return;
+                    }
+                    
+                    // Get selected language
+                    const languageSelect = card.querySelector('.coding-language');
+                    const language = languageSelect ? languageSelect.value : 'c';
+                    
+                    // Generate template based on language
+                    const baseTemplate = languageTemplates[language] || languageTemplates['c'];
+                    // Add problem description as comment if possible
+                    let template = baseTemplate;
+                    const plainProblem = problemContent.replace(/<[^>]*>/g, '').trim();
+                    if (plainProblem && template.includes('// Your code here')) {
+                        template = template.replace('// Your code here', `// ${plainProblem}\n    // Your code here`);
+                    } else if (plainProblem && template.includes('# Your code here')) {
+                        template = template.replace('# Your code here', `# ${plainProblem}\n# Your code here`);
+                    }
+                    
+                    // Collect sample test cases
+                    const sampleTestCases = [];
+                    const sampleCases = card.querySelectorAll('.sample-test-case');
+                    sampleCases.forEach((caseEl, idx) => {
+                        const input = caseEl.querySelector('.sample-test-input')?.value || '';
+                        const output = caseEl.querySelector('.sample-test-output')?.value || '';
+                        if (input.trim() || output.trim()) {
+                            sampleTestCases.push({
+                                input: input,
+                                output: output,
+                                number: idx + 1
+                            });
+                        }
+                    });
+                    
+                    // Collect hidden test cases with marks
+                    const hiddenTestCases = [];
+                    const hiddenCases = card.querySelectorAll('.hidden-test-case');
+                    hiddenCases.forEach((caseEl, idx) => {
+                        const input = caseEl.querySelector('.hidden-test-input')?.value || '';
+                        const output = caseEl.querySelector('.hidden-test-output')?.value || '';
+                        const caseMarks = parseFloat(caseEl.querySelector('.hidden-test-marks')?.value || 1);
+                        if (input.trim() || output.trim()) {
+                            hiddenTestCases.push({
+                                input: input,
+                                output: output,
+                                marks: caseMarks,
+                                number: idx + 1
+                            });
+                        }
+                    });
+                    
+                    // Validate test cases
+                    if (sampleTestCases.length === 0 && hiddenTestCases.length === 0) {
+                        alert(`Question ${index + 1}: Please add at least one test case (sample or hidden)`);
+                        validationError = true;
+                        return;
+                    }
+                    
+                    // Get section assignment
+                    const codingSectionSelect = card.querySelector('.question-section');
+                    const codingSection = codingSectionSelect ? codingSectionSelect.value : '';
+                    
+                    // Get code settings
+                    const caseSensitivitySelect = card.querySelector('.code-case-sensitivity');
+                    const caseSensitivity = caseSensitivitySelect ? caseSensitivitySelect.value : 'case-sensitive';
+                    const allowCopyPasteCheckbox = card.querySelector('.code-allow-copy-paste');
+                    const allowCopyPaste = allowCopyPasteCheckbox ? allowCopyPasteCheckbox.checked : true;
+                    
+                    questions.push({
+                        id: Date.now() + Math.random() + index,
+                        type: 'coding',
+                        question: problemContent.replace(/<[^>]*>/g, ''), // Plain text for compatibility
+                        questionHTML: problemContent, // Store HTML version
+                        language: language,
+                        template: template,
+                        marks: marks,
+                        section: codingSection || null, // Section assignment
+                        codeSettings: {
+                            caseSensitivity: caseSensitivity, // 'case-sensitive', 'case-insensitive', 'lowercase', 'uppercase'
+                            allowCopyPaste: allowCopyPaste // true/false
+                        },
+                        sampleTestCases: sampleTestCases,
+                        hiddenTestCases: hiddenTestCases
+                        // Keep backward compatibility
+                        , testCase1Input: sampleTestCases[0]?.input || '',
+                        testCase1Output: sampleTestCases[0]?.output || '',
+                        testCase2Input: sampleTestCases[1]?.input || '',
+                        testCase2Output: sampleTestCases[1]?.output || '',
+                        hiddenTestInput: hiddenTestCases[0]?.input || '',
+                        hiddenTestOutput: hiddenTestCases[0]?.output || ''
+                    });
+                }
+            });
+            
+            if (validationError) {
+                return;
+            }
+            
+            if (questions.length === 0) {
+                alert('Please add at least one question before saving!');
+                return;
+            }
+
+            const testName = document.getElementById('testName').value.trim();
+            if (!testName) {
+                alert('Please enter a test name!');
+                return;
+            }
+
+            // Get all settings
+            const timeLimitMinutes = parseInt(document.getElementById('testTimeLimit')?.value || 60);
+            const timeLimitSeconds = timeLimitMinutes * 60;
+            const minScore = parseInt(document.getElementById('testMinScore')?.value || 70);
+            const negativeMarking = document.getElementById('testNegativeMarking')?.checked || false;
+            const negativeMarkPercentage = negativeMarking ? parseInt(document.getElementById('testNegativeMarkPercentage')?.value || 25) : 0;
+            const resultDisclosure = document.getElementById('testResultDisclosure')?.value || 'manual';
+            
+            // Get sections data
+            const sections = getSectionsData();
+
+            // Save to localStorage
+            const savedTests = JSON.parse(localStorage.getItem('tests') || '[]');
+            const newTest = {
+                id: Date.now(),
+                name: testName,
+                timeLimitSeconds: timeLimitSeconds,
+                questions: questions,
+                minScore: minScore,
+                testType: questions.some(q => q.type === 'coding') ? (questions.some(q => q.type === 'mcq') ? 'both' : 'coding') : 'mcq',
+                negativeMarking: negativeMarking,
+                negativeMarkPercentage: negativeMarkPercentage,
+                resultDisclosure: resultDisclosure,
+                sections: sections, // Section configuration (null if sections disabled)
+                requireFinalSubmission: true, // Always require final submission
+                createdAt: new Date().toISOString(),
+                createdBy: 'Teacher'
+            };
+
+            savedTests.unshift(newTest);
+            localStorage.setItem('tests', JSON.stringify(savedTests));
+            
+            // Dispatch custom event to notify other pages/tabs that a test was saved
+            try {
+                window.dispatchEvent(new CustomEvent('testSaved', { detail: { test: newTest } }));
+                localStorage.setItem('testSaveTimestamp', Date.now().toString());
+            } catch (e) {
+                console.log('Could not dispatch testSaved event:', e);
+            }
+
+            let alertMsg = `Test "${testName}" saved successfully!
+
+Questions: ${questions.length}
+Time Limit: ${timeLimitMinutes} minutes
+Result Disclosure: ${resultDisclosure === 'immediate' ? 'Immediate' : 'Manual Review'}`;
+            if (sections && sections.length > 0) {
+                alertMsg += `\nSections: ${sections.length} (${sections.map(s => s.name).join(', ')})`;
+                alertMsg += `\nSection Lock: Enabled (Students must submit sections in order)`;
+            }
+            alertMsg += `\nFinal Submission: Required`;
+            alert(alertMsg);
+            
+            // Optionally clear or redirect
+            if (confirm('Test saved! Would you like to create another test?')) {
+                clearTestBuilder();
+                document.getElementById('testName').value = '';
+            } else {
+                window.location.href = 'hirer.html';
+            }
+        }
+
+        // Rich Text Editor Functions
+        function formatText(command, editorId) {
+            const editor = document.getElementById(`editor-${editorId}`);
+            if (!editor) return;
+            
+            editor.focus();
+            document.execCommand(command, false, null);
+            
+            // Update hidden input with HTML content
+            const hiddenInput = document.getElementById(`hidden-${editorId}`);
+            if (hiddenInput) {
+                hiddenInput.value = editor.innerHTML;
+            }
+            
+            // Update active button state
+            updateToolbarState(editorId, command);
+        }
+
+        function updateToolbarState(editorId, command) {
+            const toolbar = document.getElementById(`toolbar-${editorId}`);
+            if (!toolbar) return;
+            
+            const editor = document.getElementById(`editor-${editorId}`);
+            if (!editor) return;
+            
+            // Update button states based on current selection
+            toolbar.querySelectorAll('.toolbar-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+        }
+
+        function insertImage(event, editorId) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Check file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Image size must be less than 5MB');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const editor = document.getElementById(`editor-${editorId}`);
+                if (!editor) return;
+                
+                // Insert image into editor
+                editor.focus();
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '100%';
+                img.style.height = 'auto';
+                img.style.borderRadius = '4px';
+                img.style.margin = '0.5rem 0';
+                
+                // Insert at cursor position or append
+                const selection = window.getSelection();
+                if (selection.rangeCount > 0) {
+                    const range = selection.getRangeAt(0);
+                    range.insertNode(img);
+                    range.collapse(false);
+                } else {
+                    editor.appendChild(img);
+                }
+                
+                // Update hidden input
+                const hiddenInput = document.getElementById(`hidden-${editorId}`);
+                if (hiddenInput) {
+                    hiddenInput.value = editor.innerHTML;
+                }
+            };
+            reader.readAsDataURL(file);
+            
+            // Reset file input
+            event.target.value = '';
+        }
+
+        // Sync editor content to hidden inputs on change
+        function setupEditorSync() {
+            // Use event delegation for dynamically added editors
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('editor-content')) {
+                    const editorId = e.target.id.replace('editor-', '');
+                    const hiddenInput = document.getElementById(`hidden-${editorId}`);
+                    if (hiddenInput) {
+                        hiddenInput.value = e.target.innerHTML;
+                    }
+                }
+            });
+        }
+
+        // Editor sync is set up via setupEditorSync() which uses event delegation
+        // This will work for dynamically added editors
+
+        function getSavedTests(){ return JSON.parse(localStorage.getItem('tests')||'[]'); }
+        function saveTests(arr){ localStorage.setItem('tests', JSON.stringify(arr)); }
+
+        // Section Management Functions
+        document.addEventListener('DOMContentLoaded', function() {
+            const enableSectionsCheckbox = document.getElementById('enableSections');
+            const sectionsContainer = document.getElementById('sectionsContainer');
+            
+            if (enableSectionsCheckbox && sectionsContainer) {
+                enableSectionsCheckbox.addEventListener('change', function() {
+                    sectionsContainer.style.display = this.checked ? 'block' : 'none';
+                });
+            }
+        });
+
+        function addNewSection() {
+            const sectionsList = document.getElementById('sectionsList');
+            if (!sectionsList) return;
+            
+            const existingSections = sectionsList.querySelectorAll('.section-item');
+            const sectionLetters = Array.from(existingSections).map(item => item.dataset.section);
+            const nextLetter = String.fromCharCode(65 + existingSections.length); // A, B, C, D...
+            
+            const newSection = document.createElement('div');
+            newSection.className = 'section-item';
+            newSection.dataset.section = nextLetter;
+            newSection.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <h5 style="margin: 0;">
+                        <span class="section-badge">Section ${nextLetter}</span>
+                    </h5>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                            <input type="checkbox" class="section-otp-required" checked>
+                            <span>Require OTP for Submission</span>
+                        </label>
+                        ${existingSections.length > 0 ? `<button onclick="removeSection(this)" style="padding: 0.3rem 0.6rem; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">
+                            <i class="fas fa-trash"></i>
+                        </button>` : ''}
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Section Name</label>
+                        <input type="text" class="section-name" value="Section ${nextLetter}" placeholder="Section name" style="width: 100%; padding: 0.6rem; border: 2px solid var(--border); border-radius: 6px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Default Marks per Question</label>
+                        <input type="number" class="section-marks" value="${existingSections.length > 0 ? 2 : 1}" min="0.5" step="0.5" style="width: 100%; padding: 0.6rem; border: 2px solid var(--border); border-radius: 6px;">
+                    </div>
+                </div>
+                <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border);">
+                    <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                        <i class="fas fa-info-circle"></i> Students must submit this section before accessing the next section.
+                    </div>
+                </div>
+            `;
+            sectionsList.appendChild(newSection);
+            
+            // Update section options in all question selects
+            updateSectionOptionsInQuestions();
+        }
+
+        function removeSection(btn) {
+            const sectionItem = btn.closest('.section-item');
+            if (!sectionItem) return;
+            
+            const sectionsList = document.getElementById('sectionsList');
+            const allSections = sectionsList.querySelectorAll('.section-item');
+            if (allSections.length <= 1) {
+                alert('You must have at least one section!');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to remove this section? Questions assigned to it will become unassigned.')) {
+                sectionItem.remove();
+                updateSectionOptionsInQuestions();
+            }
+        }
+
+        function updateSectionOptionsInQuestions() {
+            const sectionsList = document.getElementById('sectionsList');
+            if (!sectionsList) return;
+            
+            const sections = Array.from(sectionsList.querySelectorAll('.section-item')).map(item => ({
+                letter: item.dataset.section,
+                name: item.querySelector('.section-name')?.value || `Section ${item.dataset.section}`
+            }));
+            
+            // Update all question section selects
+            document.querySelectorAll('.question-section').forEach(select => {
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">No Section</option>';
+                sections.forEach(section => {
+                    const option = document.createElement('option');
+                    option.value = section.letter;
+                    option.textContent = section.name;
+                    select.appendChild(option);
+                });
+                select.value = currentValue;
+            });
+            
+            // Add event listeners to section name inputs for real-time updates
+            sectionsList.querySelectorAll('.section-name').forEach(input => {
+                input.removeEventListener('input', updateSectionOptionsInQuestions);
+                input.addEventListener('input', updateSectionOptionsInQuestions);
+            });
+        }
+
+        // Generate OTP
+        function generateOTP() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        // Show OTP Modal (for students - would be used in dotest.html)
+        function showOTPModal(sectionName, callback) {
+            const otp = generateOTP();
+            const modal = document.createElement('div');
+            modal.className = 'otp-modal active';
+            modal.id = 'otpModal';
+            modal.innerHTML = `
+                <div class="otp-modal-content">
+                    <h3 style="margin-bottom: 1rem; color: var(--text-primary);">
+                        <i class="fas fa-lock"></i> Submit ${sectionName}
+                    </h3>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+                        To submit ${sectionName}, please enter the OTP displayed below:
+                    </p>
+                    <div style="background: linear-gradient(135deg, var(--blue), var(--sea-blue)); color: white; padding: 1.5rem; border-radius: 8px; text-align: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">Your OTP:</div>
+                        <div style="font-size: 2.5rem; font-weight: 700; letter-spacing: 0.5rem; font-family: monospace;">${otp}</div>
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Enter OTP:</label>
+                        <input type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border); border-radius: 6px; font-size: 1.2rem; text-align: center; letter-spacing: 0.3rem; font-family: monospace;">
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button onclick="verifyOTP('${otp}', ${callback ? 'callback' : 'null'})" style="flex: 1; padding: 0.8rem; background: var(--success); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                            <i class="fas fa-check"></i> Verify & Submit
+                        </button>
+                        <button onclick="closeOTPModal()" style="padding: 0.8rem 1.5rem; background: white; color: var(--text-primary); border: 2px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: 600;">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // Focus on OTP input
+            setTimeout(() => {
+                const input = document.getElementById('otpInput');
+                if (input) input.focus();
+            }, 100);
+            
+            // Store OTP and callback for verification
+            modal.dataset.otp = otp;
+            if (callback) modal.dataset.callback = callback.toString();
+        }
+
+        function verifyOTP(correctOTP, callback) {
+            const input = document.getElementById('otpInput');
+            if (!input) return;
+            
+            const enteredOTP = input.value.trim();
+            if (enteredOTP !== correctOTP) {
+                alert('Invalid OTP! Please try again.');
+                input.value = '';
+                input.focus();
+                return;
+            }
+            
+            // OTP verified
+            closeOTPModal();
+            if (callback && typeof window[callback] === 'function') {
+                window[callback]();
+            } else if (callback) {
+                eval(callback)();
+            }
+        }
+
+        function closeOTPModal() {
+            const modal = document.getElementById('otpModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Save section information with test
+        function getSectionsData() {
+            const enableSections = document.getElementById('enableSections')?.checked || false;
+            if (!enableSections) return null;
+            
+            const sectionsList = document.getElementById('sectionsList');
+            if (!sectionsList) return null;
+            
+            const sections = [];
+            sectionsList.querySelectorAll('.section-item').forEach((item, index) => {
+                const sectionData = {
+                    letter: item.dataset.section,
+                    name: item.querySelector('.section-name')?.value || `Section ${item.dataset.section}`,
+                    defaultMarks: parseFloat(item.querySelector('.section-marks')?.value || 1),
+                    requireOTP: item.querySelector('.section-otp-required')?.checked || false,
+                    order: index + 1
+                };
+                sections.push(sectionData);
+            });
+            
+            return sections;
+        }
+    </script>
+</body>
+</html>

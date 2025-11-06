@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23007AFF'/><path d='M30 35 L50 20 L70 35 L70 65 L50 80 L30 65 Z' fill='white'/><circle cx='50' cy='50' r='12' fill='%23007AFF'/></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+            --bg: var(--cream);
+            --card-bg: #ffffff;
+            --text-primary: var(--blue);
+            --text-secondary: rgba(30, 58, 138, 0.8);
+            --accent: var(--sea-blue);
+            --border: rgba(30, 58, 138, 0.15);
+            --success: var(--sea-blue);
+            --sidebar-width: 280px;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-primary); }
+        header { background: var(--bg); padding: 1rem 2rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--accent); text-decoration: none; }
+        nav a { margin-left: 1.5rem; color: var(--text-secondary); text-decoration: none; font-weight: 500; }
+        nav a:hover { color: var(--accent); }
+        .container { max-width: 1400px; margin: 0 auto; display: flex; }
+        .sidebar { width: var(--sidebar-width); background: white; border-right: 1px solid var(--border); position: sticky; top: 73px; height: calc(100vh - 73px); overflow-y: auto; }
+        .course-info { padding: 2rem; border-bottom: 1px solid var(--border); }
+        .course-info h2 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+        .course-info p { color: var(--text-secondary); font-size: 0.9rem; }
+        .progress-circle { width: 80px; height: 80px; margin: 1rem auto; }
+        .progress-text { text-align: center; font-weight: 600; color: var(--accent); }
+        .modules { padding: 1rem 0; }
+        .module-item { padding: 1rem 2rem; cursor: pointer; border-left: 3px solid transparent; transition: all 0.3s; }
+        .module-item:hover { background: rgba(14, 165, 233, 0.06); }
+        .module-item.active { background: rgba(14, 165, 233, 0.08); border-left-color: var(--accent); }
+        .module-item.completed { color: var(--success); }
+        .module-title { font-weight: 600; margin-bottom: 0.3rem; }
+        .module-meta { font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 0.5rem; }
+        .main-content { flex: 1; padding: 3rem; }
+        .lesson-header { margin-bottom: 2rem; }
+        .lesson-header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .lesson-header p { color: var(--text-secondary); }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; margin-bottom: 2rem; border-radius: 12px; overflow: hidden; background: #000; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .assignment-section { background: var(--card-bg); padding: 2rem; border-radius: 12px; margin-top: 2rem; }
+        .assignment-section h2 { margin-bottom: 1rem; }
+        .mcq-question { margin-bottom: 2rem; }
+        .mcq-question h3 { margin-bottom: 1rem; font-size: 1.1rem; }
+        .mcq-option { background: white; padding: 1rem; border: 2px solid var(--border); border-radius: 8px; margin-bottom: 0.8rem; cursor: pointer; transition: all 0.3s; }
+        .mcq-option:hover { border-color: var(--accent); }
+        .mcq-option.selected { border-color: var(--accent); background: rgba(14,165,233,0.12); }
+        .btn-submit { padding: 0.8rem 2rem; background: linear-gradient(135deg, var(--blue), var(--sea-blue)); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; }
+        .btn-submit:hover { filter: brightness(0.95); }
+        .results { margin-top: 2rem; padding: 1.5rem; background: white; border-radius: 12px; border: 1px solid var(--border); }
+        .results h3 { margin-bottom: 1rem; }
+        .score { font-size: 2rem; font-weight: 700; color: var(--success); text-align: center; margin: 1rem 0; }
+        @media (max-width: 768px) {
+            .container { flex-direction: column; }
+            .sidebar { width: 100%; position: relative; top: 0; height: auto; }
+            .main-content { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">InternHub</a>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="find-internships.html">Internships</a>
+                <a href="courses.html" style="color: var(--accent);">Courses</a>
+            </nav>
+        </div>
+    </header>
+    <div class="container">
+        <div class="sidebar">
+            <div class="course-info">
+                <h2 id="currentCourse">Web Development</h2>
+                <p>Full Stack Web Development Course</p>
+                <div class="progress-circle">
+                    <svg viewBox="0 0 80 80">
+                        <circle cx="40" cy="40" r="35" fill="none" stroke="#e5e5e7" stroke-width="8"/>
+                        <circle cx="40" cy="40" r="35" fill="none" stroke="#007aff" stroke-width="8" 
+                                stroke-dasharray="220" stroke-dashoffset="220" id="progressRing" 
+                                transform="rotate(-90 40 40)"/>
+                    </svg>
+                </div>
+                <div class="progress-text" id="progressText">0% Complete</div>
+            </div>
+            <div class="modules" id="moduleList"></div>
+        </div>
+        <div class="main-content">
+            <div class="lesson-header">
+                <h1 id="lessonTitle">Welcome to Web Development</h1>
+                <p id="lessonDescription">Start your journey to become a full-stack developer</p>
+            </div>
+            <div id="lessonContent"></div>
+        </div>
+    </div>
+    <script>
+        let currentCourse = 0;
+        let currentModule = 0;
+        let progress = {};
+        let examAnswers = {};
+
+        const courses = [
+            {
+                id: 1,
+                title: "Web Development",
+                description: "Full Stack Web Development Course",
+                modules: [
+                    {
+                        title: "Introduction to HTML",
+                        type: "video",
+                        content: '<div class="video-container"><iframe src="https://www.youtube.com/embed/UB1O30fR-EE" frameborder="0" allowfullscreen></iframe></div><div class="assignment-section"><h2>Assignment: HTML Basics</h2><p>Create a simple HTML page with the following elements: header, nav, main section, and footer. Include at least 3 paragraphs and use semantic HTML5 tags.</p><button class="btn-submit" onclick="markComplete(1, 0)">Mark as Complete</button></div>'
+                    },
+                    {
+                        title: "CSS Styling",
+                        type: "video",
+                        content: '<div class="video-container"><iframe src="https://www.youtube.com/embed/1Rs2ND1ryYc" frameborder="0" allowfullscreen></iframe></div><div class="assignment-section"><h2>Assignment: CSS Styling</h2><p>Style the HTML page you created in Module 1 using CSS. Include flexbox for layout, add colors, fonts, and make it responsive.</p><button class="btn-submit" onclick="markComplete(1, 1)">Mark as Complete</button></div>'
+                    },
+                    {
+                        title: "JavaScript Basics",
+                        type: "video",
+                        content: '<div class="video-container"><iframe src="https://www.youtube.com/embed/W6NZfCO5SIk" frameborder="0" allowfullscreen></iframe></div><div class="assignment-section"><h2>Assignment: JavaScript Basics</h2><p>Create a calculator using JavaScript that can perform basic arithmetic operations (add, subtract, multiply, divide).</p><button class="btn-submit" onclick="markComplete(1, 2)">Mark as Complete</button></div>'
+                    },
+                    {
+                        title: "Final Exam",
+                        type: "exam",
+                        content: `
+                            <div class="assignment-section">
+                                <h2>Final Exam - Web Development</h2>
+                                <p>Answer all questions. You need 80% or higher to qualify for internships.</p>
+                                
+                                <div class="mcq-question">
+                                    <h3>1. What is the purpose of HTML semantic tags?</h3>
+                                    <div class="mcq-option" onclick="selectAnswer(1, 'a')">
+                                        <input type="radio" name="q1" value="a"> a) To style the page
+                                    </div>
+                                    <div class="mcq-option" onclick="selectAnswer(1, 'b')">
+                                        <input type="radio" name="q1" value="b"> b) To add interactivity
+                                    </div>
+                                    <div class="mcq-option" onclick="selectAnswer(1, 'c')">
+                                        <input type="radio" name="q1" value="c"> c) To provide meaning and structure
+                                    </div>
+                                    <div class="mcq-option" onclick="selectAnswer(1, 'd')">
+                                        <input type="radio" name="q1" value="d"> d) To optimize performance
+                                    </div>
+                                </div>
+
+                                <div class="mcq-question">
+                                    <h3>2. What does CSS stand for?</h3>
+                                    <div class="mcq-option" onclick="selectAnswer(2, 'a')">
+                                        <input type="radio" name="q2" value="a"> a) Computer Style Sheets
+                                    </div>
+                                    <div class="mcq-option" onclick="selectAnswer(2, 'b')">
+                                        <input type="radio" name="q2" value="b"> b) Cascading Style Sheets
+                                    </div>
+                                    <div class="mcq-option" onclick="selectAnswer(2, 'c')">
+                                        <input type="radio" name="q2" value="c"> c) Creative Style System
+                                    </div>
+                                    <div class="mcq-option" onclick="selectAnswer(2, 'd')">
+                                        <input type="radio" name="q2" value="d"> d) Colorful Style Sheets
+                                    </div>
+                                </div>
+
+                                <div class="mcq-question">
+                                    <h3>3. Which method is used to select an element by ID in JavaScript?</h3>
+                                    <div class="mcq-option" onclick="selectAnswer(3, 'a')">
+                                        <input type="radio" name="q3" value="a"> a) getElementsByClass()
+                                    </div>
+                                    <div class="mcq-option" onclick="selectAnswer(3, 'b')">
+                                        <input type="radio" name="q3" value="b"> b) getElementById()
+                                    </div>
+                                    <div class="mcq-option" onclick="selectAnswer(3, 'c')">
+                                        <input type="radio" name="q3" value="c"> c) querySelector()
+                                    </div>
+                                    <div class="mcq-option" onclick="selectAnswer(3, 'd')">
+                                        <input type="radio" name="q3" value="d"> d) All of the above
+                                    </div>
+                                </div>
+
+                                <div class="mcq-question">
+                                    <h3>4. What is React primarily used for?</h3>
+                                    <div class="mcq-option" onclick="selectAnswer(4, 'a')">
+                                        <input type="radio" name="q4" value="a"> a) Database management
+                                    </div>
+                                    <div class="mcq-option" onclick="selectAnswer(4, 'b')">
+                                        <input type="radio" name="q4" value="b"> b) Building user interfaces
+                                    </div>
+                                    <div class="mcq-option" onclick="selectAnswer(4, 'c')">
+                                        <input type="radio" name="q4" value="c"> c) Server configuration
+                                    </div>
+                                    <div class="mcq-option" onclick="selectAnswer(4, 'd')">
+                                        <input type="radio" name="q4" value="d"> d) File management
+                                    </div>
+                                </div>
+
+                                <div class="mcq-question">
+                                    <h3>5. What is the purpose of npm in JavaScript development?</h3>
+                                    <div class="mcq-option" onclick="selectAnswer(5, 'a')">
+                                        <input type="radio" name="q5" value="a"> a) Node Package Manager
+                                    </div>
+                                    <div class="mcq-option" onclick="selectAnswer(5, 'b')">
+                                        <input type="radio" name="q5" value="b"> b) Network Performance Manager
+                                    </div>
+                                    <div class="mcq-option" onclick="selectAnswer(5, 'c')">
+                                        <input type="radio" name="q5" value="c"> c) New Programming Module
+                                    </div>
+                                    <div class="mcq-option" onclick="selectAnswer(5, 'd')">
+                                        <input type="radio" name="q5" value="d"> d) None of the above
+                                    </div>
+                                </div>
+
+                                <button class="btn-submit" onclick="submitExam()">Submit Exam</button>
+                                <div id="examResults"></div>
+                            </div>
+                        `
+                    }
+                ]
+            }
+        ];
+
+        function selectAnswer(questionNum, answer) {
+            examAnswers[questionNum] = answer;
+            document.querySelectorAll(`[name="q${questionNum}"]`).forEach(opt => {
+                if (opt.value === answer) {
+                    opt.parentElement.classList.add('selected');
+                } else {
+                    opt.parentElement.classList.remove('selected');
+                }
+            });
+        }
+
+        function submitExam() {
+            const correctAnswers = {1: 'c', 2: 'b', 3: 'd', 4: 'b', 5: 'a'};
+            let score = 0;
+            for (let q in correctAnswers) {
+                if (examAnswers[q] === correctAnswers[q]) score++;
+            }
+            const percentage = (score / 5) * 100;
+            
+            const qualified = percentage >= 80;
+            const qualMessage = qualified 
+                ? '<p style="color: var(--success); font-weight: 600; margin-top: 1rem;">✓ You are qualified for internships!</p>'
+                : '<p style="color: #ff3b30; margin-top: 1rem;">You need at least 80% to qualify. Please retake the exam.</p>';
+            
+            document.getElementById('examResults').innerHTML = `
+                <div class="results">
+                    <h3>Exam Results</h3>
+                    <div class="score">${percentage}%</div>
+                    <p>You scored ${score} out of 5 questions correctly.</p>
+                    ${qualMessage}
+                </div>
+            `;
+            
+            if (qualified) {
+                markComplete(1, 3);
+                updateProgress(1);
+            }
+        }
+
+        function loadCourse(courseId) {
+            currentCourse = courseId - 1;
+            currentModule = 0;
+            const course = courses[currentCourse];
+            document.getElementById('currentCourse').textContent = course.title;
+            renderModules(course);
+            loadModule(0);
+        }
+
+        function renderModules(course) {
+            const moduleList = document.getElementById('moduleList');
+            moduleList.innerHTML = course.modules.map((module, index) => `
+                <div class="module-item ${index === currentModule ? 'active' : ''} ${progress[`${currentCourse}-${index}`] ? 'completed' : ''}" 
+                     onclick="loadModule(${index})">
+                    <div class="module-title">
+                        ${progress[`${currentCourse}-${index}`] ? '<i class="fas fa-check-circle" style="color: var(--success);"></i> ' : ''}
+                        ${module.title}
+                    </div>
+                    <div class="module-meta">
+                        <span>${module.type === 'video' ? '<i class="fas fa-play-circle"></i> Video' : '<i class="fas fa-file-alt"></i> Exam'}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadModule(moduleIndex) {
+            currentModule = moduleIndex;
+            const module = courses[currentCourse].modules[moduleIndex];
+            document.getElementById('lessonTitle').textContent = module.title;
+            document.getElementById('lessonDescription').textContent = module.type === 'exam' ? 'Final graded examination' : 'Video lecture and assignment';
+            document.getElementById('lessonContent').innerHTML = module.content;
+            renderModules(courses[currentCourse]);
+            updateProgress(currentCourse);
+        }
+
+        function markComplete(courseId, moduleIndex) {
+            progress[`${courseId - 1}-${moduleIndex}`] = true;
+            updateProgress(currentCourse);
+            renderModules(courses[currentCourse]);
+            showNotification('Progress saved!', 'success');
+        }
+
+        function updateProgress(courseIndex) {
+            const course = courses[courseIndex];
+            const completed = course.modules.filter((_, i) => progress[`${courseIndex}-${i}`]).length;
+            const percentage = (completed / course.modules.length) * 100;
+            document.getElementById('progressText').textContent = `${Math.round(percentage)}% Complete`;
+            
+            const circle = document.getElementById('progressRing');
+            const circumference = 2 * Math.PI * 35;
+            circle.style.strokeDashoffset = circumference - (percentage / 100) * circumference;
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed; top: 100px; right: 20px; 
+                background: ${type === 'success' ? 'var(--success)' : 'var(--accent)'}; 
+                color: white; padding: 1rem 2rem; border-radius: 8px; 
+                box-shadow: 0 5px 20px rgba(0,0,0,0.2); z-index: 10000;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Initialize
+        loadCourse(1);
+    </script>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hirer Authorization - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+            --primary-gradient: linear-gradient(135deg, var(--blue), var(--sea-blue));
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--cream);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .auth-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(30, 58, 138, 0.15);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header i {
+            font-size: 4rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .auth-header h1 {
+            font-size: 2rem;
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: rgba(30, 58, 138, 0.7);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--blue);
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(30, 58, 138, 0.2);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--sea-blue);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+
+        .passcode-input {
+            text-align: center;
+            font-size: 1.5rem;
+            letter-spacing: 1rem;
+            font-weight: 600;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.3);
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c00;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+            text-align: center;
+        }
+
+        .success-message {
+            background: #efe;
+            color: #060;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+            text-align: center;
+        }
+
+        .setup-section {
+            display: none;
+        }
+
+        .info-box {
+            background: rgba(14, 165, 233, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--sea-blue);
+        }
+
+        .info-box i {
+            color: var(--sea-blue);
+            margin-right: 0.5rem;
+        }
+
+        .company-display {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(30, 58, 138, 0.05);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .company-display strong {
+            color: var(--blue);
+            font-size: 1.2rem;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .back-link a {
+            color: var(--sea-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-header">
+            <i class="fas fa-shield-alt"></i>
+            <h1>Hirer Authorization</h1>
+            <p>Secure access to company portal</p>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <!-- Login Form -->
+        <div id="loginSection">
+            <div class="company-display" id="companyDisplay" style="display: none;">
+                <p>Company: <strong id="companyName"></strong></p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="passcode">4-Digit Passcode</label>
+                    <input type="password" id="passcode" class="passcode-input" maxlength="4" pattern="[0-9]{4}" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-sign-in-alt"></i> Access Dashboard
+                </button>
+            </form>
+
+            <div class="back-link">
+                <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            </div>
+        </div>
+
+        <!-- Setup Form (First Time) -->
+        <div id="setupSection" class="setup-section">
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <strong>First Time Setup:</strong> Create your secure credentials
+            </div>
+
+            <form id="setupForm">
+                <div class="form-group">
+                    <label for="setupCompany">Company Name</label>
+                    <input type="text" id="setupCompany" required>
+                </div>
+                <div class="form-group">
+                    <label for="setupUsername">Choose Username</label>
+                    <input type="text" id="setupUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="setupPasscode">Set 4-Digit Passcode</label>
+                    <input type="password" id="setupPasscode" class="passcode-input" maxlength="4" pattern="[0-9]{4}" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPasscode">Confirm Passcode</label>
+                    <input type="password" id="confirmPasscode" class="passcode-input" maxlength="4" pattern="[0-9]{4}" required>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-check-circle"></i> Complete Setup
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Check if hirer credentials exist
+        const hirerCredentials = JSON.parse(localStorage.getItem('hirerCredentials') || 'null');
+        
+        if (!hirerCredentials) {
+            // First time - show setup
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('setupSection').style.display = 'block';
+        } else {
+            // Show company name
+            document.getElementById('companyDisplay').style.display = 'block';
+            document.getElementById('companyName').textContent = hirerCredentials.company;
+        }
+
+        // Setup Form Handler
+        document.getElementById('setupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const company = document.getElementById('setupCompany').value.trim();
+            const username = document.getElementById('setupUsername').value.trim();
+            const passcode = document.getElementById('setupPasscode').value;
+            const confirmPasscode = document.getElementById('confirmPasscode').value;
+
+            // Validation
+            if (passcode !== confirmPasscode) {
+                showError('Passcodes do not match!');
+                return;
+            }
+
+            if (!/^\d{4}$/.test(passcode)) {
+                showError('Passcode must be exactly 4 digits!');
+                return;
+            }
+
+            // Save credentials
+            const credentials = {
+                company: company,
+                username: username,
+                passcode: passcode,
+                createdAt: Date.now()
+            };
+
+            localStorage.setItem('hirerCredentials', JSON.stringify(credentials));
+            
+            // Initialize activity log
+            localStorage.setItem('hirerActivityLog', JSON.stringify([]));
+
+            showSuccess('Setup complete! Redirecting to dashboard...');
+            
+            // Set session and redirect
+            sessionStorage.setItem('hirerAuthorized', 'true');
+            sessionStorage.setItem('hirerCompany', company);
+            sessionStorage.setItem('hirerUsername', username);
+            sessionStorage.setItem('hirerLoginTime', Date.now());
+
+            setTimeout(() => {
+                window.location.href = 'hirer.html';
+            }, 1500);
+        });
+
+        // Login Form Handler
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const passcode = document.getElementById('passcode').value;
+
+            // Verify credentials
+            if (username !== hirerCredentials.username || passcode !== hirerCredentials.passcode) {
+                showError('Invalid username or passcode!');
+                logFailedAttempt(username);
+                return;
+            }
+
+            // Successful login
+            sessionStorage.setItem('hirerAuthorized', 'true');
+            sessionStorage.setItem('hirerCompany', hirerCredentials.company);
+            sessionStorage.setItem('hirerUsername', username);
+            sessionStorage.setItem('hirerLoginTime', Date.now());
+
+            // Log successful login
+            logActivity('LOGIN', 'User logged in successfully');
+
+            showSuccess('Access granted! Redirecting...');
+            
+            setTimeout(() => {
+                window.location.href = 'hirer.html';
+            }, 1000);
+        });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        function logFailedAttempt(username) {
+            logActivity('FAILED_LOGIN', `Failed login attempt with username: ${username}`);
+        }
+
+        function logActivity(action, description) {
+            const log = JSON.parse(localStorage.getItem('hirerActivityLog') || '[]');
+            log.push({
+                timestamp: Date.now(),
+                action: action,
+                description: description,
+                username: sessionStorage.getItem('hirerUsername') || 'Unknown',
+                company: sessionStorage.getItem('hirerCompany') || hirerCredentials?.company || 'Unknown'
+            });
+            localStorage.setItem('hirerActivityLog', JSON.stringify(log));
+        }
+
+        // Restrict passcode input to numbers only
+        document.querySelectorAll('.passcode-input').forEach(input => {
+            input.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Report an Issue</title>
+</head>
+<body>
+  <header><h1>Report an Issue</h1></header>
+  <main>
+    <section>
+      <form id="issue-form">
+        <label>Category
+          <select name="category" required>
+            <option>Bug</option>
+            <option>Content</option>
+            <option>Account</option>
+          </select>
+        </label>
+        <label>Details <textarea name="details" required></textarea></label>
+        <label>Screenshot URL <input type="url" name="screenshot" /></label>
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+  </main>
+  <script>
+    (function(){
+      const form = document.getElementById('issue-form');
+      const storeKey = 'reportedIssues';
+      function saveIssue(issue){
+        const list = JSON.parse(localStorage.getItem(storeKey)||'[]');
+        list.push({...issue, id: Date.now(), timestamp: new Date().toISOString()});
+        localStorage.setItem(storeKey, JSON.stringify(list));
+      }
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(form).entries());
+        if(!data.category || !data.details){
+          showToast('Please select a category and add details', 'error');
+          return;
+        }
+        saveIssue(data);
+        form.reset();
+        showToast('Issue submitted. Thank you!', 'success');
+      });
+      function showToast(text, type='info'){
+        const t=document.createElement('div');
+        t.className='toast '+type;
+        t.textContent=text;
+        document.body.appendChild(t);
+        setTimeout(()=>t.classList.add('show'),10);
+        setTimeout(()=>{t.classList.remove('show'); setTimeout(()=>t.remove(),300);},3000);
+      }
+    })();
+  </script>
+</main>
+  <style>
+    :root{--blue:#1e3a8a;--accent:#0ea5e9;--border:#e5e7eb}
+    body{font-family:Inter,Segoe UI,Roboto,sans-serif;background:#f6f1e7;color:var(--blue)}
+    header{padding:2rem 2rem}
+    main{max-width:1000px;margin:0 auto;padding:2rem}
+    form{background:#fff;border:2px solid var(--border);border-radius:16px;padding:2rem;display:grid;gap:1rem}
+    label{display:flex;flex-direction:column;font-weight:600;color:var(--blue)}
+    input,textarea,select{margin-top:.4rem;padding:.7rem .9rem;border:2px solid var(--border);border-radius:12px;font-size:1rem}
+    button{background:linear-gradient(135deg,var(--blue),var(--accent));color:#fff;border:none;border-radius:999px;padding:.8rem 1.4rem;font-weight:700;cursor:pointer}
+    button:hover{filter:brightness(1.05)}
+    .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(30px);background:#111827;color:#fff;padding:.7rem 1rem;border-radius:8px;opacity:0;transition:.3s}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .toast.success{background:#10b981}.toast.error{background:#ef4444}
+  </style>
+</body>
+</html>

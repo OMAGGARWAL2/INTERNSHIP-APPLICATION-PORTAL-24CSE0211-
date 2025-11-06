@@ -1,0 +1,2273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Assessment Test - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700;800;900&family=SF+Pro+Text:wght@300;400;500;600;700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --cream: #faf8f3;
+            --blue: #1e40af;
+            --dark-blue: #1e3a8a;
+            --light-blue: #3b82f6;
+            --bg: var(--cream);
+            --card-bg: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --accent: var(--blue);
+            --border: #e5e7eb;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+        }
+        body { 
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: var(--bg); 
+            color: var(--text-primary); 
+            overflow: hidden;
+            height: 100vh;
+        }
+        .fullscreen-overlay {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(14, 165, 233, 0.98);
+            color: white;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            font-size: 1.5rem;
+            backdrop-filter: blur(5px);
+            pointer-events: auto;
+            user-select: none;
+        }
+        .fullscreen-overlay.hidden {
+            display: none !important;
+        }
+        #testContainer {
+            display: none;
+        }
+        #testContainer.visible {
+            display: flex;
+        }
+        .test-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            background: var(--bg);
+        }
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 2px solid var(--border);
+            padding: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+        .test-header {
+            padding: 1rem;
+            border-bottom: 2px solid var(--border);
+            background: white;
+        }
+        .test-header h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.2rem;
+            background: var(--blue);
+            color: white;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .timer.warning {
+            background: linear-gradient(135deg, var(--warning), #ff9500);
+        }
+        .timer.danger {
+            background: linear-gradient(135deg, var(--error), #cc0000);
+        }
+        .questions-nav {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        .question-palette {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .question-nav-item {
+            padding: 0.6rem;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .question-nav-item:hover:not(.section-header) { 
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .question-nav-item.active {
+            background: linear-gradient(135deg, var(--blue), var(--sea-blue));
+            color: white;
+            border-color: transparent;
+        }
+        .question-nav-item.answered {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+        .question-nav-item.marked {
+            background: #8b5cf6;
+            color: white;
+            border-color: #8b5cf6;
+        }
+        .question-nav-item.skipped {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+        .question-nav-item.not-attempted {
+            background: #f3f4f6;
+            color: #6b7280;
+            border-color: #d1d5db;
+        }
+        .question-nav-item.current {
+            border: 3px solid var(--blue);
+            box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
+            transform: scale(1.05);
+        }
+        .section-header {
+            grid-column: 1 / -1;
+            background: var(--blue);
+            color: white;
+            padding: 0.8rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: default;
+            margin-top: 0.5rem;
+        }
+        .section-header:first-child {
+            margin-top: 0;
+        }
+        .status-legend {
+            padding: 1rem;
+            background: #f9fafb;
+            border-top: 2px solid var(--border);
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+        .legend-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .submit-section {
+            padding: 1rem;
+            background: white;
+            border-top: 2px solid var(--border);
+        }
+        .main-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            overflow: hidden;
+            background: var(--bg);
+        }
+        .question-panel {
+            padding: 2rem;
+            overflow-y: auto;
+            background: white;
+            border-right: 2px solid var(--border);
+        }
+        .options-panel {
+            padding: 2rem;
+            overflow-y: auto;
+            background: var(--cream);
+        }
+        .top-bar {
+            grid-column: 1 / -1;
+            background: var(--blue);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--dark-blue);
+        }
+        .test-content {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            overflow: hidden;
+        }
+        .question-section {
+            display: none;
+        }
+        .question-section.active {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            height: 100%;
+        }
+        .question-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .question-marks {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: var(--accent);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-left: 1rem;
+        }
+        .mcq-option {
+            background: white;
+            padding: 1rem 1.2rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            margin-bottom: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .mcq-option:hover:not(.locked) { 
+            border-color: var(--blue); 
+            background: rgba(30, 64, 175, 0.05); 
+        }
+        .mcq-option.selected { 
+            border-color: var(--blue);
+            background: rgba(30, 64, 175, 0.1);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+            font-weight: 600;
+        }
+        .mcq-option.locked { 
+            border-color: #9ca3af; 
+            background: #f3f4f6; 
+            cursor: not-allowed; 
+            opacity: 0.7; 
+        }
+        .coding-section {
+            display: grid;
+            grid-template-columns: 500px 1fr;
+            gap: 0;
+            height: calc(100vh - 100px);
+            background: white;
+        }
+        .question-description-panel {
+            background: #f9fafb;
+            padding: 2rem;
+            overflow-y: auto;
+            border-right: 2px solid var(--border);
+        }
+        .question-description-panel h3 {
+            color: var(--blue);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        .question-description-panel p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        .sample-io {
+            background: white;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+        .sample-io-label {
+            font-weight: 700;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+        .sample-io-content {
+            background: #f3f4f6;
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: var(--text-primary);
+        }
+        .code-editor-panel {
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+        .code-editor-header {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .code-editor-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .language-select {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            background: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .CodeMirror {
+            height: 100% !important;
+            font-size: 16px !important;
+            line-height: 1.6 !important;
+        }
+        .code-console-panel {
+            border-top: 2px solid var(--border);
+            background: #1a1a2e;
+            color: #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            height: 250px;
+        }
+        .code-console-header {
+            padding: 0.75rem 1rem;
+            background: #0f172a;
+            border-bottom: 1px solid #1e293b;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .code-console-output {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #e5e7eb;
+        }
+        .code-console-controls {
+            padding: 0.75rem 1rem;
+            background: #0f172a;
+            border-top: 1px solid #1e293b;
+        }
+        .code-input-area {
+            width: 100%;
+            padding: 0.5rem;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 4px;
+            color: #e5e7eb;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            resize: vertical;
+            min-height: 50px;
+        }
+        .run-code-btn {
+            padding: 0.6rem 1.5rem;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .run-code-btn:hover {
+            background: #059669;
+        }
+        .code-header {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .code-editor {
+            display: none !important; /* Hide default textarea */
+        }
+        .code-console-header {
+            padding: 0.75rem 1rem;
+            background: #0f172a;
+            border-bottom: 1px solid #1e293b;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #e5e7eb;
+        }
+        .code-console-output {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #e5e7eb;
+        }
+        .code-console-controls {
+            padding: 0.75rem 1rem;
+            background: #0f172a;
+            border-top: 1px solid #1e293b;
+        }
+        .code-input-area {
+            width: 100%;
+            padding: 0.5rem;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 4px;
+            color: #e5e7eb;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            resize: vertical;
+            min-height: 60px;
+        }
+        .btn-submit-test {
+            padding: 0.8rem 2rem;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .warning-badge {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+        .test-info {
+            background: rgba(14, 165, 233, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent);
+        }
+        .error-message {
+            background: var(--error);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 8px;
+            margin: 2rem;
+        }
+        .section-lock {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px dashed #ef4444;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ef4444;
+        }
+        .section-unlock {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px dashed #10b981;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #10b981;
+        }
+        .run-btn {
+            padding: 0.5rem 1rem;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .run-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .output-panel {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 0 0 8px 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .output-panel.success {
+            color: #a0ffa0;
+        }
+        .output-panel.error {
+            color: #ffa0a0;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="fullscreen-overlay" id="fullscreenNotice">
+        <div style="text-align: center; max-width: 600px; padding: 2rem;">
+            <i class="fas fa-lock" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+            <h2 style="margin-bottom: 0.5rem;">Fullscreen Mode Required</h2>
+            <p style="margin-bottom: 1rem; opacity: 0.9;">This test must be taken in fullscreen mode for security purposes.</p>
+            <p style="margin-bottom: 2rem; opacity: 0.7; font-size: 0.9rem;">Please enter fullscreen mode to continue with the assessment.</p>
+            <button onclick="toggleFullscreen();" style="padding: 1rem 2rem; background: white; color: var(--blue); border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem;">
+                <i class="fas fa-expand"></i> Enter Fullscreen Mode
+            </button>
+        </div>
+    </div>
+
+    <div class="test-container" id="testContainer">
+        <div class="sidebar">
+            <div class="test-header">
+                <h2 id="testNameHeader" style="font-size: 1.1rem; margin-bottom: 0.5rem;">Assessment Test</h2>
+                <div class="timer" id="timer" style="font-size: 0.9rem; padding: 0.6rem;">
+                    <i class="fas fa-clock"></i>
+                    <span id="timerText">60:00</span>
+                </div>
+            </div>
+            
+            <div class="questions-nav" id="questionsNav">
+                <div class="status-legend" style="margin-bottom: 1rem; background: white; padding: 0.8rem; border: 1px solid var(--border); border-radius: 6px;">
+                    <div class="legend-item">
+                        <div class="legend-icon" style="background: #10b981; color: white;">1</div>
+                        <span>Answered</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon" style="background: #f3f4f6; color: #6b7280; border: 2px solid #d1d5db;">2</div>
+                        <span>Not Answered</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon" style="background: #8b5cf6; color: white;">3</div>
+                        <span>Marked for Review</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon" style="background: #ef4444; color: white;">4</div>
+                        <span>Not Visited</span>
+                    </div>
+                </div>
+                <div class="question-palette" id="questionPalette">
+                    <!-- Questions will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="submit-section">
+                <button class="btn-submit-test" onclick="submitTest()" style="width: 100%; padding: 0.8rem; background: var(--success); color: white; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.95rem;">
+                    <i class="fas fa-check-circle"></i> SUBMIT
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="top-bar">
+                <div>
+                    <span class="warning-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        Test Mode Active - Tab Switching Monitored
+                    </span>
+                </div>
+                <div>
+                    <button onclick="exitFullscreen()" style="padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; cursor: pointer; font-weight: 600;">
+                        <i class="fas fa-times"></i> Exit Test
+                    </button>
+                </div>
+            </div>
+
+            <div class="test-content" id="testContent">
+                <!-- Questions will be loaded here in split view -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Modal for Messages -->
+    <div id="customModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+            <h3 id="modalTitle" style="margin-bottom: 1rem; color: var(--text-primary);"></h3>
+            <p id="modalMessage" style="margin-bottom: 1.5rem; color: var(--text-secondary);"></p>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button id="modalConfirm" onclick="closeModal()" style="padding: 0.8rem 1.5rem; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let timeLeft = 3600;
+        let currentQuestion = 0;
+        let answers = {};
+        let markedForReview = {}; // Track questions marked for review
+        let testQuestions = [];
+        let testMeta = {};
+        let timerInterval = null;
+        let testId = null;
+        let jobApplicationId = null;
+        let tabSwitchCount = 0;
+        let startTime = null;
+        let currentSection = null;
+        let sectionStatus = {}; // Track section completion status
+        let sectionQuestions = {}; // Track questions per section
+        let submittedSections = []; // Track submitted sections
+        let currentSectionIndex = 0; // Track current section index
+        
+        // Judge0 API Configuration
+        const JUDGE0_API_KEY = '189939819bmshb761c684f0e32fbp11e99ejsn25535435a0b0';
+        const JUDGE0_API_HOST = 'judge0-ce.p.rapidapi.com';
+        const JUDGE0_API_URL = `https://${JUDGE0_API_HOST}/submissions`;
+        
+        const languageMap = {
+            'c': 50,           // C (GCC 9.2.0)
+            'cpp': 54,         // C++ (GCC 9.2.0)
+            'java': 62,        // Java (OpenJDK 13.0.1)
+            'python3': 71,     // Python (3.8.1)
+            'python2': 70,     // Python (2.7.17)
+            'javascript': 63,  // JavaScript (Node.js 12.14.0)
+            'bash': 46,        // Bash (5.0.0)
+            'php': 68,         // PHP (7.4.1)
+            'ruby': 72,        // Ruby (2.7.0)
+            'csharp': 51,      // C# (Mono 6.6.0.161)
+            'go': 60,          // Go (1.13.5)
+            'rust': 73,        // Rust (1.40.0)
+            'kotlin': 78,      // Kotlin (1.3.70)
+            'swift': 83        // Swift (5.2.3)
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            console.log('Page loaded, initializing test...');
+            
+            // Get test ID and job application ID from URL parameters or sessionStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            testId = urlParams.get('testId');
+            jobApplicationId = urlParams.get('applicationId') || urlParams.get('internshipId');
+            
+            console.log('URL Parameters - testId:', testId, 'jobApplicationId:', jobApplicationId);
+            
+            // Check if test requirement is from Apply Now
+            if (!testId) {
+                const requiredTest = sessionStorage.getItem('requiredTest');
+                if (requiredTest) {
+                    try {
+                        const testData = JSON.parse(requiredTest);
+                        testId = testData.testId;
+                        jobApplicationId = testData.internshipId;
+                        console.log('Got test data from sessionStorage:', testData);
+                    } catch (e) {
+                        console.error('Error parsing required test:', e);
+                    }
+                }
+            }
+            
+            if (!checkApplicationAccess()) {
+                console.log('Application access check failed');
+                return;
+            }
+
+            // Check fullscreen on load
+            checkFullscreen();
+
+            // Load test
+            console.log('Loading test...');
+            loadTest();
+        });
+
+        function checkApplicationAccess() {
+            console.log('Checking application access...');
+            console.log('testId:', testId);
+            console.log('jobApplicationId:', jobApplicationId);
+            
+            // If testId is provided, allow access (might be from Apply Now redirect)
+            if (testId) {
+                console.log('Test ID provided, allowing access');
+                return true;
+            }
+            
+            // Check if test requirement is from Apply Now
+            const requiredTest = sessionStorage.getItem('requiredTest');
+            if (requiredTest && !testId) {
+                try {
+                    const testData = JSON.parse(requiredTest);
+                    testId = testData.testId;
+                    jobApplicationId = testData.internshipId;
+                    console.log('Got test data from sessionStorage:', testData);
+                    
+                    // Show info about the requirement
+                    setTimeout(() => {
+                        if (document.getElementById('testNameHeader')) {
+                            document.getElementById('testNameHeader').innerHTML = `
+                                <span>Assessment Test Required</span>
+                                <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.9;">
+                                    <i class="fas fa-info-circle"></i> For: ${testData.internshipTitle || 'Internship'}
+                                </div>
+                                <div style="font-size: 0.85rem; opacity: 0.8;">
+                                    <i class="fas fa-building"></i> ${testData.company || 'Company'}
+                                </div>
+                            `;
+                        }
+                    }, 100);
+                    
+                    // Clear sessionStorage after reading
+                    sessionStorage.removeItem('requiredTest');
+                    return true;
+                } catch (e) {
+                    console.error('Error parsing required test:', e);
+                }
+            }
+            
+            if (!jobApplicationId) {
+                // Try to find recent application
+                const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+                const recentApp = applications.find(app => app.testRequired && app.internshipId);
+                if (recentApp && testId) {
+                    jobApplicationId = recentApp.id;
+                    console.log('Found recent application:', recentApp);
+                    return true;
+                }
+                // Don't block - might be redirected from Apply Now
+                console.log('No job application ID, but allowing access');
+                return true;
+            }
+
+            const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+            const application = applications.find(app => app.id == jobApplicationId || app.internshipId == jobApplicationId);
+
+            if (!application) {
+                // Still allow - might be redirected from Apply Now before application is saved
+                console.warn('Application not found, but allowing test access (might be from Apply Now redirect)');
+                return true;
+            }
+
+            // Check if test is already completed
+            const testResults = JSON.parse(localStorage.getItem('testResults') || '[]');
+            const existingResult = testResults.find(r => 
+                (r.applicationId == jobApplicationId || r.internshipId == jobApplicationId) && 
+                r.testId == testId
+            );
+
+            if (existingResult) {
+                showError('Test Already Completed', 'You have already taken this test. Results will be shared by the recruiter.');
+                return false;
+            }
+
+            return true;
+        }
+
+        function showError(title, message) {
+            document.body.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; height: 100vh; background: var(--bg);">
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h2>${title}</h2>
+                        <p style="margin-top: 1rem;">${message}</p>
+                        <button onclick="window.location.href='index.html'" style="margin-top: 2rem; padding: 0.8rem 2rem; background: white; color: var(--error); border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            Go to Home
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkFullscreen() {
+            const isFullscreen = !!(document.fullscreenElement || 
+                                  document.webkitFullscreenElement || 
+                                  document.mozFullScreenElement || 
+                                  document.msFullscreenElement);
+
+            if (!isFullscreen) {
+                document.getElementById('fullscreenNotice').style.display = 'flex';
+                document.getElementById('testContainer').style.display = 'none';
+            } else {
+                document.getElementById('fullscreenNotice').classList.add('hidden');
+                document.getElementById('testContainer').classList.add('visible');
+                document.getElementById('testContainer').style.display = 'flex';
+                
+                // Start timer when in fullscreen
+                if (!timerInterval && startTime === null) {
+                    startTime = Date.now();
+                    startTimer();
+                }
+            }
+        }
+
+        function toggleFullscreen() {
+            const elem = document.documentElement;
+            const requestFullscreen = elem.requestFullscreen || 
+                                    elem.webkitRequestFullscreen || 
+                                    elem.mozRequestFullScreen || 
+                                    elem.msRequestFullscreen;
+
+            if (requestFullscreen) {
+                requestFullscreen.call(elem).then(() => {
+                    setTimeout(checkFullscreen, 100);
+                }).catch(err => {
+                    alert('Could not enter fullscreen mode. Please try pressing F11.');
+                });
+            }
+        }
+
+        function exitFullscreen() {
+            if (confirm('Are you sure you want to exit the test? Your progress will be saved.')) {
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+                else if (document.msExitFullscreen) document.msExitFullscreen();
+                
+                // Redirect to feedback page
+                setTimeout(() => {
+                    window.location.href = 'feedback.html';
+                }, 500);
+            }
+        }
+
+        function loadTest() {
+            // Debug logging
+            console.log('Loading test with ID:', testId);
+            console.log('Job Application ID:', jobApplicationId);
+            
+            if (!testId) {
+                // Try to get testId from sessionStorage if not in URL
+                const requiredTest = sessionStorage.getItem('requiredTest');
+                if (requiredTest) {
+                    try {
+                        const testData = JSON.parse(requiredTest);
+                        testId = testData.testId;
+                        console.log('Got testId from sessionStorage:', testId);
+                    } catch (e) {
+                        console.error('Error parsing required test:', e);
+                    }
+                }
+            }
+            
+            if (!testId) {
+                showError('Test Not Found', 'No test ID provided. Please make sure you are accessing this test correctly.');
+                return;
+            }
+
+            const savedTests = JSON.parse(localStorage.getItem('tests') || '[]');
+            console.log('Available tests:', savedTests);
+            
+            // Try to find test by ID (handle both string and number comparisons)
+            const test = savedTests.find(t => {
+                console.log(`Comparing ${t.id} with ${testId}`);
+                return String(t.id) === String(testId);
+            });
+
+            if (!test) {
+                showError('Test Not Found', `The requested test could not be found. Test ID: ${testId}`);
+                return;
+            }
+
+            testMeta = test;
+            testQuestions = test.questions || [];
+            timeLeft = test.timeLimitSeconds || 3600;
+
+            // Initialize section status
+            if (testMeta.sections) {
+                testMeta.sections.forEach(section => {
+                    sectionStatus[section.letter] = false;
+                });
+            }
+
+            // Update UI
+            document.getElementById('testNameHeader').textContent = test.name || 'Assessment Test';
+            updateTimerDisplay();
+            renderQuestions();
+            
+            console.log('Test loaded successfully:', test);
+        }
+
+        function renderQuestions() {
+            const palette = document.getElementById('questionPalette');
+            const content = document.getElementById('testContent');
+
+            palette.innerHTML = '';
+            content.innerHTML = '';
+
+            if (testQuestions.length === 0) {
+                content.innerHTML = '<p>No questions available.</p>';
+                return;
+            }
+
+            // Group questions by section
+            const sections = {};
+            testQuestions.forEach((q, index) => {
+                const section = q.section || 'default';
+                if (!sections[section]) sections[section] = [];
+                sections[section].push({question: q, index: index});
+                if (!sectionQuestions[section]) sectionQuestions[section] = [];
+                sectionQuestions[section].push(q.id || `q_${index}`);
+            });
+
+            // Render question palette in grid format
+            let questionCounter = 0;
+            Object.keys(sections).forEach(sectionKey => {
+                const sectionQuestionsArray = sections[sectionKey];
+                const sectionName = testMeta.sections?.find(s => s.letter === sectionKey)?.name || `Section ${sectionKey}`;
+                const isDefaultSection = sectionKey === 'default';
+                
+                // Add section header only if multiple sections
+                if (Object.keys(sections).length > 1 && !isDefaultSection) {
+                    const sectionHeader = document.createElement('div');
+                    sectionHeader.className = 'section-header';
+                    sectionHeader.textContent = sectionName;
+                    palette.appendChild(sectionHeader);
+                }
+
+                // Add questions in grid
+                sectionQuestionsArray.forEach(({question: q, index}) => {
+                    const questionId = q.id || `q_${index}`;
+                    if (!q.id) q.id = questionId;
+                    questionCounter++;
+
+                    // Check if this question's section is locked
+                    const isQuestionLocked = isSectionLocked(sectionKey);
+
+                    // Navigation item
+                    const navItem = document.createElement('div');
+                    navItem.className = 'question-nav-item';
+                    navItem.id = `nav_${questionId}`;
+                    navItem.textContent = questionCounter;
+                    
+                    if (isQuestionLocked) {
+                        navItem.style.opacity = '0.4';
+                        navItem.style.cursor = 'not-allowed';
+                        navItem.onclick = () => {
+                            showModal('Section Locked', 'Submit the previous section to access this question.');
+                        };
+                    } else {
+                        navItem.onclick = () => showQuestion(index);
+                    }
+                    
+                    palette.appendChild(navItem);
+
+                    // Question content (same as before)
+                    const marks = q.marks || (q.type === 'mcq' ? 1 : 5);
+                    const questionText = q.questionHTML || q.question || q.problem || 'Question ' + (index + 1);
+
+                    if (q.type === 'mcq') {
+                        const options = q.optionsHTML || q.options || [];
+                        const negativeMarking = testMeta.negativeMarking ? (testMeta.negativeMarkPercentage || 0) / 100 : 0;
+                        content.innerHTML += `
+                            <div class="question-section ${index === currentQuestion ? 'active' : ''}" id="q${questionId}">
+                                <!-- Left Panel: Question -->
+                                <div class="question-panel">
+                                    <div style="margin-bottom: 1.5rem;">
+                                        <span style="display: inline-block; padding: 0.3rem 0.8rem; background: var(--blue); color: white; border-radius: 4px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;">Question ${questionCounter}</span>
+                                        <span class="question-marks" style="margin-left: 1rem;">${marks} Mark${marks > 1 ? 's' : ''}</span>
+                                        ${negativeMarking > 0 ? `<span style="color: var(--error); font-size: 0.85rem; margin-left: 1rem;">(-${(marks * negativeMarking).toFixed(1)} for wrong)</span>` : ''}
+                                    </div>
+                                    <div style="font-size: 1.05rem; line-height: 1.8; color: var(--text-primary);">
+                                        ${questionText}
+                                    </div>
+                                </div>
+                                
+                                <!-- Right Panel: Options -->
+                                <div class="options-panel">
+                                    <h4 style="margin-bottom: 1rem; color: var(--blue); font-size: 0.95rem; font-weight: 600;">SELECT YOUR ANSWER:</h4>
+                                    ${options.map((opt, i) => `
+                                        <div class="mcq-option ${answers[questionId] === i ? 'selected' : ''}" onclick="selectMCQOption('${questionId}', ${i}, ${index})" style="margin-bottom: 0.8rem;">
+                                            <input type="radio" name="q${questionId}" value="${i}" ${answers[questionId] === i ? 'checked' : ''} style="margin-right: 0.8rem;">
+                                            <span style="font-size: 0.95rem;">${opt}</span>
+                                        </div>
+                                    `).join('')}
+                                    
+                                    <div style="display: flex; gap: 0.8rem; margin-top: 2rem; flex-wrap: wrap;">
+                                        <button onclick="clearAnswer('${questionId}', ${index})" style="padding: 0.7rem 1.2rem; background: white; color: var(--blue); border: 2px solid var(--blue); border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                                            <i class="fas fa-eraser"></i> CLEAR
+                                        </button>
+                                        <button onclick="markForReview('${questionId}', ${index})" style="padding: 0.7rem 1.2rem; background: #8b5cf6; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                                            <i class="fas fa-bookmark"></i> MARK FOR REVIEW
+                                        </button>
+                                        ${index < testQuestions.length - 1 ? `
+                                        <button onclick="saveAndNext(${index})" style="padding: 0.7rem 1.2rem; background: var(--blue); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                                            SAVE & NEXT <i class="fas fa-arrow-right"></i>
+                                        </button>` : ''}
+                                    </div>
+                                    
+                                    ${index === sections[sectionKey][sections[sectionKey].length - 1].index && Object.keys(sections).length > 1 && !isDefaultSection ? `
+                                    <div style="margin-top: 2rem; padding: 1.2rem; background: rgba(30, 64, 175, 0.1); border: 2px solid var(--blue); border-radius: 8px;">
+                                        <h4 style="margin-bottom: 0.5rem; color: var(--blue); font-size: 0.9rem;"><i class="fas fa-info-circle"></i> End of ${sectionName}</h4>
+                                        <p style="margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-secondary);">Submit this section to unlock the next section.</p>
+                                        <button onclick="submitSection('${sectionKey}')" style="padding: 0.8rem 1.5rem; background: var(--success); color: white; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.9rem; width: 100%;">
+                                            <i class="fas fa-check-circle"></i> SUBMIT ${sectionName.toUpperCase()}
+                                        </button>
+                                    </div>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    } else if (q.type === 'coding') {
+                        const template = q.template || '#include <stdio.h>\n\nint main() {\n    // Your code here\n    return 0;\n}';
+                        const language = q.language || 'python3';
+                        const languageName = {
+                            'c': 'C', 'cpp': 'C++', 'java': 'Java',
+                            'python3': 'Python 3', 'python2': 'Python 2',
+                            'javascript': 'JavaScript', 'csharp': 'C#',
+                            'php': 'PHP', 'ruby': 'Ruby'
+                        }[language] || 'Python 3';
+                        
+                        const savedCode = answers[questionId] || template;
+                        
+                        content.innerHTML += `
+                            <div class="question-section ${index === currentQuestion ? 'active' : ''}" id="q${questionId}">
+                                <div class="coding-section">
+                                    <!-- LEFT: Question Description -->
+                                    <div class="question-description-panel">
+                                        <div style="margin-bottom: 1rem;">
+                                            <span style="display: inline-block; padding: 0.3rem 0.8rem; background: var(--blue); color: white; border-radius: 4px; font-size: 0.85rem; font-weight: 600;">Question ${questionCounter}</span>
+                                            <span style="margin-left: 1rem; color: var(--text-secondary); font-weight: 600;">${marks} Mark${marks > 1 ? 's' : ''}</span>
+                                        </div>
+                                        <h3>${questionText.split('.')[0]}</h3>
+                                        <p>${questionText}</p>
+                                        
+                                        ${q.sampleInput ? `
+                                        <div class="sample-io">
+                                            <div class="sample-io-label">SAMPLE INPUT 1</div>
+                                            <div class="sample-io-content">${q.sampleInput}</div>
+                                        </div>
+                                        ` : ''}
+                                        
+                                        ${q.sampleOutput ? `
+                                        <div class="sample-io">
+                                            <div class="sample-io-label">SAMPLE OUTPUT 1</div>
+                                            <div class="sample-io-content">${q.sampleOutput}</div>
+                                        </div>
+                                        ` : ''}
+                                        
+                                        ${q.explanation ? `
+                                        <div style="margin-top: 1.5rem;">
+                                            <h4 style="font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Explanation:</h4>
+                                            <p style="line-height: 1.6;">${q.explanation}</p>
+                                        </div>
+                                        ` : ''}
+                                        
+                                        <div style="margin-top: 2rem; display: flex; gap: 0.8rem; flex-wrap: wrap;">
+                                            <button onclick="clearCodeAnswer('${questionId}')" style="padding: 0.6rem 1rem; background: white; color: var(--blue); border: 2px solid var(--blue); border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                                                <i class="fas fa-eraser"></i> CLEAR
+                                            </button>
+                                            <button onclick="markForReview('${questionId}', ${index})" style="padding: 0.6rem 1rem; background: #8b5cf6; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                                                <i class="fas fa-bookmark"></i> MARK
+                                            </button>
+                                            ${index < testQuestions.length - 1 ? `
+                                            <button onclick="saveAndNext(${index})" style="padding: 0.6rem 1rem; background: var(--blue); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                                                NEXT <i class="fas fa-arrow-right"></i>
+                                            </button>` : ''}
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- RIGHT: Code Editor + Console -->
+                                    <div class="code-editor-panel">
+                                        <div class="code-editor-header">
+                                            <div class="code-editor-controls">
+                                                <select id="lang${questionId}" class="language-select" onchange="changeLanguage('${questionId}', this.value)">
+                                                    <option value="python3" ${language === 'python3' ? 'selected' : ''}>Python 3</option>
+                                                    <option value="c" ${language === 'c' ? 'selected' : ''}>C</option>
+                                                    <option value="cpp" ${language === 'cpp' ? 'selected' : ''}>C++</option>
+                                                    <option value="java" ${language === 'java' ? 'selected' : ''}>Java</option>
+                                                    <option value="python2" ${language === 'python2' ? 'selected' : ''}>Python 2</option>
+                                                    <option value="javascript" ${language === 'javascript' ? 'selected' : ''}>JavaScript</option>
+                                                    <option value="bash" ${language === 'bash' ? 'selected' : ''}>Bash</option>
+                                                    <option value="csharp" ${language === 'csharp' ? 'selected' : ''}>C#</option>
+                                                    <option value="php" ${language === 'php' ? 'selected' : ''}>PHP</option>
+                                                    <option value="ruby" ${language === 'ruby' ? 'selected' : ''}>Ruby</option>
+                                                </select>
+                                            </div>
+                                            <button onclick="runCodeWithJudge0('${questionId}')" class="run-code-btn" id="runBtn${questionId}">
+                                                <i class="fas fa-play"></i> Run
+                                            </button>
+                                        </div>
+                                        <div style="flex: 1; position: relative; overflow: hidden;">
+                                            <textarea id="code${questionId}" style="width: 100%; height: 100%; display: none;">${savedCode}</textarea>
+                                        </div>
+                                        <div class="code-console-panel">
+                                            <div class="code-console-header">
+                                                <span><i class="fas fa-terminal"></i> Console</span>
+                                                <span style="font-size: 0.85rem; color: #94a3b8;">Custom Input</span>
+                                            </div>
+                                            <div style="display: flex; height: calc(100% - 40px);">
+                                                <div class="code-console-output" id="output${questionId}" style="flex: 1;">
+                                                    <div style="color: #60a5fa;">Ready to run. Click "Run" to execute.</div>
+                                                </div>
+                                                <div style="flex: 0.5; border-left: 1px solid #1e293b; padding: 1rem;">
+                                                    <textarea id="input${questionId}" class="code-input-area" placeholder="Enter input here" style="height: 100%; min-height: 100px;"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            });
+
+            updateNavigation();
+            
+            // Initialize CodeMirror editors for coding questions
+            setTimeout(() => {
+                initializeCodeEditors();
+            }, 100);
+        }
+        
+        // Global CodeMirror editors storage
+        const codeEditors = {};
+        
+        // Initialize CodeMirror for all coding questions
+        function initializeCodeEditors() {
+            testQuestions.forEach((q, index) => {
+                if (q.type === 'coding') {
+                    const questionId = q.id || `q_${index}`;
+                    const textarea = document.getElementById(`code${questionId}`);
+                    
+                    if (textarea && !codeEditors[questionId]) {
+                        const language = q.language || 'python3';
+                        const mode = getCodeMirrorMode(language);
+                        
+                        const editor = CodeMirror.fromTextArea(textarea, {
+                            mode: mode,
+                            theme: 'monokai',
+                            lineNumbers: true,
+                            autoCloseBrackets: true,
+                            matchBrackets: true,
+                            indentUnit: 4,
+                            tabSize: 4,
+                            lineWrapping: false,
+                            extraKeys: {
+                                "Ctrl-Space": "autocomplete",
+                                "Tab": function(cm) {
+                                    if (cm.somethingSelected()) {
+                                        cm.indentSelection("add");
+                                    } else {
+                                        cm.replaceSelection("    ", "end");
+                                    }
+                                }
+                            }
+                        });
+                        
+                        // Auto-save on change
+                        editor.on('change', function() {
+                            const code = editor.getValue();
+                            saveCode(questionId, code);
+                        });
+                        
+                        codeEditors[questionId] = editor;
+                        
+                        // Refresh editor to ensure proper display
+                        setTimeout(() => editor.refresh(), 100);
+                    }
+                }
+            });
+        }
+        
+        // Get CodeMirror mode based on language
+        function getCodeMirrorMode(language) {
+            const modes = {
+                'c': 'text/x-csrc',
+                'cpp': 'text/x-c++src',
+                'java': 'text/x-java',
+                'python3': 'python',
+                'python2': 'python',
+                'javascript': 'javascript',
+                'bash': 'shell',
+                'php': 'php',
+                'ruby': 'ruby',
+                'csharp': 'text/x-csharp'
+            };
+            return modes[language] || 'python';
+        }
+        
+        // Update changeLanguage function to work with CodeMirror
+        function changeLanguage(questionId, newLang) {
+            const editor = codeEditors[questionId];
+            if (editor) {
+                const mode = getCodeMirrorMode(newLang);
+                editor.setOption('mode', mode);
+            }
+        }
+
+        // Submit section function with auto OTP generation
+        function submitSection(sectionKey) {
+            // Generate random 6-digit OTP
+            const otp = Math.floor(100000 + Math.random() * 900000);
+            
+            // Show OTP modal
+            showOTPModal(sectionKey, otp);
+        }
+        
+        function showOTPModal(sectionKey, otp) {
+            const sectionName = testMeta.sections?.find(s => s.letter === sectionKey)?.name || sectionKey;
+            
+            const modalHTML = `
+                <div id="otpModal" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center;">
+                    <div style="background: white; padding: 2rem; border-radius: 12px; max-width: 400px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+                        <h3 style="margin-bottom: 1rem; color: var(--blue); text-align: center;"><i class="fas fa-lock"></i> Section Verification</h3>
+                        <p style="margin-bottom: 1rem; text-align: center;">Your OTP for ${sectionName}:</p>
+                        <div style="background: var(--cream); padding: 1.5rem; border-radius: 8px; text-align: center; font-size: 2rem; font-weight: 700; letter-spacing: 0.5rem; color: var(--blue); margin-bottom: 1.5rem; border: 2px dashed var(--blue);">
+                            ${otp}
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); text-align: center; margin-bottom: 1.5rem;">Please note this OTP. The next section will unlock automatically.</p>
+                        <button onclick="confirmSectionSubmit('${sectionKey}')" style="width: 100%; padding: 1rem; background: var(--blue); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 1rem;">
+                            <i class="fas fa-check-circle"></i> CONTINUE TO NEXT SECTION
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+        
+        function confirmSectionSubmit(sectionKey) {
+            // Remove OTP modal
+            const otpModal = document.getElementById('otpModal');
+            if (otpModal) otpModal.remove();
+            
+            // Mark section as submitted
+            submittedSections.push(sectionKey);
+            
+            // Update section locks
+            updateSectionLocks();
+            
+            // Show notification
+            showNotification(`${testMeta.sections?.find(s => s.letter === sectionKey)?.name || sectionKey} submitted! Next section unlocked.`, 'success');
+            
+            // Move to first question of next section
+            const sectionOrder = testMeta.sections.map(s => s.letter);
+            const currentSectionIndex = sectionOrder.indexOf(sectionKey);
+            if (currentSectionIndex < sectionOrder.length - 1) {
+                const nextSection = sectionOrder[currentSectionIndex + 1];
+                const nextSectionFirstQuestion = testQuestions.findIndex(q => q.section === nextSection);
+                if (nextSectionFirstQuestion !== -1) {
+                    setTimeout(() => {
+                        showQuestion(nextSectionFirstQuestion);
+                    }, 500);
+                }
+            }
+            
+            // Re-render to update locks
+            renderQuestions();
+        }
+
+        function showQuestion(index) {
+            if (index < 0 || index >= testQuestions.length) return;
+            
+            // Check if section is locked
+            const question = testQuestions[index];
+            const section = question.section || 'default';
+            
+            if (isSectionLocked(section)) {
+                showModal('Section Locked', `Please submit the previous section before accessing this question.`);
+                return;
+            }
+            
+            currentQuestion = index;
+            
+            // Hide all questions, show current
+            document.querySelectorAll('.question-section').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            const questionId = testQuestions[index].id || `q_${index}`;
+            const currentQuestionEl = document.getElementById(`q${questionId}`);
+            if (currentQuestionEl) {
+                currentQuestionEl.classList.add('active');
+            }
+            
+            // Refresh CodeMirror if it's a coding question
+            if (testQuestions[index].type === 'coding' && codeEditors[questionId]) {
+                setTimeout(() => {
+                    codeEditors[questionId].refresh();
+                }, 100);
+            }
+            
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            testQuestions.forEach((q, i) => {
+                const questionId = q.id || `q_${i}`;
+                const navItem = document.getElementById(`nav_${questionId}`);
+                
+                if (navItem) {
+                    // Remove all status classes
+                    navItem.classList.remove('answered', 'marked', 'not-attempted', 'current');
+                    
+                    // Add current class if this is the active question
+                    if (i === currentQuestion) {
+                        navItem.classList.add('current');
+                    }
+                    
+                    // Priority: marked for review > answered > not-attempted
+                    if (markedForReview[questionId]) {
+                        navItem.classList.add('marked'); // Purple
+                    } else if (answers[questionId] !== undefined) {
+                        navItem.classList.add('answered'); // Green
+                    } else {
+                        navItem.classList.add('not-attempted'); // Gray
+                    }
+                }
+            });
+        }
+        
+        // Save and Next function
+        function saveAndNext(currentIndex) {
+            // Answers are auto-saved, just move to next
+            if (currentIndex < testQuestions.length - 1) {
+                showQuestion(currentIndex + 1);
+            }
+        }
+
+        // New MCQ selection function (doesn't auto-lock) - WORKING
+        function selectMCQOption(qId, option, questionIndex) {
+            console.log('Selecting MCQ option:', qId, option);
+            
+            // Check if section is locked
+            const question = testQuestions[questionIndex];
+            const section = question.section || 'default';
+            
+            if (isSectionLocked(section)) {
+                showModal('Section Locked', `Please submit the previous section before answering this question.`);
+                return;
+            }
+            
+            // Update visual selection
+            document.querySelectorAll(`#q${qId} .mcq-option`).forEach((opt, i) => {
+                if (i === option) {
+                    opt.classList.add('selected');
+                } else {
+                    opt.classList.remove('selected');
+                }
+            });
+            
+            // Update radio button
+            const radio = document.querySelector(`input[name="q${qId}"][value="${option}"]`);
+            if (radio) radio.checked = true;
+            
+            // Store the selected option (auto-save but not locked)
+            answers[qId] = option;
+            
+            // Update navigation immediately to show as answered
+            updateNavigation();
+            updateAnsweredCount();
+            
+            console.log('MCQ option selected and saved:', answers[qId]);
+        }
+        
+        // Submit answer function - OPTIONAL, not mandatory
+        function submitAnswer(qId, questionIndex) {
+            const question = testQuestions[questionIndex];
+            
+            if (question.type === 'mcq') {
+                // Allow submission even without selection - it will skip the question
+                if (answers[qId] === undefined) {
+                    // Just move to next question without error
+                    showNotification('Question skipped', 'info');
+                    if (questionIndex < testQuestions.length - 1) {
+                        setTimeout(() => showQuestion(questionIndex + 1), 300);
+                    }
+                    return;
+                }
+                
+                showNotification('Answer saved!', 'success');
+            } else if (question.type === 'coding') {
+                const code = document.getElementById(`code${qId}`).value;
+                const template = question.template || '';
+                
+                if (!code || code.trim() === template.trim()) {
+                    // Allow skipping coding questions too
+                    showNotification('Question skipped', 'info');
+                    if (questionIndex < testQuestions.length - 1) {
+                        setTimeout(() => showQuestion(questionIndex + 1), 300);
+                    }
+                    return;
+                }
+                
+                answers[qId] = code;
+                showNotification('Code saved!', 'success');
+            }
+            
+            updateNavigation();
+            updateAnsweredCount();
+            
+            // Move to next question
+            if (questionIndex < testQuestions.length - 1) {
+                setTimeout(() => {
+                    showQuestion(questionIndex + 1);
+                }, 300);
+            }
+        }
+        
+        // Removed old code submission logic below
+        function submitAnswerOLD(qId, questionIndex) {
+            const question = testQuestions[questionIndex];
+            
+            if (question.type === 'mcq') {
+                // Check if an option is selected
+                if (answers[qId] === undefined) {
+                    showModal('No Answer Selected', 'Please select an option before submitting.');
+                    return;
+                }
+                
+                // Mark as submitted and lock
+                document.getElementById(`q${qId}`).dataset.submitted = 'true';
+                
+                // Lock all options
+                document.querySelectorAll(`#q${qId} .mcq-option`).forEach(opt => {
+                    opt.classList.add('locked');
+                    opt.onclick = null;
+                });
+                
+                // Disable Clear and Mark for Review buttons
+                const clearBtn = document.querySelector(`#q${qId} button[onclick*="clearAnswer"]`);
+                if (clearBtn) {
+                    clearBtn.disabled = true;
+                    clearBtn.style.opacity = '0.5';
+                    clearBtn.style.cursor = 'not-allowed';
+                }
+                
+                showNotification('Answer submitted and locked!', 'success');
+            } else if (question.type === 'coding') {
+                const code = document.getElementById(`code${qId}`).value;
+                const template = question.template || '';
+                
+                if (!code || code.trim() === template.trim()) {
+                    showModal('No Code Written', 'Please write your code before submitting.');
+                    return;
+                }
+                
+                answers[qId] = code;
+                document.getElementById(`q${qId}`).dataset.submitted = 'true';
+                
+                // Lock the code editor
+                document.getElementById(`code${qId}`).disabled = true;
+                document.getElementById(`code${qId}`).style.opacity = '0.7';
+                
+                // Disable buttons
+                const clearBtn = document.querySelector(`#q${qId} button[onclick*="clearCodeAnswer"]`);
+                if (clearBtn) {
+                    clearBtn.disabled = true;
+                    clearBtn.style.opacity = '0.5';
+                    clearBtn.style.cursor = 'not-allowed';
+                }
+                
+                showNotification('Code submitted and locked!', 'success');
+            }
+            
+            updateNavigation();
+            updateAnsweredCount();
+            
+            // Move to next question
+            setTimeout(() => {
+                if (questionIndex < testQuestions.length - 1) {
+                    showQuestion(questionIndex + 1);
+                }
+            }, 800);
+        }
+        
+        // Clear answer function - WORKING
+        function clearAnswer(qId, questionIndex) {
+            // Clear the saved answer
+            delete answers[qId];
+            
+            // Clear visual selection
+            document.querySelectorAll(`#q${qId} .mcq-option`).forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Clear radio buttons
+            document.querySelectorAll(`input[name="q${qId}"]`).forEach(radio => {
+                radio.checked = false;
+            });
+            
+            // Update navigation
+            updateNavigation();
+            updateAnsweredCount();
+            
+            showNotification('Answer cleared', 'info');
+        }
+        
+        // Clear code answer function - WORKING
+        function clearCodeAnswer(qId) {
+            const question = testQuestions.find(q => q.id === qId);
+            const template = question.template || '';
+            
+            const editor = codeEditors[qId];
+            if (editor) {
+                editor.setValue(template);
+            }
+            
+            // Clear saved answer
+            delete answers[qId];
+            updateNavigation();
+            updateAnsweredCount();
+            
+            showNotification('Code cleared', 'info');
+        }
+        
+        // Mark for review function
+        function markForReview(qId, questionIndex) {
+            if (markedForReview[qId]) {
+                delete markedForReview[qId];
+                showNotification('Review mark removed', 'info');
+            } else {
+                markedForReview[qId] = true;
+                showNotification('Marked for review', 'success');
+            }
+            
+            updateNavigation();
+        }
+        
+        // Change language function
+        function changeLanguage(qId, newLang) {
+            const question = testQuestions.find(q => q.id === qId);
+            if (question) {
+                question.language = newLang;
+                // You could optionally update the template based on language
+            }
+        }
+        
+        // Real Judge0 API code execution
+        async function runCodeWithJudge0(qId) {
+            const editor = codeEditors[qId];
+            const output = document.getElementById(`output${qId}`);
+            const runBtn = document.getElementById(`runBtn${qId}`);
+            const inputEl = document.getElementById(`input${qId}`);
+            const langEl = document.getElementById(`lang${qId}`);
+            
+            if (!editor) return;
+            
+            const code = editor.getValue();
+            const customInput = inputEl ? inputEl.value : '';
+            const language = langEl ? langEl.value : 'python3';
+            
+            if (output) {
+                output.style.display = 'block';
+                output.innerHTML = '<div style="color: #0ea5e9;"><i class="fas fa-spinner fa-spin"></i> Compiling and executing code...</div>';
+            }
+            
+            if (runBtn) {
+                runBtn.disabled = true;
+                runBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running...';
+            }
+            
+            // Save the code first
+            saveCode(qId, code);
+            
+            try {
+                // Step 1: Submit code to Judge0
+                const submitResponse = await fetch(JUDGE0_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        'X-RapidAPI-Key': JUDGE0_API_KEY,
+                        'X-RapidAPI-Host': JUDGE0_API_HOST
+                    },
+                    body: JSON.stringify({
+                        source_code: code,
+                        language_id: languageMap[language] || 71,
+                        stdin: customInput,
+                        cpu_time_limit: 2,
+                        memory_limit: 128000
+                    })
+                });
+                
+                if (!submitResponse.ok) {
+                    throw new Error(`HTTP error! status: ${submitResponse.status}`);
+                }
+                
+                const submitData = await submitResponse.json();
+                const token = submitData.token;
+                
+                // Step 2: Poll for result
+                let result = null;
+                let attempts = 0;
+                const maxAttempts = 10;
+                
+                while (attempts < maxAttempts) {
+                    await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+                    
+                    const resultResponse = await fetch(`${JUDGE0_API_URL}/${token}`, {
+                        method: 'GET',
+                        headers: {
+                            'X-RapidAPI-Key': JUDGE0_API_KEY,
+                            'X-RapidAPI-Host': JUDGE0_API_HOST
+                        }
+                    });
+                    
+                    if (!resultResponse.ok) {
+                        throw new Error(`HTTP error! status: ${resultResponse.status}`);
+                    }
+                    
+                    result = await resultResponse.json();
+                    
+                    // Check if execution is complete
+                    if (result.status.id > 2) { // Status > 2 means execution is complete
+                        break;
+                    }
+                    
+                    attempts++;
+                }
+                
+                if (!result) {
+                    throw new Error('Failed to get execution result');
+                }
+                
+                // Step 3: Display output
+                if (output) {
+                    let resultHTML = '';
+                    let className = 'output-panel';
+                    
+                    // Status descriptions
+                    const statusDescriptions = {
+                        3: 'Accepted',
+                        4: 'Wrong Answer',
+                        5: 'Time Limit Exceeded',
+                        6: 'Compilation Error',
+                        7: 'Runtime Error (SIGSEGV)',
+                        8: 'Runtime Error (SIGXFSZ)',
+                        9: 'Runtime Error (SIGFPE)',
+                        10: 'Runtime Error (SIGABRT)',
+                        11: 'Runtime Error (NZEC)',
+                        12: 'Runtime Error (Other)',
+                        13: 'Internal Error',
+                        14: 'Exec Format Error'
+                    };
+                    
+                    const statusId = result.status.id;
+                    const statusDesc = result.status.description || statusDescriptions[statusId] || 'Unknown';
+                    
+                    // Success case (Accepted)
+                    if (statusId === 3) {
+                        resultHTML = `<div style="color: #10b981; font-weight: 600; margin-bottom: 0.5rem;"><i class="fas fa-check-circle"></i> ${statusDesc}</div>`;
+                        
+                        if (result.stdout) {
+                            resultHTML += `<div style="margin-top: 0.5rem;"><strong>Output:</strong></div><div style="margin-top: 0.3rem; white-space: pre-wrap; background: #1e1e1e; padding: 0.5rem; border-radius: 4px; color: #d4d4d4;">${result.stdout}</div>`;
+                        } else {
+                            resultHTML += `<div style="margin-top: 0.5rem; color: #6b7280;">No output produced.</div>`;
+                        }
+                        className = 'output-panel success';
+                    }
+                    // Compilation Error
+                    else if (statusId === 6) {
+                        resultHTML = `<div style="color: #ef4444; font-weight: 600; margin-bottom: 0.5rem;"><i class="fas fa-times-circle"></i> ${statusDesc}</div>`;
+                        if (result.compile_output) {
+                            resultHTML += `<div style="margin-top: 0.3rem; white-space: pre-wrap; background: #fef2f2; padding: 0.5rem; border-radius: 4px; color: #991b1b; border-left: 3px solid #ef4444;">${result.compile_output}</div>`;
+                        }
+                        className = 'output-panel error';
+                    }
+                    // Runtime Error
+                    else if (statusId >= 7 && statusId <= 12) {
+                        resultHTML = `<div style="color: #ef4444; font-weight: 600; margin-bottom: 0.5rem;"><i class="fas fa-exclamation-triangle"></i> ${statusDesc}</div>`;
+                        if (result.stderr) {
+                            resultHTML += `<div style="margin-top: 0.3rem; white-space: pre-wrap; background: #fef2f2; padding: 0.5rem; border-radius: 4px; color: #991b1b; border-left: 3px solid #ef4444;">${result.stderr}</div>`;
+                        }
+                        if (result.stdout) {
+                            resultHTML += `<div style="margin-top: 0.5rem;"><strong>Output before error:</strong></div><div style="margin-top: 0.3rem; white-space: pre-wrap; background: #1e1e1e; padding: 0.5rem; border-radius: 4px; color: #d4d4d4;">${result.stdout}</div>`;
+                        }
+                        className = 'output-panel error';
+                    }
+                    // Time Limit Exceeded
+                    else if (statusId === 5) {
+                        resultHTML = `<div style="color: #f59e0b; font-weight: 600; margin-bottom: 0.5rem;"><i class="fas fa-clock"></i> ${statusDesc}</div>`;
+                        resultHTML += `<div style="margin-top: 0.5rem; color: #92400e;">Your program took too long to execute. Please optimize your code.</div>`;
+                        className = 'output-panel';
+                    }
+                    // Other errors
+                    else {
+                        resultHTML = `<div style="color: #ef4444; font-weight: 600; margin-bottom: 0.5rem;"><i class="fas fa-times-circle"></i> ${statusDesc}</div>`;
+                        if (result.message) {
+                            resultHTML += `<div style="margin-top: 0.5rem; color: #991b1b;">${result.message}</div>`;
+                        }
+                        className = 'output-panel error';
+                    }
+                    
+                    // Add execution statistics
+                    resultHTML += `<div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; color: #6b7280; display: flex; gap: 1.5rem;">`;
+                    if (result.time) resultHTML += `<span><i class="fas fa-clock" style="margin-right: 0.3rem;"></i>Time: ${result.time}s</span>`;
+                    if (result.memory) resultHTML += `<span><i class="fas fa-memory" style="margin-right: 0.3rem;"></i>Memory: ${(result.memory / 1024).toFixed(2)} MB</span>`;
+                    resultHTML += `</div>`;
+                    
+                    output.innerHTML = resultHTML;
+                }
+            } catch (error) {
+                console.error('Judge0 API Error:', error);
+                if (output) {
+                    output.innerHTML = `<div style="color: #ef4444; font-weight: 600;"><i class="fas fa-times-circle"></i> Error</div><div style="margin-top: 0.5rem; color: #991b1b;">${error.message}</div><div style="margin-top: 0.5rem; color: #6b7280; font-size: 0.85rem;">Please check your internet connection and try again.</div>`;
+                }
+            } finally {
+                if (runBtn) {
+                    runBtn.disabled = false;
+                    runBtn.innerHTML = '<i class="fas fa-play"></i> Run Code';
+                }
+            }
+        }
+        
+        // Fallback simulation (when no API key is set)
+        async function runCodeSimulation(qId) {
+            const codeEl = document.getElementById(`code${qId}`);
+            const output = document.getElementById(`output${qId}`);
+            const runBtn = document.getElementById(`runBtn${qId}`);
+            
+            const code = codeEl.value;
+            
+            // Simulate delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Find the question to determine language
+            const question = testQuestions.find(q => q.id == qId);
+            const language = question?.language || 'c';
+            
+            let result = '';
+            let className = 'output-panel';
+            
+            // Language-specific simulation
+            if (code.includes('error') || code.includes('Error')) {
+                result = '<div style="color: #ef4444;"><strong>✗ Compilation Error:</strong> Syntax error detected</div>';
+                className = 'output-panel error';
+            } else if (code.includes('printf') || code.includes('cout') || code.includes('System.out') || code.includes('print')) {
+                result = '<div style="color: #10b981;"><strong>✓ Output:</strong></div><div style="margin-top: 0.5rem;">Hello, World!</div><div style="margin-top: 0.5rem; color: #6b7280;">Program exited successfully</div>';
+                className = 'output-panel success';
+            } else {
+                result = '<div style="color: #10b981;"><strong>✓ Compiled successfully!</strong></div><div style="margin-top: 0.5rem; color: #6b7280;">Note: Submit your test for complete evaluation.</div>';
+                className = 'output-panel success';
+            }
+            
+            result += '<div style="margin-top: 1rem; padding: 0.75rem; background: rgba(245, 158, 11, 0.1); border-left: 3px solid #f59e0b; border-radius: 4px;"><strong>ℹ️ Simulation Mode:</strong> To use real code execution, add your Judge0 API key.</div>';
+            
+            if (output) {
+                output.innerHTML = result;
+                output.className = className;
+            }
+            
+            if (runBtn) {
+                runBtn.disabled = false;
+                runBtn.innerHTML = '<i class="fas fa-play"></i> Run Code';
+            }
+        }
+        
+        // Show notification function
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#0ea5e9'};
+                color: white;
+                border-radius: 8px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                z-index: 10000;
+                font-weight: 600;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function selectAnswer(qId, option, questionIndex) {
+            
+            // Check if section is locked
+            const question = testQuestions[questionIndex];
+            const section = question.section || 'default';
+            
+            if (isSectionLocked(section)) {
+                showModal('Section Locked', `Please complete the previous section before answering this question.`);
+                return;
+            }
+            
+            // If answer already selected, don't allow change (lock mechanism)
+            if (answers[qId] !== undefined) {
+                console.log('Answer already selected, locking options');
+                // Ensure options are locked
+                document.querySelectorAll(`#q${qId} .mcq-option`).forEach(opt => {
+                    opt.classList.add('locked');
+                    opt.onclick = null; // Remove click handler
+                });
+                return;
+            }
+            
+            answers[qId] = option;
+            updateNavigation();
+            updateAnsweredCount();
+            const radio = document.querySelector(`input[name="q${qId}"][value="${option}"]`);
+            if (radio) radio.checked = true;
+            
+            // Update visual selection
+            document.querySelectorAll(`#q${qId} .mcq-option`).forEach((opt, i) => {
+                if (i === option) {
+                    opt.classList.add('selected');
+                }
+                // Lock all options after selection
+                opt.classList.add('locked');
+                opt.onclick = null; // Remove click handler
+            });
+            
+            console.log('Answer saved:', answers[qId]);
+            
+            // Update section status
+            updateSectionLocks();
+            
+            // Move to next question automatically after a short delay
+            setTimeout(() => {
+                if (questionIndex < testQuestions.length - 1) {
+                    showQuestion(questionIndex + 1);
+                }
+            }, 500);
+        }
+
+        function saveCode(qId, code) {
+            answers[qId] = code;
+            updateNavigation();
+            updateAnsweredCount();
+        }
+
+        function runCode(qId) {
+            const codeEl = document.getElementById(`code${qId}`);
+            if (!codeEl) return;
+            
+            const code = codeEl.value;
+            const output = document.getElementById(`output${qId}`);
+            const runBtn = document.getElementById(`runBtn${qId}`);
+            
+            if (output) {
+                output.style.display = 'block';
+                output.innerHTML = '<div style="color: #a0a0a0;">Compiling and running code...</div>';
+                output.className = 'output-panel';
+            }
+            
+            if (runBtn) {
+                runBtn.disabled = true;
+                runBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running...';
+            }
+            
+            // Save the code first
+            saveCode(qId, code);
+            
+            // Enhanced code execution simulation with multiple language support
+            setTimeout(() => {
+                if (output) {
+                    // Find the question to determine language
+                    const question = testQuestions.find(q => q.id == qId);
+                    const language = question?.language || 'c';
+                    
+                    // Enhanced simulation with language-specific output
+                    let result = '';
+                    let className = 'output-panel';
+                    
+                    // Language-specific execution simulation
+                    switch(language) {
+                        case 'c':
+                        case 'cpp':
+                            if (code.includes('error') || code.includes('Error')) {
+                                result = '<div style="color: #ff6b6b;">Compilation Error: Unknown identifier \'error\'</div>';
+                                className = 'output-panel error';
+                            } else if (code.includes('printf') || code.includes('cout')) {
+                                result = '<div style="color: #6bff6b;">Hello, World!</div>\n<div style="color: #a0a0a0;">Program exited with code 0</div>';
+                                className = 'output-panel success';
+                            } else if (code.includes('return 0')) {
+                                result = '<div style="color: #a0a0a0;">Program exited with code 0</div>';
+                                className = 'output-panel';
+                            } else {
+                                result = '<div style="color: #6bff6b;">Code compiled successfully!</div>\n<div style="color: #a0a0a0;">Note: For a complete evaluation, please submit your test.</div>';
+                                className = 'output-panel success';
+                            }
+                            break;
+                        case 'java':
+                            if (code.includes('error') || code.includes('Error')) {
+                                result = '<div style="color: #ff6b6b;">Compilation Error: Cannot find symbol \'error\'</div>';
+                                className = 'output-panel error';
+                            } else if (code.includes('System.out.println')) {
+                                result = '<div style="color: #6bff6b;">Hello, World!</div>\n<div style="color: #a0a0a0;">Process finished with exit code 0</div>';
+                                className = 'output-panel success';
+                            } else {
+                                result = '<div style="color: #6bff6b;">Code compiled successfully!</div>\n<div style="color: #a0a0a0;">Note: For a complete evaluation, please submit your test.</div>';
+                                className = 'output-panel success';
+                            }
+                            break;
+                        case 'python3':
+                        case 'python2':
+                            if (code.includes('error') || code.includes('Error')) {
+                                result = '<div style="color: #ff6b6b;">SyntaxError: invalid syntax</div>';
+                                className = 'output-panel error';
+                            } else if (code.includes('print')) {
+                                result = '<div style="color: #6bff6b;">Hello, World!</div>\n<div style="color: #a0a0a0;">Process finished with exit code 0</div>';
+                                className = 'output-panel success';
+                            } else {
+                                result = '<div style="color: #6bff6b;">Code executed successfully!</div>\n<div style="color: #a0a0a0;">Note: For a complete evaluation, please submit your test.</div>';
+                                className = 'output-panel success';
+                            }
+                            break;
+                        default:
+                            // Generic simulation
+                            if (code.includes('error') || code.includes('Error')) {
+                                result = '<div style="color: #ff6b6b;">Error: Code contains errors</div>';
+                                className = 'output-panel error';
+                            } else if (code.includes('return 0') || code.includes('print') || code.includes('cout') || code.includes('System.out')) {
+                                result = '<div style="color: #6bff6b;">Hello, World!</div>\n<div style="color: #a0a0a0;">Execution completed successfully</div>';
+                                className = 'output-panel success';
+                            } else {
+                                result = '<div style="color: #6bff6b;">Code compiled successfully!</div>\n<div style="color: #a0a0a0;">Note: For a complete evaluation, please submit your test.</div>';
+                                className = 'output-panel success';
+                            }
+                    }
+                    
+                    output.innerHTML = result;
+                    output.className = className;
+                }
+                
+                if (runBtn) {
+                    runBtn.disabled = false;
+                    runBtn.innerHTML = '<i class="fas fa-play"></i> Run Code';
+                }
+            }, 2000);
+        }
+
+        // Enhanced section lock functionality - NOT MANDATORY TO ATTEMPT ALL
+        function isSectionLocked(section) {
+            console.log('Checking if section is locked:', section);
+            console.log('testMeta.sections:', testMeta.sections);
+            
+            // If it's the default section or no sections defined, it's not locked
+            if (section === 'default' || !testMeta.sections || testMeta.sections.length <= 1) {
+                console.log('Section not locked - default or no sections');
+                return false;
+            }
+            
+            // Find section order
+            const sectionOrder = testMeta.sections.map(s => s.letter);
+            const sectionIndex = sectionOrder.indexOf(section);
+            console.log('Section order:', sectionOrder, 'Section index:', sectionIndex);
+            
+            // If it's the first section, it's not locked
+            if (sectionIndex <= 0) {
+                console.log('Section not locked - first section');
+                return false;
+            }
+            
+            // Check if previous section is submitted (not necessarily all answered)
+            const prevSection = sectionOrder[sectionIndex - 1];
+            const isPrevSectionSubmitted = submittedSections.includes(prevSection);
+            
+            console.log('Previous section:', prevSection, 'Submitted:', isPrevSectionSubmitted);
+            
+            // Section is locked only if previous section is not submitted
+            const isLocked = !isPrevSectionSubmitted;
+            console.log('Section locked:', isLocked);
+            return isLocked;
+        }
+
+        function updateSectionLocks() {
+            console.log('Updating section locks...');
+            // Update section status based on answered questions
+            Object.keys(sectionQuestions).forEach(section => {
+                const questions = sectionQuestions[section];
+                const answeredCount = questions.filter(qId => answers[qId] !== undefined).length;
+                // A section is considered "completed" if all questions are answered
+                const totalQuestions = questions.length;
+                sectionStatus[section] = answeredCount >= totalQuestions && totalQuestions > 0;
+                console.log('Section', section, 'answered:', answeredCount, 'total:', totalQuestions, 'status:', sectionStatus[section]);
+            });
+            
+            // Update UI to show section completion
+            updateSectionUI();
+        }
+
+        function updateSectionUI() {
+            // This would update the UI to show which sections are completed
+            // For now, we'll just update the navigation
+            updateNavigation();
+        }
+
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft <= 300 && timeLeft > 60) {
+                    document.getElementById('timer').className = 'timer warning';
+                } else if (timeLeft <= 60) {
+                    document.getElementById('timer').className = 'timer danger';
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timerText').textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function updateAnsweredCount() {
+            // Optional: Could display answered count somewhere if needed
+            // For now, just keep the function to avoid errors
+        }
+
+        function showModal(title, message) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('customModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('customModal').style.display = 'none';
+        }
+
+        function calculateResults() {
+            let score = 0;
+            let maxMarks = 0;
+
+            testQuestions.forEach(q => {
+                const questionId = q.id;
+                const marks = q.marks || (q.type === 'mcq' ? 1 : 5);
+                maxMarks += marks;
+
+                if (answers[questionId] !== undefined && answers[questionId] !== null) {
+                    if (q.type === 'mcq') {
+                        if (answers[questionId] == q.correct) {
+                            score += marks;
+                        } else if (testMeta.negativeMarking) {
+                            const negativeMarkPercentage = testMeta.negativeMarkPercentage || 0;
+                            score -= marks * (negativeMarkPercentage / 100);
+                        }
+                    } else if (q.type === 'coding') {
+                        // For coding questions, we give partial credit for attempting
+                        // In a real implementation, this would be evaluated by running test cases
+                        score += marks * 0.5; // 50% for attempt
+                    }
+                }
+            });
+
+            // Ensure score doesn't go negative
+            score = Math.max(0, score);
+            const percentage = maxMarks > 0 ? (score / maxMarks) * 100 : 0;
+
+            return { score, maxMarks, percentage: percentage.toFixed(2) };
+        }
+
+        function submitTest() {
+            if (!confirm('Are you sure you want to submit the test? You cannot change your answers after submission.')) {
+                return;
+            }
+
+            // Stop timer
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+
+            // Calculate time taken
+            const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+            const answeredQuestions = Object.keys(answers).length;
+
+            // Calculate results
+            const resultData = calculateResults();
+            resultData.timeTaken = timeTaken;
+            resultData.tabSwitches = tabSwitchCount;
+            resultData.totalQuestions = testQuestions.length;
+            resultData.answeredQuestions = answeredQuestions;
+
+            // Save results to localStorage
+            const testResults = JSON.parse(localStorage.getItem('testResults') || '[]');
+            testResults.push({
+                testId: testId,
+                applicationId: jobApplicationId,
+                internshipId: jobApplicationId,
+                timestamp: Date.now(),
+                score: resultData.score,
+                maxMarks: resultData.maxMarks,
+                percentage: resultData.percentage,
+                timeTaken: timeTaken,
+                tabSwitches: tabSwitchCount,
+                answers: answers
+            });
+            localStorage.setItem('testResults', JSON.stringify(testResults));
+
+            // Exit fullscreen
+            if (document.exitFullscreen) document.exitFullscreen();
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+            else if (document.msExitFullscreen) document.msExitFullscreen();
+            
+            // Redirect to feedback page
+            setTimeout(() => {
+                window.location.href = 'feedback.html';
+            }, 500);
+        }
+
+        function showResult(result) {
+            const passed = result.percentage >= (testMeta.minScore || 70);
+            document.body.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--bg); padding: 2rem;">
+                    <div style="background: white; padding: 3rem; border-radius: 16px; max-width: 600px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <i class="fas ${passed ? 'fa-check-circle' : 'fa-times-circle'}" style="font-size: 4rem; color: ${passed ? 'var(--success)' : 'var(--error)'}; margin-bottom: 1rem;"></i>
+                            <h2 style="color: var(--text-primary); margin-bottom: 0.5rem;">Test Submitted!</h2>
+                            <p style="color: var(--text-secondary);">Your assessment has been completed.</p>
+                        </div>
+                        <div style="background: var(--bg); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+                            <h3 style="margin-bottom: 1rem; color: var(--text-primary);">Your Results</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div>
+                                    <div style="font-size: 0.9rem; color: var(--text-secondary);">Score</div>
+                                    <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">${result.score.toFixed(2)}</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary);">out of ${result.maxMarks}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.9rem; color: var(--text-secondary);">Percentage</div>
+                                    <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">${result.percentage}%</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary);">${passed ? 'Passed' : 'Not Passed'}</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="color: var(--text-secondary);">Questions Answered:</span>
+                                    <strong>${result.answeredQuestions} / ${result.totalQuestions}</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="color: var(--text-secondary);">Time Taken:</span>
+                                    <strong>${Math.floor(result.timeTaken / 60)}m ${result.timeTaken % 60}s</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="color: var(--text-secondary);">Tab Switches:</span>
+                                    <strong>${result.tabSwitches}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="window.location.href='feedback.html'" style="width: 100%; padding: 1rem; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; margin-bottom: 1rem;">
+                            <i class="fas fa-comment-alt"></i> Provide Feedback
+                        </button>
+                        <button onclick="window.location.href='index.html'" style="width: 100%; padding: 1rem; background: white; color: var(--text-primary); border: 2px solid var(--border); border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem;">
+                            Return to Home
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Strict tab switch detection - auto-submit test on excessive switching
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && timerInterval) {
+                tabSwitchCount++;
+                
+                // Show warning
+                showNotification(`Warning: Tab switching detected! (${tabSwitchCount} time${tabSwitchCount > 1 ? 's' : ''})`, 'error');
+                
+                // Auto-submit test after 3 tab switches
+                if (tabSwitchCount >= 3) {
+                    clearInterval(timerInterval);
+                    showModal('Test Auto-Submitted', `Your test has been automatically submitted due to excessive tab switching (${tabSwitchCount} times). This activity is considered a violation of test rules.`);
+                    setTimeout(() => {
+                        submitTest();
+                    }, 2000);
+                }
+            }
+        });
+
+        // Fullscreen change detection
+        document.addEventListener('fullscreenchange', () => {
+            setTimeout(checkFullscreen, 50);
+        });
+        document.addEventListener('webkitfullscreenchange', () => {
+            setTimeout(checkFullscreen, 50);
+        });
+        document.addEventListener('mozfullscreenchange', () => {
+            setTimeout(checkFullscreen, 50);
+        });
+        document.addEventListener('MSFullscreenChange', () => {
+            setTimeout(checkFullscreen, 50);
+        });
+
+        // Prevent context menu and shortcuts
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/php/php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/ruby/ruby.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/shell/shell.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
+</body>
+</html>

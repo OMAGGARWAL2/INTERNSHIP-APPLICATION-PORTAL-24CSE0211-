@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hirer Dashboard - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700;800;900&family=SF+Pro+Text:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+            --primary-gradient: linear-gradient(135deg, var(--blue), var(--sea-blue));
+            --secondary-gradient: linear-gradient(135deg, var(--sea-blue), var(--blue));
+            --dark-bg: var(--cream);
+            --card-bg: #ffffff;
+            --text-primary: var(--blue);
+            --text-secondary: rgba(30, 58, 138, 0.8);
+            --accent-color: var(--sea-blue);
+            --hover-color: var(--blue);
+            --border-color: rgba(30, 58, 138, 0.15);
+        }
+
+        body {
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            border-bottom: 2px solid var(--accent-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        .btn-post {
+            padding: 0.7rem 1.5rem;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-post:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-test {
+            padding: 0.7rem 1.5rem;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-test:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-title {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: var(--text-secondary);
+        }
+
+        /* Internship Grid */
+        .internship-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .internship-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .internship-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-gradient);
+        }
+
+        .internship-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .internship-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .company-info {
+            margin-bottom: 1rem;
+        }
+
+        .company-info p {
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+
+        .tag {
+            padding: 0.3rem 0.8rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-color);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .salary {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #10b981;
+            margin: 1rem 0;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-view {
+            flex: 1;
+            padding: 0.8rem;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-edit {
+            padding: 0.8rem 1.5rem;
+            background: transparent;
+            border: 2px solid var(--accent-color);
+            border-radius: 10px;
+            color: var(--accent-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h2 {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .applicants-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .applicant-card {
+            background: var(--dark-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .applicant-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .applicant-email {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .internship-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                gap: 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-building"></i>
+                <span>Hirer Dashboard</span>
+            </div>
+            <nav>
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="find-internships.html"><i class="fas fa-briefcase"></i> All Internships</a>
+                <a href="courses.html"><i class="fas fa-graduation-cap"></i> Courses</a>
+                <a href="messages.html"><i class="fas fa-envelope"></i> Messages</a>
+                <a href="post-internship.html" class="btn-post" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-plus"></i> Post Internship
+                </a>
+                <a href="createcourse.html" class="btn-post" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; background: #8b5cf6;">
+                    <i class="fas fa-book"></i> Create Course
+                </a>
+                <a href="postmaterials.html" class="btn-post" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; background: #10b981;">
+                    <i class="fas fa-upload"></i> Post Study Materials
+                </a>
+                <a href="ats.html" class="btn-post" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; background: #f59e0b;">
+                    <i class="fas fa-users-cog"></i> Track Applications (ATS)
+                </a>
+                <a href="test.html" class="btn-test">
+                    <i class="fas fa-clipboard-list"></i> Create Test
+                </a>
+                <button onclick="hirerLogout()" class="btn-post" style="background: #ef4444; cursor: pointer;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <h1 class="page-title">Welcome to Hirer Portal</h1>
+        <p class="page-subtitle">
+            <strong style="color: var(--accent-color);"><i class="fas fa-building"></i> Company:</strong> <span id="displayCompany">Loading...</span> | 
+            <strong style="color: var(--accent-color);"><i class="fas fa-user"></i> User:</strong> <span id="displayUsername">Loading...</span>
+        </p>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3 id="totalInternships">0</h3>
+                <p>Total Internships</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalApplications">0</h3>
+                <p>Total Applications</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="activePosts">0</h3>
+                <p>Active Posts</p>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <h2 style="margin-bottom: 1.5rem; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--text-primary);">Quick Actions</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+            <a href="post-internship.html" style="background: var(--card-bg); padding: 2rem; border-radius: 15px; border: 2px solid var(--border-color); text-decoration: none; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 40px rgba(30,58,138,0.2)'; this.style.borderColor='var(--accent-color)';" onmouseout="this.style.transform=''; this.style.boxShadow=''; this.style.borderColor='var(--border-color)';">
+                <i class="fas fa-plus-circle" style="font-size: 3rem; color: var(--accent-color);"></i>
+                <h3 style="color: var(--text-primary); font-size: 1.3rem; font-weight: 600; margin: 0;">Post Internship</h3>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin: 0;">Create new internship opportunities</p>
+            </a>
+            <a href="ats.html" style="background: var(--card-bg); padding: 2rem; border-radius: 15px; border: 2px solid var(--border-color); text-decoration: none; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 40px rgba(30,58,138,0.2)'; this.style.borderColor='var(--accent-color)';" onmouseout="this.style.transform=''; this.style.boxShadow=''; this.style.borderColor='var(--border-color)';">
+                <i class="fas fa-users-cog" style="font-size: 3rem; color: #f59e0b;"></i>
+                <h3 style="color: var(--text-primary); font-size: 1.3rem; font-weight: 600; margin: 0;">Track Applications (ATS)</h3>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin: 0;">Manage applicant tracking system</p>
+            </a>
+            <a href="test.html" style="background: var(--card-bg); padding: 2rem; border-radius: 15px; border: 2px solid var(--border-color); text-decoration: none; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 40px rgba(30,58,138,0.2)'; this.style.borderColor='var(--accent-color)';" onmouseout="this.style.transform=''; this.style.boxShadow=''; this.style.borderColor='var(--border-color)';">
+                <i class="fas fa-clipboard-list" style="font-size: 3rem; color: #ef4444;"></i>
+                <h3 style="color: var(--text-primary); font-size: 1.3rem; font-weight: 600; margin: 0;">Create Test</h3>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin: 0;">Build assessment tests for candidates</p>
+            </a>
+            <a href="postmaterials.html" style="background: var(--card-bg); padding: 2rem; border-radius: 15px; border: 2px solid var(--border-color); text-decoration: none; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 40px rgba(30,58,138,0.2)'; this.style.borderColor='var(--accent-color)';" onmouseout="this.style.transform=''; this.style.boxShadow=''; this.style.borderColor='var(--border-color)';">
+                <i class="fas fa-upload" style="font-size: 3rem; color: #10b981;"></i>
+                <h3 style="color: var(--text-primary); font-size: 1.3rem; font-weight: 600; margin: 0;">Post Study Materials</h3>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin: 0;">Share resources with students</p>
+            </a>
+            <a href="createcourse.html" style="background: var(--card-bg); padding: 2rem; border-radius: 15px; border: 2px solid var(--border-color); text-decoration: none; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 40px rgba(30,58,138,0.2)'; this.style.borderColor='var(--accent-color)';" onmouseout="this.style.transform=''; this.style.boxShadow=''; this.style.borderColor='var(--border-color)';">
+                <i class="fas fa-book" style="font-size: 3rem; color: #8b5cf6;"></i>
+                <h3 style="color: var(--text-primary); font-size: 1.3rem; font-weight: 600; margin: 0;">Create Course</h3>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin: 0;">Build training courses for interns</p>
+            </a>
+            <a href="messages.html" style="background: var(--card-bg); padding: 2rem; border-radius: 15px; border: 2px solid var(--border-color); text-decoration: none; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 40px rgba(30,58,138,0.2)'; this.style.borderColor='var(--accent-color)';" onmouseout="this.style.transform=''; this.style.boxShadow=''; this.style.borderColor='var(--border-color)';">
+                <i class="fas fa-envelope" style="font-size: 3rem; color: var(--accent-color);"></i>
+                <h3 style="color: var(--text-primary); font-size: 1.3rem; font-weight: 600; margin: 0;">Messages</h3>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin: 0;">View and respond to applicants</p>
+            </a>
+        </div>
+
+        <!-- Messages Section -->
+        <div style="background: var(--card-bg); padding: 2rem; border-radius: 15px; margin-bottom: 3rem; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--text-primary);">
+                    <i class="fas fa-comments" style="color: var(--accent-color);"></i> Messages from Applicants
+                </h2>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button onclick="clearAllMessages()" style="padding: 0.6rem 1rem; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+                        <i class="fas fa-trash"></i> Clear Messages
+                    </button>
+                    <a href="messages.html" class="btn-view" style="text-decoration: none;">
+                        <i class="fas fa-external-link-alt"></i> View All Messages
+                    </a>
+                </div>
+            </div>
+            <div id="messagesPreview" style="display: grid; gap: 1rem;">
+                <!-- Messages will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Internships Grid -->
+        <h2 style="margin-bottom: 1.5rem; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">All Internship Listings</h2>
+        <div class="internship-grid" id="internshipsGrid"></div>
+    </div>
+
+    <!-- Post Internship Modal -->
+    <div class="modal" id="postModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Post New Internship</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="postForm">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Position Title</label>
+                    <input type="text" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 10px;" placeholder="e.g., Frontend Developer Intern">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Company Name</label>
+                    <input type="text" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 10px;" placeholder="Your Company Name">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Location</label>
+                    <input type="text" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 10px;" placeholder="e.g., Remote, Mumbai">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Stipend Range</label>
+                    <input type="text" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 10px;" placeholder="e.g., ₹15,000 - ₹25,000">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Skills Required</label>
+                    <input type="text" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 10px;" placeholder="e.g., React, JavaScript, HTML/CSS">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Description</label>
+                    <textarea required rows="4" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 10px; font-family: inherit;"></textarea>
+                </div>
+                <div style="margin-bottom: 1.5rem; border: 2px dashed var(--border-color); padding: 1.5rem; border-radius: 10px;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;"><i class="fas fa-clipboard-check"></i> Require Test Before Application</label>
+                    <div style="margin-bottom: 1rem;">
+                        <input type="checkbox" id="requireTest" onchange="toggleTestSection()">
+                        <label for="requireTest">Require applicants to pass a test</label>
+                    </div>
+                    <div id="testSection" style="display: none;">
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Test Type</label>
+                            <select id="testType" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 10px;" onchange="updateTestBuilderButtons()">
+                                <option value="mcq">Multiple Choice Questions (MCQ)</option>
+                                <option value="coding">Coding Test</option>
+                                <option value="both">Both MCQ and Coding</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Time Limit (minutes)</label>
+                            <input type="number" id="timeLimit" min="5" max="180" value="60" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 10px;">
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Minimum Score Required (%)</label>
+                            <input type="number" id="minScore" min="0" max="100" value="70" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 10px;">
+                        </div>
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(14, 165, 233, 0.05); border-radius: 8px;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-weight: 600;">
+                                <input type="checkbox" id="negativeMarking" style="width: auto;">
+                                Enable Negative Marking
+                            </label>
+                            <div id="negativeMarkSection" style="display: none; margin-top: 0.5rem;">
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Negative Mark Percentage (of question marks)</label>
+                                <input type="number" id="negativeMarkPercentage" min="0" max="100" value="25" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border-color); border-radius: 8px;">
+                                <small style="color: var(--text-secondary);">e.g., 25% means -0.25 marks for each wrong answer</small>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Result Disclosure</label>
+                            <select id="resultDisclosure" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 10px;">
+                                <option value="manual">Manual Review (Results sent via email)</option>
+                                <option value="immediate">Immediate Results (Show score right after submission)</option>
+                            </select>
+                        </div>
+                        <button type="button" onclick="openTestBuilder()" class="btn-post" style="width: 100%; background: #3b82f6;">
+                            <i class="fas fa-plus-circle"></i> Add Test Questions
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-post" style="width: 100%;">Post Internship</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Test Builder Modal -->
+    <div class="modal" id="testBuilderModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>Test Builder</h2>
+                <button class="close-btn" onclick="closeTestBuilder()">&times;</button>
+            </div>
+                                <div id="testBuilderContent">
+                        <!-- Test questions will be added here -->
+                    </div>
+                    <button onclick="addMCQQuestion()" class="btn-post" style="width: 100%; margin-top: 1rem; background: #3b82f6;">
+                        <i class="fas fa-plus"></i> Add MCQ Question
+                    </button>
+                    <button onclick="addCodingQuestion()" class="btn-post" style="width: 100%; margin-top: 0.5rem; background: #8b5cf6; display: none;">
+                        <i class="fas fa-code"></i> Add Coding Question
+                    </button>
+            <button onclick="saveTest()" class="btn-post" style="width: 100%; margin-top: 1rem; background: var(--accent-color);">
+                <i class="fas fa-save"></i> Save Test
+            </button>
+        </div>
+    </div>
+
+    <!-- View Applications Modal -->
+    <div class="modal" id="applicationsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Applications Received</h2>
+                <button class="close-btn" onclick="closeApplicationsModal()">&times;</button>
+            </div>
+            <div class="applicants-list" id="applicantsList">
+                <!-- Applicants will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Authorization Check
+        const isAuthorized = sessionStorage.getItem('hirerAuthorized');
+        if (!isAuthorized) {
+            window.location.href = 'hirer-auth.html';
+        }
+
+        // Get hirer details
+        const hirerCompany = sessionStorage.getItem('hirerCompany');
+        const hirerUsername = sessionStorage.getItem('hirerUsername');
+
+        // Activity Logging Function
+        function logActivity(action, description, details = {}) {
+            const log = JSON.parse(localStorage.getItem('hirerActivityLog') || '[]');
+            log.push({
+                timestamp: Date.now(),
+                action: action,
+                description: description,
+                username: hirerUsername,
+                company: hirerCompany,
+                details: details
+            });
+            localStorage.setItem('hirerActivityLog', JSON.stringify(log));
+        }
+
+        // Log page access
+        logActivity('PAGE_ACCESS', 'Accessed hirer dashboard');
+
+        // Display user info
+        document.getElementById('displayCompany').textContent = hirerCompany || 'N/A';
+        document.getElementById('displayUsername').textContent = hirerUsername || 'N/A';
+
+        // Custom notification function
+        function showCustomNotification(type, title, message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                min-width: 320px;
+                background: white;
+                padding: 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+                z-index: 10000;
+                border-left: 4px solid ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                animation: slideIn 0.3s ease;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: start; gap: 1rem;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}" style="font-size: 1.5rem; color: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};"></i>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 700; color: #1e3a8a; margin-bottom: 0.25rem;">${title}</div>
+                        <div style="color: #6b7280; font-size: 0.9rem;">${message}</div>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 1.2rem;">
+                        &times;
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 4000);
+        }
+
+        // Load internships from localStorage
+        let internships = JSON.parse(localStorage.getItem('internships') || '[]');
+        
+        // Add sample if empty
+        if (internships.length === 0) {
+            internships = [{
+                id: 1,
+                position: "Frontend Developer Intern",
+                company: "TechNova Solutions",
+                location: "Remote",
+                stipend: "₹15,000 - ₹25,000",
+                skills: ["React", "JavaScript", "HTML/CSS"],
+                description: "Work on cutting-edge web applications using React and modern JavaScript frameworks."
+            }];
+            localStorage.setItem('internships', JSON.stringify(internships));
+        }
+
+        function displayInternships() {
+            const grid = document.getElementById('internshipsGrid');
+            grid.innerHTML = '';
+
+            internships.forEach(internship => {
+                const card = document.createElement('div');
+                card.className = 'internship-card';
+                card.innerHTML = `
+                    <h3>${internship.position || internship.title || 'Unknown Position'}</h3>
+                    <div class="company-info">
+                        <p><i class="fas fa-building"></i> <strong>${internship.company}</strong></p>
+                        <p><i class="fas fa-map-marker-alt"></i> ${internship.location}</p>
+                        <p><i class="fas fa-users"></i> ${internship.applicants || 0} applicants</p>
+                    </div>
+                    <div class="tags">
+                        ${(internship.skills || internship.tags || []).map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        ${internship.hasTest ? '<span class="tag" style="background: #ff3b30; color: white;"><i class="fas fa-clipboard-check"></i> Test Required</span>' : ''}
+                        ${internship.hasCourse ? '<span class="tag" style="background: #34c759; color: white;"><i class="fas fa-graduation-cap"></i> Course Included</span>' : ''}
+                    </div>
+                    <div class="salary">${internship.stipend}/month</div>
+                    <p style="color: var(--text-secondary); margin: 1rem 0;">${internship.description}</p>
+                    <div class="card-actions">
+                        <button class="btn-view" onclick="viewApplications(${internship.id})">
+                            <i class="fas fa-eye"></i> View Applications
+                        </button>
+                        <button class="btn-edit" onclick="editInternship(${internship.id})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn-delete" onclick="deleteInternship(${internship.id})" style="background: #ef4444; color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Update stats
+            document.getElementById('totalInternships').textContent = internships.length;
+            document.getElementById('totalApplications').textContent = 
+                internships.reduce((sum, ip) => sum + (ip.applicants || 0), 0);
+            document.getElementById('activePosts').textContent = internships.length;
+        }
+        
+        function viewApplications(id) {
+            const internship = internships.find(ip => ip.id === id);
+            if (!internship) return;
+            
+            const applicantsList = document.getElementById('applicantsList');
+            
+            // Load real applications from localStorage
+            const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+            const internshipApplications = applications.filter(app => 
+                app.internshipId === id || app.jobTitle === internship.position || app.jobTitle === internship.title
+            );
+            
+            if (internshipApplications.length === 0) {
+                applicantsList.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                        <h3>No applications yet</h3>
+                        <p>No applicants have applied for this position yet.</p>
+                    </div>
+                `;
+            } else {
+                applicantsList.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3>Applicants for: ${internship.position || internship.title}</h3>
+                        <span style="background: var(--accent-color); color: white; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                            ${internshipApplications.length} ${internshipApplications.length === 1 ? 'application' : 'applications'}
+                        </span>
+                    </div>
+                    ${internshipApplications.map((app, index) => `
+                        <div class="applicant-card" style="position: relative;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
+                                <div style="flex: 1;">
+                                    <div class="applicant-name">${app.applicantName || app.name || 'Unknown Applicant'}</div>
+                                    <div class="applicant-email">
+                                        <i class="fas fa-envelope"></i> ${app.applicantEmail || app.email || 'No email'}
+                                    </div>
+                                    ${app.applicantPhone ? `
+                                        <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.25rem;">
+                                            <i class="fas fa-phone"></i> ${app.applicantPhone}
+                                        </div>
+                                    ` : ''}
+                                    ${app.coverLetter ? `
+                                        <div style="margin-top: 0.75rem; padding: 0.75rem; background: rgba(30,58,138,0.05); border-radius: 6px; font-size: 0.9rem; color: var(--text-secondary);">
+                                            <strong>Cover Letter:</strong><br>
+                                            ${app.coverLetter.substring(0, 150)}${app.coverLetter.length > 150 ? '...' : ''}
+                                        </div>
+                                    ` : ''}
+                                    ${app.hasResume && app.resumeFileName ? `
+                                        <div style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(14,165,233,0.1); border-radius: 6px; font-size: 0.85rem;">
+                                            <i class="fas fa-file-pdf"></i> Resume: ${app.resumeFileName}
+                                        </div>
+                                    ` : ''}
+                                    <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem; align-items: center;">
+                                        <label style="font-size: 0.9rem; font-weight: 600;">Status:</label>
+                                        <select onchange="updateApplicationStatus(${app.id}, this.value)" style="padding: 0.4rem 0.8rem; border: 2px solid var(--border); border-radius: 6px; font-size: 0.9rem; cursor: pointer;">
+                                            <option value="Pending" ${app.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                            <option value="Shortlisted" ${app.status === 'Shortlisted' ? 'selected' : ''}>Shortlisted</option>
+                                            <option value="Interview" ${app.status === 'Interview' ? 'selected' : ''}>Interview</option>
+                                            <option value="Accepted" ${app.status === 'Accepted' ? 'selected' : ''}>Accepted</option>
+                                            <option value="Rejected" ${app.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                    <button onclick="editApplication(${app.id})" style="padding: 0.5rem 1rem; background: var(--accent-color); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button onclick="messageApplicant(${app.id})" style="padding: 0.5rem 1rem; background: white; color: var(--accent-color); border: 2px solid var(--accent-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">
+                                        <i class="fas fa-comments"></i> Message
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-secondary);">
+                                <i class="fas fa-calendar"></i> Applied: ${new Date(app.appliedDate || Date.now()).toLocaleDateString()}
+                                ${app.testId ? ' • <i class="fas fa-clipboard-check"></i> Test Completed' : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+            }
+
+            document.getElementById('applicationsModal').classList.add('active');
+        }
+        
+        // Update application status
+        function updateApplicationStatus(applicationId, newStatus) {
+            const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+            const application = applications.find(app => app.id === applicationId);
+            if (application) {
+                const oldStatus = application.status;
+                application.status = newStatus;
+                application.statusUpdatedAt = new Date().toISOString();
+                localStorage.setItem('applications', JSON.stringify(applications));
+                
+                // Log activity
+                logActivity('UPDATE_STATUS', `Updated application status from ${oldStatus} to ${newStatus}`, {
+                    applicationId: applicationId,
+                    applicantName: application.applicantName || application.name,
+                    applicantEmail: application.applicantEmail || application.email,
+                    oldStatus: oldStatus,
+                    newStatus: newStatus
+                });
+                
+                // Show notification
+                showNotification('success', 'Status Updated', `Application status updated from ${oldStatus} to ${newStatus}`);
+                
+                // Refresh display - find the internship from the modal
+                const modal = document.getElementById('applicationsModal');
+                const applicantsList = document.getElementById('applicantsList');
+                const titleElement = applicantsList.querySelector('h3');
+                if (titleElement) {
+                    const titleText = titleElement.textContent;
+                    const internshipTitle = titleText.includes('for:') ? titleText.split('for:')[1]?.trim() : null;
+                    if (internshipTitle) {
+                        const internship = internships.find(ip => 
+                            ip.position === internshipTitle || ip.title === internshipTitle
+                        );
+                        if (internship) {
+                            viewApplications(internship.id);
+                        } else {
+                            // Try to find by matching application's job title
+                            const appInternship = internships.find(ip => 
+                                ip.position === application.jobTitle || ip.title === application.jobTitle ||
+                                ip.id === application.internshipId
+                            );
+                            if (appInternship) {
+                                viewApplications(appInternship.id);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Edit application - enhanced with modal
+        function editApplication(applicationId) {
+            const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+            const application = applications.find(app => app.id === applicationId);
+            if (!application) {
+                showCustomNotification('error', 'Not Found', 'Application not found');
+                return;
+            }
+            
+            // Create edit modal
+            const editModal = document.createElement('div');
+            editModal.className = 'modal active';
+            editModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 3000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            `;
+            
+            editModal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="color: var(--text-primary);">Edit Application</h3>
+                        <button onclick="this.closest('.modal').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">&times;</button>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <strong>Applicant:</strong> ${application.applicantName || application.name || 'Unknown'}<br>
+                        <strong>Position:</strong> ${application.jobTitle || 'N/A'}<br>
+                        <strong>Email:</strong> ${application.applicantEmail || application.email || 'N/A'}
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Status:</label>
+                        <select id="editStatus" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 1rem;">
+                            <option value="Pending" ${application.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="Shortlisted" ${application.status === 'Shortlisted' ? 'selected' : ''}>Shortlisted</option>
+                            <option value="Interview" ${application.status === 'Interview' ? 'selected' : ''}>Interview</option>
+                            <option value="Accepted" ${application.status === 'Accepted' ? 'selected' : ''}>Accepted</option>
+                            <option value="Rejected" ${application.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                        </select>
+                    </div>
+                    ${application.coverLetter ? `
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Cover Letter:</label>
+                            <textarea id="editCoverLetter" rows="4" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 8px;">${application.coverLetter || ''}</textarea>
+                        </div>
+                    ` : ''}
+                    <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                        <button onclick="this.closest('.modal').remove()" style="padding: 0.6rem 1.2rem; background: white; color: var(--text-primary); border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; font-weight: 600;">Cancel</button>
+                        <button onclick="saveApplicationEdit(${applicationId})" style="padding: 0.6rem 1.2rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Save Changes</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(editModal);
+            
+            // Store modal reference
+            window.currentEditModal = editModal;
+            window.currentEditApplicationId = applicationId;
+        }
+        
+        // Save application edit
+        function saveApplicationEdit(applicationId) {
+            const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+            const application = applications.find(app => app.id === applicationId);
+            if (!application) {
+                showCustomNotification('error', 'Not Found', 'Application not found');
+                return;
+            }
+            
+            const newStatus = document.getElementById('editStatus').value;
+            const editCoverLetter = document.getElementById('editCoverLetter');
+            const newCoverLetter = editCoverLetter ? editCoverLetter.value : application.coverLetter;
+            
+            if (!['Pending', 'Shortlisted', 'Interview', 'Accepted', 'Rejected'].includes(newStatus)) {
+                showCustomNotification('error', 'Invalid Status', 'Invalid status selected');
+                return;
+            }
+            
+            // Update application
+            const oldStatus = application.status;
+            application.status = newStatus;
+            if (editCoverLetter) {
+                application.coverLetter = newCoverLetter;
+            }
+            application.statusUpdatedAt = new Date().toISOString();
+            application.lastEdited = new Date().toISOString();
+            
+            localStorage.setItem('applications', JSON.stringify(applications));
+            
+            // Close modal
+            if (window.currentEditModal) {
+                window.currentEditModal.remove();
+            }
+            
+            // Show notification
+            showNotification('success', 'Application Updated', `Status changed from ${oldStatus} to ${newStatus}`);
+            
+            // Refresh view
+            const applicantsList = document.getElementById('applicantsList');
+            if (applicantsList) {
+                const titleElement = applicantsList.querySelector('h3');
+                if (titleElement) {
+                    const titleText = titleElement.textContent;
+                    const internshipTitle = titleText.includes('for:') ? titleText.split('for:')[1]?.trim() : null;
+                    if (internshipTitle) {
+                        const internship = internships.find(ip => 
+                            ip.position === internshipTitle || ip.title === internshipTitle
+                        );
+                        if (internship) {
+                            viewApplications(internship.id);
+                        } else {
+                            // Find by application's internshipId
+                            const appInternship = internships.find(ip => 
+                                ip.id === application.internshipId
+                            );
+                            if (appInternship) {
+                                viewApplications(appInternship.id);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Message applicant
+        function messageApplicant(applicationId) {
+            const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+            const application = applications.find(app => app.id === applicationId);
+            if (!application) {
+                showCustomNotification('error', 'Not Found', 'Application not found');
+                return;
+            }
+            
+            // Create conversation if doesn't exist
+            const conversations = JSON.parse(localStorage.getItem('conversations') || '[]');
+            const existingConvo = conversations.find(c => 
+                c.internshipId === application.internshipId && 
+                c.applicantEmail === application.applicantEmail
+            );
+            
+            if (existingConvo) {
+                sessionStorage.setItem('openConversationId', existingConvo.id);
+            } else {
+                const newConversation = {
+                    id: Date.now(),
+                    company: application.company || 'Your Company',
+                    title: application.jobTitle || 'Application',
+                    internshipId: application.internshipId,
+                    applicantEmail: application.applicantEmail,
+                    applicantName: application.applicantName,
+                    messages: [{
+                        from: 'system',
+                        text: `You started a conversation with ${application.applicantName} regarding their application for ${application.jobTitle}.`,
+                        ts: new Date().toISOString()
+                    }]
+                };
+                conversations.unshift(newConversation);
+                localStorage.setItem('conversations', JSON.stringify(conversations));
+                sessionStorage.setItem('openConversationId', newConversation.id);
+            }
+            
+            window.location.href = 'messages.html';
+        }
+        
+        // Clear all messages
+        function clearAllMessages() {
+            const conversations = JSON.parse(localStorage.getItem('conversations') || '[]');
+            if (conversations.length === 0) {
+                showCustomNotification('info', 'No Messages', 'No messages to clear');
+                return;
+            }
+            
+            // Filter by hirer's company if applicable
+            const hirerProfile = JSON.parse(localStorage.getItem('hirerProfile') || 'null');
+            let messagesToClear = conversations;
+            if (hirerProfile && hirerProfile.company) {
+                messagesToClear = conversations.filter(c => c.company === hirerProfile.company);
+            }
+            
+            if (messagesToClear.length === 0) {
+                alert('No messages to clear');
+                return;
+            }
+            
+            if (confirm(`Are you sure you want to delete all ${messagesToClear.length} conversation(s)?\n\nThis action cannot be undone.`)) {
+                if (hirerProfile && hirerProfile.company) {
+                    // Delete only hirer's company conversations
+                    const filtered = conversations.filter(c => c.company !== hirerProfile.company);
+                    localStorage.setItem('conversations', JSON.stringify(filtered));
+                } else {
+                    // Delete all
+                    localStorage.setItem('conversations', JSON.stringify([]));
+                }
+                displayMessagesPreview();
+                showCustomNotification('success', 'Cleared', 'All messages cleared successfully');
+            }
+        }
+        
+        // Show notification (simple version)
+        function showNotification(type, title, message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                max-width: 350px;
+                border-left: 4px solid ${type === 'success' ? '#10b981' : '#ef4444'};
+            `;
+            notification.innerHTML = `
+                <div style="font-weight: 600; margin-bottom: 0.25rem;">${title}</div>
+                <div style="color: var(--text-secondary); font-size: 0.9rem;">${message}</div>
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        function closeApplicationsModal() {
+            document.getElementById('applicationsModal').classList.remove('active');
+        }
+
+        function deleteInternship(id) {
+            const internship = internships.find(ip => ip.id === id);
+            if (!internship) return;
+            
+            const confirmMessage = `Are you sure you want to delete "${internship.position || internship.title}"?\n\nThis action cannot be undone. All applications for this internship will also be removed.`;
+            if (!confirm(confirmMessage)) return;
+            
+            // Log activity
+            logActivity('DELETE_INTERNSHIP', `Deleted internship: ${internship.position || internship.title}`, {
+                internshipId: id,
+                position: internship.position || internship.title,
+                company: internship.company
+            });
+            
+            // Remove internship from array
+            internships = internships.filter(ip => ip.id !== id);
+            
+            // Also remove applications for this internship
+            const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+            const filteredApplications = applications.filter(app => app.internshipId !== id);
+            localStorage.setItem('applications', JSON.stringify(filteredApplications));
+            
+            // Update localStorage
+            localStorage.setItem('internships', JSON.stringify(internships));
+            
+            // Refresh display
+            displayInternships();
+            
+            showCustomNotification('success', 'Deleted', `Internship "${internship.position || internship.title}" deleted successfully`);
+        }
+        
+        function editInternship(id) {
+            showCustomNotification('info', 'Coming Soon', `Edit functionality for internship #${id} will be available soon`);
+        }
+
+        function openPostModal() {
+            document.getElementById('postModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('postModal').classList.remove('active');
+            document.getElementById('postForm').reset();
+        }
+
+        // Handle form submission
+        document.getElementById('postForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            showCustomNotification('success', 'Posted!', 'Internship posted successfully!');
+            closeModal();
+        });
+
+        // Close modal on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Test Builder Functions
+        let testQuestions = [];
+
+        function toggleTestSection() {
+            const section = document.getElementById('testSection');
+            const checkbox = document.getElementById('requireTest');
+            section.style.display = checkbox.checked ? 'block' : 'none';
+        }
+
+        function updateTestBuilderButtons() {
+            const testType = document.getElementById('testType')?.value || 'mcq';
+            const codingBtn = document.querySelector('button[onclick="addCodingQuestion()"]');
+            if (codingBtn) {
+                codingBtn.style.display = (testType === 'coding' || testType === 'both') ? 'block' : 'none';
+            }
+        }
+
+        // Toggle negative marking section
+        document.addEventListener('DOMContentLoaded', () => {
+            const negativeMarkCheckbox = document.getElementById('negativeMarking');
+            const negativeMarkSection = document.getElementById('negativeMarkSection');
+            if (negativeMarkCheckbox && negativeMarkSection) {
+                negativeMarkCheckbox.addEventListener('change', function() {
+                    negativeMarkSection.style.display = this.checked ? 'block' : 'none';
+                });
+            }
+        });
+
+        function openTestBuilder() {
+            document.getElementById('testBuilderModal').classList.add('active');
+            renderTestBuilder();
+            updateTestBuilderButtons(); // Update button visibility based on test type
+        }
+
+        function closeTestBuilder() {
+            document.getElementById('testBuilderModal').classList.remove('active');
+        }
+
+        function addMCQQuestion() {
+            const questionNum = testQuestions.length + 1;
+            const mcqHTML = `
+                <div class="question-card" style="background: #f9fafb; padding: 1.5rem; margin-bottom: 1rem; border-radius: 10px; border: 2px solid var(--border-color);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h4 style="margin: 0;">Question ${questionNum} - MCQ</h4>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <label style="font-size: 0.9rem; font-weight: 600;">Marks:</label>
+                            <input type="number" class="question-marks" min="0.5" step="0.5" value="1" style="width: 70px; padding: 0.4rem; border: 2px solid var(--border-color); border-radius: 6px;">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Question Text</label>
+                        <textarea class="question-text" rows="3" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 8px; font-family: inherit;" placeholder="Enter question here"></textarea>
+                    </div>
+                    <div style="margin-bottom: 0.5rem;">
+                        <label style="font-weight: 600;">Options:</label>
+                        ${['A', 'B', 'C', 'D'].map(opt => `
+                            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; align-items: center;">
+                                <input type="text" class="mcq-option" style="flex: 1; padding: 0.5rem; border: 2px solid var(--border-color); border-radius: 8px;" placeholder="Option ${opt}">
+                                <input type="radio" name="correct-${questionNum}" value="${opt}" class="correct-answer">
+                                <label style="font-size: 0.9rem;">Correct</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="removeQuestion(this)" style="padding: 0.5rem 1rem; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 0.5rem;">
+                        <i class="fas fa-trash"></i> Remove Question
+                    </button>
+                </div>
+            `;
+            
+            const content = document.getElementById('testBuilderContent');
+            const div = document.createElement('div');
+            div.innerHTML = mcqHTML;
+            content.appendChild(div);
+            testQuestions.push({type: 'mcq'});
+        }
+
+        function addCodingQuestion() {
+            const questionNum = testQuestions.length + 1;
+            const codingHTML = `
+                <div class="question-card" style="background: #f9fafb; padding: 1.5rem; margin-bottom: 1rem; border-radius: 10px; border: 2px solid var(--border-color);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h4 style="margin: 0;">Question ${questionNum} - Coding (C Language)</h4>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <label style="font-size: 0.9rem; font-weight: 600;">Marks:</label>
+                            <input type="number" class="question-marks" min="1" step="1" value="5" style="width: 70px; padding: 0.4rem; border: 2px solid var(--border-color); border-radius: 6px;">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Problem Statement</label>
+                        <textarea class="coding-problem" rows="4" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 8px; font-family: inherit;" placeholder="Describe the coding problem in detail..."></textarea>
+                    </div>
+                    <div style="background: rgba(14, 165, 233, 0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <h5 style="margin-bottom: 0.5rem; color: var(--accent-color);">
+                            <i class="fas fa-flask"></i> Sample Test Cases (Visible to students)
+                        </h5>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Test Case 1 Input</label>
+                                <textarea class="test-input-1" rows="2" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border-color); border-radius: 6px; font-family: monospace; font-size: 0.85rem;" placeholder="Input for test case 1"></textarea>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Test Case 1 Expected Output</label>
+                                <textarea class="test-output-1" rows="2" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border-color); border-radius: 6px; font-family: monospace; font-size: 0.85rem;" placeholder="Expected output"></textarea>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Test Case 2 Input</label>
+                                <textarea class="test-input-2" rows="2" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border-color); border-radius: 6px; font-family: monospace; font-size: 0.85rem;" placeholder="Input for test case 2"></textarea>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Test Case 2 Expected Output</label>
+                                <textarea class="test-output-2" rows="2" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border-color); border-radius: 6px; font-family: monospace; font-size: 0.85rem;" placeholder="Expected output"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background: rgba(255, 59, 48, 0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 2px dashed rgba(255, 59, 48, 0.3);">
+                        <h5 style="margin-bottom: 0.5rem; color: var(--error);">
+                            <i class="fas fa-eye-slash"></i> Hidden Test Cases (For evaluation)
+                        </h5>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Hidden Test Case Input</label>
+                                <textarea class="hidden-test-input" rows="3" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border-color); border-radius: 6px; font-family: monospace; font-size: 0.85rem;" placeholder="Hidden test input"></textarea>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Hidden Test Case Expected Output</label>
+                                <textarea class="hidden-test-output" rows="3" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border-color); border-radius: 6px; font-family: monospace; font-size: 0.85rem;" placeholder="Expected output"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="removeQuestion(this)" style="padding: 0.5rem 1rem; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                        <i class="fas fa-trash"></i> Remove Question
+                    </button>
+                </div>
+            `;
+            
+            const content = document.getElementById('testBuilderContent');
+            const div = document.createElement('div');
+            div.innerHTML = codingHTML;
+            content.appendChild(div);
+            testQuestions.push({type: 'coding'});
+        }
+
+        function removeQuestion(btn) {
+            btn.closest('.question-card').remove();
+        }
+
+        function renderTestBuilder() {
+            document.getElementById('testBuilderContent').innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Add questions to build your test</p>';
+            testQuestions = [];
+        }
+
+        function saveTest() {
+            // Collect all questions
+            const questions = [];
+            const questionCards = document.querySelectorAll('.question-card');
+            
+            questionCards.forEach((card, index) => {
+                const questionText = card.querySelector('.question-text');
+                const codingProblem = card.querySelector('.coding-problem');
+                const marksInput = card.querySelector('.question-marks');
+                const marks = marksInput ? parseFloat(marksInput.value) : (questionText ? 1 : 5);
+                
+                if (questionText) {
+                    // MCQ Question
+                    const options = Array.from(card.querySelectorAll('.mcq-option')).map(opt => opt.value).filter(opt => opt.trim() !== '');
+                    if (options.length < 2) {
+                        showCustomNotification('error', 'Invalid Question', `Question ${index + 1}: Please provide at least 2 options`);
+                        return;
+                    }
+                    const correctAnswer = card.querySelector('.correct-answer:checked')?.value || 'A';
+                    // Convert to numeric index for compatibility
+                    const correctIndex = ['A', 'B', 'C', 'D'].indexOf(correctAnswer);
+                    questions.push({
+                        id: Date.now() + Math.random() + index, // Unique ID
+                        type: 'mcq',
+                        question: questionText.value.trim(),
+                        options: options,
+                        correct: correctIndex >= 0 ? correctIndex : 0,
+                        marks: marks
+                    });
+                } else if (codingProblem) {
+                    // Coding Question
+                    const template = `#include <stdio.h>
+
+int main() {
+    // ${codingProblem.value}
+    // Your code here
+    return 0;
+}`;
+                    questions.push({
+                        id: Date.now() + Math.random() + index, // Unique ID
+                        type: 'coding',
+                        question: codingProblem.value.trim(),
+                        language: 'c',
+                        template: template,
+                        marks: marks,
+                        testCase1Input: card.querySelector('.test-input-1')?.value || '',
+                        testCase1Output: card.querySelector('.test-output-1')?.value || '',
+                        testCase2Input: card.querySelector('.test-input-2')?.value || '',
+                        testCase2Output: card.querySelector('.test-output-2')?.value || '',
+                        hiddenTestInput: card.querySelector('.hidden-test-input')?.value || '',
+                        hiddenTestOutput: card.querySelector('.hidden-test-output')?.value || ''
+                    });
+                }
+            });
+            
+            if (questions.length === 0) {
+                showCustomNotification('error', 'No Questions', 'Please add at least one question!');
+                return;
+            }
+            
+            // Prompt for test name
+            const testName = prompt('Enter a name for this test:', 'New Test');
+            if (!testName) {
+                return;
+            }
+            
+            // Get all settings from form
+            const minScore = parseInt(document.getElementById('minScore')?.value || 70);
+            const testType = document.getElementById('testType')?.value || 'mcq';
+            const timeLimitMinutes = parseInt(document.getElementById('timeLimit')?.value || 60);
+            const timeLimitSeconds = timeLimitMinutes * 60;
+            const negativeMarking = document.getElementById('negativeMarking')?.checked || false;
+            const negativeMarkPercentage = negativeMarking ? parseInt(document.getElementById('negativeMarkPercentage')?.value || 25) : 0;
+            const resultDisclosure = document.getElementById('resultDisclosure')?.value || 'manual';
+            
+            // Save to localStorage with all advanced features
+            const savedTests = JSON.parse(localStorage.getItem('tests') || '[]');
+            const newTest = {
+                id: Date.now(),
+                name: testName,
+                timeLimitSeconds: timeLimitSeconds,
+                questions: questions,
+                minScore: minScore,
+                testType: testType,
+                negativeMarking: negativeMarking,
+                negativeMarkPercentage: negativeMarkPercentage,
+                resultDisclosure: resultDisclosure,
+                createdAt: new Date().toISOString(),
+                createdBy: 'Teacher' // Can be enhanced with actual user info
+            };
+            
+            savedTests.unshift(newTest); // Add to beginning of array
+            localStorage.setItem('tests', JSON.stringify(savedTests));
+            
+            // Log to console for debugging
+            console.log('Test saved with advanced features:', newTest);
+            console.log('All saved tests:', savedTests);
+            
+            showCustomNotification('success', 'Test Saved', `Test "${testName}" saved successfully with ${questions.length} question${questions.length > 1 ? 's' : ''}!`);
+            closeTestBuilder();
+        }
+
+        // Display messages preview
+        function displayMessagesPreview() {
+            const messagesContainer = document.getElementById('messagesPreview');
+            const conversations = JSON.parse(localStorage.getItem('conversations') || '[]');
+            
+            if (conversations.length === 0) {
+                messagesContainer.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                        <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <p>No messages yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Show last 3 conversations
+            const recentConversations = conversations.slice(0, 3);
+            messagesContainer.innerHTML = recentConversations.map(convo => {
+                const lastMessage = convo.messages && convo.messages.length > 0 
+                    ? convo.messages[convo.messages.length - 1] 
+                    : null;
+                const hasResume = lastMessage && lastMessage.resumeAttachment;
+                
+                return `
+                    <div style="background: var(--dark-bg); padding: 1.5rem; border-radius: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="window.location.href='messages.html'">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                            <div>
+                                <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem;">${convo.company}</div>
+                                <div style="font-size: 0.9rem; color: var(--text-secondary);">${convo.title}</div>
+                            </div>
+                            ${hasResume ? '<span style="background: #34c759; color: white; padding: 0.25rem 0.5rem; border-radius: 15px; font-size: 0.75rem;"><i class="fas fa-file-pdf"></i> Resume</span>' : ''}
+                        </div>
+                        ${lastMessage ? `
+                            <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                ${lastMessage.from === 'me' ? 'Applicant: ' : ''}${lastMessage.text.substring(0, 60)}${lastMessage.text.length > 60 ? '...' : ''}
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                                ${new Date(lastMessage.ts).toLocaleDateString()} at ${new Date(lastMessage.ts).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Initialize
+        displayInternships();
+        displayMessagesPreview();
+
+        // Logout function
+        function hirerLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                logActivity('LOGOUT', 'User logged out');
+                sessionStorage.clear();
+                window.location.href = 'hirer-auth.html';
+            }
+        }
+    </script>
+</body>
+</html>

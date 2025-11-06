@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - InternHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root { --cream:#f6f1e7; --blue:#1e3a8a; --sea:#0ea5e9; --border: rgba(30,58,138,.15); }
+        body { background: var(--cream); color: var(--blue); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; margin:0; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+        .card { background:#fff; border:1px solid var(--border); border-radius:12px; padding:1.25rem; }
+        .notif { display:flex; gap:1rem; align-items:flex-start; border-bottom:1px solid rgba(30,58,138,.1); padding:1rem 0; transition: background 0.3s; }
+        .notif:last-child { border-bottom:none; }
+        .notif:hover { background: rgba(14,165,233,0.05); }
+        .notif.unread { background: rgba(14,165,233,0.08); border-left: 4px solid var(--sea); }
+        .icon { width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; background: linear-gradient(135deg, var(--blue), var(--sea)); flex-shrink: 0; }
+        .icon.success { background: linear-gradient(135deg, #10b981, #059669); }
+        .icon.warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .icon.danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .icon.info { background: linear-gradient(135deg, var(--sea), #0284c7); }
+        .muted { color: rgba(30,58,138,0.7); }
+        .btn { padding:.6rem 1rem; border:none; border-radius:10px; color:#fff; background: linear-gradient(135deg, var(--blue), var(--sea)); cursor:pointer; font-weight:600; transition: transform 0.3s; }
+        .btn:hover { transform: translateY(-2px); }
+        .toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap: wrap; gap: 1rem; }
+        a { color: var(--sea); text-decoration: none; }
+        .tabs { display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border); }
+        .tab { padding: 1rem 1.5rem; cursor: pointer; font-weight: 600; color: rgba(30,58,138,0.6); border-bottom: 3px solid transparent; transition: all 0.3s; }
+        .tab.active { color: var(--sea); border-bottom-color: var(--sea); }
+        .tab:hover { color: var(--blue); }
+        .badge { background: #ef4444; color: white; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-left: 0.5rem; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .stat-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 1rem; text-align: center; }
+        .stat-number { font-size: 2rem; font-weight: 800; color: var(--sea); }
+        .stat-label { color: rgba(30,58,138,0.7); font-size: 0.9rem; margin-top: 0.25rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="toolbar">
+            <div style="display:flex; align-items:center; gap:.75rem;">
+                <a href="index.html"><i class="fas fa-arrow-left"></i></a>
+                <h2 style="margin:0;"><i class="fas fa-bell"></i> Notifications</h2>
+            </div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button class="btn" id="markAllRead" style="background: rgba(14,165,233,0.1); color: var(--sea); border: 2px solid var(--sea);">
+                    <i class="fas fa-check-double"></i> Mark All Read
+                </button>
+                <button class="btn" id="clearAll" style="background: #ef4444;">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+            </div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalCount">0</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="unreadCount" style="color: #ef4444;">0</div>
+                <div class="stat-label">Unread</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="todayCount" style="color: #10b981;">0</div>
+                <div class="stat-label">Today</div>
+            </div>
+        </div>
+        
+        <!-- Category Tabs -->
+        <div class="tabs">
+            <div class="tab active" data-category="all" onclick="switchTab('all')">
+                All<span class="badge" id="badge-all">0</span>
+            </div>
+            <div class="tab" data-category="applications" onclick="switchTab('applications')">
+                Applications<span class="badge" id="badge-applications" style="background: var(--sea);">0</span>
+            </div>
+            <div class="tab" data-category="success" onclick="switchTab('success')">
+                Updates<span class="badge" id="badge-success" style="background: #10b981;">0</span>
+            </div>
+            <div class="tab" data-category="rejection" onclick="switchTab('rejection')">
+                Alerts<span class="badge" id="badge-rejection" style="background: #f59e0b;">0</span>
+            </div>
+            <div class="tab" data-category="info" onclick="switchTab('info')">
+                Info<span class="badge" id="badge-info" style="background: #6b7280;">0</span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div id="list"></div>
+        </div>
+    </div>
+
+<script>
+let currentCategory = 'all';
+
+function getNotifs(){ return JSON.parse(localStorage.getItem('notifications')||'[]'); }
+function setNotifs(v){ localStorage.setItem('notifications', JSON.stringify(v)); }
+
+function timeAgo(ts){ 
+    try{ 
+        const d=new Date(ts); 
+        const diff=(Date.now()-d.getTime())/1000; 
+        if(diff<60) return 'just now'; 
+        if(diff<3600) return Math.floor(diff/60)+'m ago'; 
+        if(diff<86400) return Math.floor(diff/3600)+'h ago';
+        if(diff<604800) return Math.floor(diff/86400)+'d ago';
+        return d.toLocaleDateString(); 
+    }catch(e){ return ''; } 
+}
+
+function updateStats() {
+    const items = getNotifs();
+    const unread = items.filter(n => !n.read);
+    const today = items.filter(n => {
+        const notifDate = new Date(n.timestamp || n.ts);
+        const todayDate = new Date();
+        return notifDate.toDateString() === todayDate.toDateString();
+    });
+    
+    document.getElementById('totalCount').textContent = items.length;
+    document.getElementById('unreadCount').textContent = unread.length;
+    document.getElementById('todayCount').textContent = today.length;
+}
+
+function updateBadges() {
+    const items = getNotifs();
+    const categories = ['all', 'applications', 'success', 'rejection', 'info'];
+    
+    categories.forEach(cat => {
+        let count = 0;
+        if (cat === 'all') {
+            count = items.filter(n => !n.read).length;
+        } else if (cat === 'applications') {
+            count = items.filter(n => !n.read && (n.type === 'application' || n.type === 'job')).length;
+        } else {
+            count = items.filter(n => !n.read && n.type === cat).length;
+        }
+        
+        const badge = document.getElementById(`badge-${cat}`);
+        if (badge) {
+            badge.textContent = count;
+            badge.style.display = count > 0 ? 'inline-block' : 'none';
+        }
+    });
+}
+
+function switchTab(category) {
+    currentCategory = category;
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.category === category);
+    });
+    render();
+}
+
+function render(){
+    const list = document.getElementById('list');
+    let items = getNotifs();
+    
+    // Filter by category
+    if (currentCategory !== 'all') {
+        if (currentCategory === 'applications') {
+            items = items.filter(n => n.type === 'application' || n.type === 'job');
+        } else {
+            items = items.filter(n => n.type === currentCategory);
+        }
+    }
+    
+    if (!items.length){ 
+        list.innerHTML = '<div class="muted" style="text-align:center; padding:2rem;"><i class="fas fa-inbox" style="font-size: 3rem; opacity: 0.3; display: block; margin-bottom: 1rem;"></i>No notifications in this category</div>'; 
+        return; 
+    }
+    
+    list.innerHTML = items.map(n => `
+        <div class="notif ${n.read ? '' : 'unread'}" style="position: relative;">
+            <div class="icon ${n.type}">${iconFor(n.type)}</div>
+            <div style="flex:1;">
+                <div style="display:flex; justify-content:space-between; gap:1rem; align-items: start;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                            <strong>${escapeHtml(n.title||'Notification')}</strong>
+                            ${n.read ? '' : '<span style="font-size: 0.7rem; color: var(--sea); background: rgba(14,165,233,0.15); padding: 0.2rem 0.6rem; border-radius: 12px;"><i class="fas fa-circle" style="font-size: 0.4rem;"></i> New</span>'}
+                        </div>
+                        <div class="muted" style="margin-top:.5rem; line-height: 1.5;">${escapeHtml(n.message||'')}</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+                        <button onclick="deleteNotification(${n.id})" style="background: transparent; border: none; color: #ef4444; cursor: pointer; padding: 0.2rem 0.5rem; font-size: 0.9rem; border-radius: 6px; transition: background 0.3s;" title="Delete notification" onmouseover="this.style.background='rgba(239,68,68,0.1)'" onmouseout="this.style.background='transparent'">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        ${!n.read ? `<button onclick="markAsRead(${n.id})" style="background: transparent; border: none; color: var(--sea); cursor: pointer; padding: 0.2rem 0.5rem; font-size: 0.9rem; border-radius: 6px; transition: background 0.3s;" title="Mark as read" onmouseover="this.style.background='rgba(14,165,233,0.1)'" onmouseout="this.style.background='transparent'"><i class="fas fa-check"></i></button>` : ''}
+                        <small class="muted">${timeAgo(n.timestamp || n.ts)}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    updateStats();
+    updateBadges();
+}
+
+// Mark single as read
+function markAsRead(id) {
+    const notifs = getNotifs();
+    const notif = notifs.find(n => n.id === id);
+    if (notif) {
+        notif.read = true;
+        setNotifs(notifs);
+        render();
+    }
+}
+
+// Delete single notification
+function deleteNotification(id) {
+    if (confirm('Delete this notification?')) {
+        const notifs = getNotifs();
+        const filtered = notifs.filter(n => n.id !== id);
+        setNotifs(filtered);
+        render();
+    }
+}
+
+// Mark all as read
+function markAllRead() {
+    const notifs = getNotifs();
+    notifs.forEach(n => n.read = true);
+    setNotifs(notifs);
+    render();
+    alert('All notifications marked as read');
+}
+
+function iconFor(type){
+    const m = { 
+        course:'<i class="fas fa-graduation-cap"></i>', 
+        job:'<i class="fas fa-briefcase"></i>', 
+        application:'<i class="fas fa-file-alt"></i>',
+        test:'<i class="fas fa-clipboard-check"></i>', 
+        success:'<i class="fas fa-check-circle"></i>',
+        rejection:'<i class="fas fa-times-circle"></i>',
+        info:'<i class="fas fa-bell"></i>' 
+    };
+    return m[type]||m.info;
+}
+
+function escapeHtml(s){ return String(s).replace(/[&<>"]+/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+document.getElementById('clearAll').onclick = () => {
+    const notifs = getNotifs();
+    if (notifs.length === 0) {
+        alert('No notifications to clear');
+        return;
+    }
+    if (confirm(`Are you sure you want to delete all ${notifs.length} notification(s)?\n\nThis action cannot be undone.`)) {
+        setNotifs([]);
+        render();
+        alert('All notifications cleared');
+    }
+};
+
+document.getElementById('markAllRead').onclick = markAllRead;
+
+// Seed sample if empty
+if (!getNotifs().length){
+    setNotifs([
+        {id:Date.now(), type:'success', title:'Welcome to InternHub', message:'Start exploring amazing internship opportunities!', timestamp:new Date().toISOString(), read: false},
+        {id:Date.now()+1, type:'info', title:'Complete Your Profile', message:'Add your skills and experience to get better recommendations.', timestamp:new Date(Date.now() - 3600000).toISOString(), read: false}
+    ]);
+}
+
+render();
+</script>
+</body>
+</html>

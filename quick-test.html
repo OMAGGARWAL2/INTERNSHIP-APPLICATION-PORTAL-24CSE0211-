@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Test Creator - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #1e3a8a;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+        p {
+            color: #4b5563;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        button {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #0ea5e9, #1e3a8a);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.4);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        .status {
+            padding: 1rem;
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+        }
+        .status.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Quick Test Creator</h1>
+        <p>Create a sample test instantly and try the testing experience</p>
+        
+        <button onclick="createSampleTest()">Create Sample Test</button>
+        <button class="btn-secondary" onclick="viewTests()">View All Tests</button>
+        <button style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="window.location.href='test.html'">Create Custom Test</button>
+        
+        <div class="status" id="status"></div>
+    </div>
+
+    <script>
+        function createSampleTest() {
+            const sampleTest = {
+                id: 'test_' + Date.now(),
+                name: 'Professional Assessment Test',
+                timeLimitSeconds: 3600,
+                negativeMarking: true,
+                negativeMarkPercentage: 25,
+                sections: [
+                    { letter: 'A', name: 'Multiple Choice Questions', requireOTP: false },
+                    { letter: 'B', name: 'Programming Questions', requireOTP: false }
+                ],
+                questions: [
+                    {
+                        id: 'q1',
+                        type: 'mcq',
+                        section: 'A',
+                        question: 'What is the time complexity of binary search?',
+                        questionHTML: 'What is the time complexity of binary search?',
+                        options: ['O(n)', 'O(log n)', 'O(n^2)', 'O(1)'],
+                        optionsHTML: ['O(n)', 'O(log n)', 'O(n^2)', 'O(1)'],
+                        correct: 1,
+                        marks: 1
+                    },
+                    {
+                        id: 'q2',
+                        type: 'mcq',
+                        section: 'A',
+                        question: 'Which data structure uses LIFO principle?',
+                        questionHTML: 'Which data structure uses LIFO principle?',
+                        options: ['Queue', 'Stack', 'Array', 'Linked List'],
+                        optionsHTML: ['Queue', 'Stack', 'Array', 'Linked List'],
+                        correct: 1,
+                        marks: 1
+                    },
+                    {
+                        id: 'q3',
+                        type: 'mcq',
+                        section: 'A',
+                        question: 'What does SQL stand for?',
+                        questionHTML: 'What does SQL stand for?',
+                        options: ['Structured Query Language', 'Simple Query Language', 'Standard Query Language', 'Sequential Query Language'],
+                        optionsHTML: ['Structured Query Language', 'Simple Query Language', 'Standard Query Language', 'Sequential Query Language'],
+                        correct: 0,
+                        marks: 1
+                    },
+                    {
+                        id: 'q4',
+                        type: 'coding',
+                        section: 'B',
+                        question: 'Write a C program to find the factorial of a number using recursion.',
+                        questionHTML: 'Write a C program to find the factorial of a number using recursion.',
+                        language: 'c',
+                        template: '#include <stdio.h>\n\nint factorial(int n) {\n    // Write your code here\n}\n\nint main() {\n    int num;\n    scanf("%d", &num);\n    printf("%d", factorial(num));\n    return 0;\n}',
+                        marks: 10
+                    },
+                    {
+                        id: 'q5',
+                        type: 'coding',
+                        section: 'B',
+                        question: 'Write a Python program to check if a string is a palindrome.',
+                        questionHTML: 'Write a Python program to check if a string is a palindrome.',
+                        language: 'python3',
+                        template: 'def is_palindrome(s):\n    # Write your code here\n    pass\n\n# Test\nstring = input()\nif is_palindrome(string):\n    print("Palindrome")\nelse:\n    print("Not Palindrome")',
+                        marks: 10
+                    }
+                ],
+                createdAt: Date.now()
+            };
+
+            // Save to localStorage
+            let tests = JSON.parse(localStorage.getItem('tests') || '[]');
+            
+            // Remove any existing test with same ID
+            tests = tests.filter(t => t.id !== sampleTest.id);
+            
+            // Add new test
+            tests.push(sampleTest);
+            localStorage.setItem('tests', JSON.stringify(tests));
+
+            // Show success message
+            const status = document.getElementById('status');
+            status.className = 'status show';
+            status.style.background = '#f0fdf4';
+            status.style.borderColor = '#10b981';
+            status.innerHTML = `
+                <strong>✅ Test Created Successfully!</strong><br>
+                Test ID: ${sampleTest.id}<br>
+                Questions: ${sampleTest.questions.length}<br>
+                <button onclick="takeTest('${sampleTest.id}')" style="margin-top: 1rem; padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #0ea5e9, #1e3a8a); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    Take This Test Now
+                </button>
+            `;
+        }
+
+        function takeTest(testId) {
+            window.location.href = `dotest.html?testId=${testId}`;
+        }
+
+        function viewTests() {
+            const tests = JSON.parse(localStorage.getItem('tests') || '[]');
+            
+            if (tests.length === 0) {
+                const status = document.getElementById('status');
+                status.className = 'status show';
+                status.style.background = '#fef3c7';
+                status.style.borderColor = '#f59e0b';
+                status.innerHTML = '<strong>⚠️ No tests found!</strong><br>Create a sample test first.';
+                return;
+            }
+
+            const status = document.getElementById('status');
+            status.className = 'status show';
+            status.style.background = '#eff6ff';
+            status.style.borderColor = '#0ea5e9';
+            status.innerHTML = `
+                <strong>📝 Available Tests (${tests.length})</strong><br><br>
+                ${tests.map(test => `
+                    <div style="padding: 1rem; background: white; border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid #e5e7eb;">
+                        <strong>${test.name}</strong><br>
+                        <small>Questions: ${test.questions.length} | Time: ${Math.floor(test.timeLimitSeconds / 60)} mins</small><br>
+                        <button onclick="takeTest('${test.id}')" style="margin-top: 0.5rem; padding: 0.5rem 1rem; background: linear-gradient(135deg, #0ea5e9, #1e3a8a); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+                            Take Test
+                        </button>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        // Check if there are any tests on load
+        window.addEventListener('load', () => {
+            const tests = JSON.parse(localStorage.getItem('tests') || '[]');
+            if (tests.length > 0) {
+                const status = document.getElementById('status');
+                status.className = 'status show';
+                status.style.background = '#eff6ff';
+                status.style.borderColor = '#0ea5e9';
+                status.innerHTML = `<strong>ℹ️ You have ${tests.length} test(s) saved</strong><br>Click "View All Tests" to see them.`;
+            }
+        });
+    </script>
+</body>
+</html>

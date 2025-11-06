@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cookies</title>
+</head>
+<body>
+  <header><h1>Cookies</h1></header>
+  <main>
+    <section>
+      <p>We use cookies to improve functionality and measure usage.</p>
+      <h2>Your Choices</h2>
+      <form id="cookie-form" style="margin-top:1rem">
+        <label><input type="checkbox" name="functional" checked disabled> Functional (required)</label>
+        <label><input type="checkbox" name="analytics"> Analytics</label>
+        <label><input type="checkbox" name="marketing"> Marketing</label>
+        <button type="submit">Save Preferences</button>
+      </form>
+      <p id="cookie-status" style="margin-top:1rem"></p>
+    </section>
+  </main>
+  <style>
+    :root{--blue:#1e3a8a;--accent:#0ea5e9;--border:#e5e7eb}
+    body{font-family:Inter,Segoe UI,Roboto,sans-serif;background:#f6f1e7;color:var(--blue)}
+    header{padding:2rem 2rem}
+    main{max-width:900px;margin:0 auto;padding:2rem}
+    form{background:#fff;border:2px solid var(--border);border-radius:16px;padding:1rem;display:grid;gap:.8rem;max-width:500px}
+    label{display:flex;align-items:center;gap:.6rem}
+    button{background:linear-gradient(135deg,var(--blue),var(--accent));color:#fff;border:none;border-radius:999px;padding:.6rem 1.2rem;font-weight:700;cursor:pointer;width:max-content}
+  </style>
+  <script>
+    (function(){
+      const KEY='cookiePreferences';
+      const form=document.getElementById('cookie-form');
+      const status=document.getElementById('cookie-status');
+      const saved=JSON.parse(localStorage.getItem(KEY)||'{}');
+      if(saved.analytics) form.analytics.checked=true;
+      if(saved.marketing) form.marketing.checked=true;
+      updateStatus(saved);
+      form.addEventListener('submit',function(e){
+        e.preventDefault();
+        const prefs={functional:true, analytics:form.analytics.checked, marketing:form.marketing.checked, savedAt:new Date().toISOString()};
+        localStorage.setItem(KEY,JSON.stringify(prefs));
+        updateStatus(prefs);
+      });
+      function updateStatus(p){
+        status.textContent=`Preferences: Functional=${p.functional?'on':'off'} | Analytics=${p.analytics?'on':'off'} | Marketing=${p.marketing?'on':'off'} (saved ${new Date(p.savedAt||Date.now()).toLocaleString()})`;
+      }
+    })();
+  </script>
+</body>
+</html>

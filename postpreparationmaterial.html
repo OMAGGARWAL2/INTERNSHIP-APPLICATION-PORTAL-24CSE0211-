@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Preparation Material - PYQ Portal</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700;800;900&family=SF+Pro+Text:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #e0f2fe 100%);
+            --header-bg: rgba(30, 58, 138, 0.95);
+            --accent-color: #2563eb;
+            --accent-light: #3b82f6;
+            --text-primary: #1e3a8a;
+            --card-bg: #ffffff;
+            --border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        body {
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-bg);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: var(--header-bg);
+            padding: 1rem 0;
+            border-bottom: 3px solid var(--accent-light);
+            box-shadow: 0 4px 20px rgba(30, 58, 138, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'SF Pro Display', sans-serif;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: #60a5fa;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border-radius: 16px;
+            color: #ffffff;
+            box-shadow: 0 10px 30px rgba(30, 58, 138, 0.3);
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Form Section */
+        .form-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(30, 58, 138, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .form-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            color: var(--text-primary);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .file-upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            background: #f9fafb;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--accent-color);
+            background: #eff6ff;
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--accent-color);
+            background: #dbeafe;
+        }
+
+        .file-upload-area i {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-area p {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .file-upload-area small {
+            color: #6b7280;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-list {
+            margin-top: 1rem;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: #f3f4f6;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-item-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .file-item i {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+        }
+
+        .file-item-name {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .file-item-size {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .remove-file {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .remove-file:hover {
+            background: #dc2626;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Posted Materials Section */
+        .materials-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(30, 58, 138, 0.2);
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .material-card {
+            background: #f9fafb;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .material-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(30, 58, 138, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        .material-card h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .material-card .company {
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .material-card .tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .material-tag {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-dark);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .material-card .actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-view {
+            flex: 1;
+            padding: 0.5rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-view:hover {
+            background: var(--accent-dark);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">
+                <i class="fas fa-rocket"></i>
+                <span>InternHub</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="find-internships.html">Find Internships</a>
+                <a href="postpreparationmaterial.html" style="color: #60a5fa;">PYQ Portal</a>
+                <a href="hirer.html">Hirer Dashboard</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <div class="page-header">
+            <h1><i class="fas fa-file-alt"></i> Previous Year Questions Portal</h1>
+            <p>Upload interview questions and preparation materials for students</p>
+        </div>
+
+        <div class="form-section">
+            <h2><i class="fas fa-upload"></i> Upload Preparation Material</h2>
+            <form id="materialForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="companyName">Company Name *</label>
+                    <input type="text" id="companyName" required placeholder="e.g., Google, Microsoft, Amazon">
+                </div>
+
+                <div class="form-group">
+                    <label for="position">Position/Role *</label>
+                    <input type="text" id="position" required placeholder="e.g., Software Engineer, Data Scientist">
+                </div>
+
+                <div class="form-group">
+                    <label for="questionType">Question Type *</label>
+                    <select id="questionType" required>
+                        <option value="">Select type</option>
+                        <option value="coding">Coding Questions</option>
+                        <option value="technical">Technical Questions</option>
+                        <option value="aptitude">Aptitude Questions</option>
+                        <option value="behavioral">Behavioral Questions</option>
+                        <option value="system-design">System Design</option>
+                        <option value="others">Others</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="difficulty">Difficulty Level *</label>
+                    <select id="difficulty" required>
+                        <option value="">Select difficulty</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Question Description/Details *</label>
+                    <textarea id="description" required placeholder="Enter the question details, description, or problem statement..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Files (PDF, DOC, DOCX, TXT) *</label>
+                    <div class="file-upload-area" onclick="document.getElementById('fileInput').click()" 
+                         ondrop="handleDrop(event)" 
+                         ondragover="handleDragOver(event)" 
+                         ondragleave="handleDragLeave(event)">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to upload or drag and drop</p>
+                        <small>Supported formats: PDF, DOC, DOCX, TXT (Max 10MB per file)</small>
+                    </div>
+                    <input type="file" id="fileInput" class="file-input" multiple accept=".pdf,.doc,.docx,.txt" onchange="handleFileSelect(event)">
+                    <div class="file-list" id="fileList"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">Tags (comma separated)</label>
+                    <input type="text" id="tags" placeholder="e.g., arrays, recursion, dynamic programming, algorithms">
+                    <small style="color: #6b7280; margin-top: 0.25rem; display: block;">Add relevant tags to help students find this material</small>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="makePublic" checked>
+                        <label for="makePublic">Make this material publicly available to all students</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Submit Material
+                </button>
+            </form>
+        </div>
+
+        <div class="materials-section">
+            <h2><i class="fas fa-list"></i> Posted Materials</h2>
+            <div class="materials-grid" id="materialsGrid">
+                <!-- Materials will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFiles = [];
+
+        function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+            files.forEach(file => {
+                if (!selectedFiles.find(f => f.name === file.name)) {
+                    selectedFiles.push(file);
+                }
+            });
+            updateFileList();
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.currentTarget.classList.remove('dragover');
+            
+            const files = Array.from(event.dataTransfer.files);
+            files.forEach(file => {
+                if (file.type.startsWith('application/') || file.type.startsWith('text/')) {
+                    if (!selectedFiles.find(f => f.name === file.name)) {
+                        selectedFiles.push(file);
+                    }
+                }
+            });
+            updateFileList();
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(event) {
+            event.currentTarget.classList.remove('dragover');
+        }
+
+        function removeFile(fileName) {
+            selectedFiles = selectedFiles.filter(f => f.name !== fileName);
+            updateFileList();
+        }
+
+        function updateFileList() {
+            const fileList = document.getElementById('fileList');
+            if (selectedFiles.length === 0) {
+                fileList.innerHTML = '';
+                return;
+            }
+
+            fileList.innerHTML = selectedFiles.map(file => `
+                <div class="file-item">
+                    <div class="file-item-info">
+                        <i class="fas fa-file-alt"></i>
+                        <div>
+                            <div class="file-item-name">${file.name}</div>
+                            <div class="file-item-size">${(file.size / 1024).toFixed(2)} KB</div>
+                        </div>
+                    </div>
+                    <button type="button" class="remove-file" onclick="removeFile('${file.name}')">
+                        <i class="fas fa-times"></i> Remove
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            const formData = {
+                company: document.getElementById('companyName').value,
+                position: document.getElementById('position').value,
+                questionType: document.getElementById('questionType').value,
+                difficulty: document.getElementById('difficulty').value,
+                description: document.getElementById('description').value,
+                tags: document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t),
+                files: selectedFiles.map(f => ({
+                    name: f.name,
+                    size: f.size,
+                    type: f.type
+                })),
+                public: document.getElementById('makePublic').checked,
+                date: new Date().toISOString()
+            };
+
+            // Save to localStorage
+            const materials = JSON.parse(localStorage.getItem('preparationMaterials') || '[]');
+            materials.unshift(formData);
+            localStorage.setItem('preparationMaterials', JSON.stringify(materials));
+
+            // Show success message
+            alert('Material posted successfully!');
+            
+            // Reset form
+            document.getElementById('materialForm').reset();
+            selectedFiles = [];
+            updateFileList();
+            
+            // Reload materials
+            loadMaterials();
+        }
+
+        function loadMaterials() {
+            const materials = JSON.parse(localStorage.getItem('preparationMaterials') || '[]');
+            const grid = document.getElementById('materialsGrid');
+            
+            if (materials.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #6b7280;">No materials posted yet.</div>';
+                return;
+            }
+
+            grid.innerHTML = materials.map((material, index) => `
+                <div class="material-card">
+                    <h3>${material.position}</h3>
+                    <div class="company">${material.company}</div>
+                    <div class="tags">
+                        <span class="material-tag">${material.questionType}</span>
+                        <span class="material-tag">${material.difficulty}</span>
+                        ${material.tags.slice(0, 3).map(tag => `<span class="material-tag">${tag}</span>`).join('')}
+                    </div>
+                    <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">
+                        ${material.description.substring(0, 100)}${material.description.length > 100 ? '...' : ''}
+                    </p>
+                    <div class="actions">
+                        <button class="btn-view" onclick="viewMaterial(${index})">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewMaterial(index) {
+            const materials = JSON.parse(localStorage.getItem('preparationMaterials') || '[]');
+            const material = materials[index];
+            alert(`Company: ${material.company}
+Position: ${material.position}
+Type: ${material.questionType}
+Difficulty: ${material.difficulty}
+
+Description:
+${material.description}
+
+Files: ${material.files.map(f => f.name).join(', ')}`);
+        }
+
+        // Load materials on page load
+        loadMaterials();
+    </script>
+</body>
+</html>

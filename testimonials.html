@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Testimonials</title>
+</head>
+<body>
+  <header><h1>Testimonials</h1></header>
+  <main>
+    <section>
+      <blockquote>“Got my internship in 2 weeks using the platform.” — A. Student</blockquote>
+      <blockquote>“Clear flow and helpful tests.” — H. Recruiter</blockquote>
+    </section>
+  </main>
+</main>
+  <style>
+    :root{--blue:#1e3a8a;--accent:#0ea5e9;--border:#e5e7eb}
+    body{font-family:Inter,Segoe UI,Roboto,sans-serif;background:#f6f1e7;color:var(--blue)}
+    header{padding:2rem 2rem}
+    main{max-width:1000px;margin:0 auto;padding:2rem}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+    .card{background:#fff;border:2px solid var(--border);border-radius:12px;padding:1rem}
+    .stars{color:#f59e0b}
+  </style>
+  <section class="grid" id="tGrid"></section>
+  <script>
+    (function(){
+      const samples=[
+        {name:'A. Student', text:'Got my internship in 2 weeks using the platform.', rating:5},
+        {name:'H. Recruiter', text:'Clear flow and helpful tests.', rating:4},
+        {name:'M. Intern', text:'Resume builder and quick tests made me stand out.', rating:5},
+      ];
+      const grid=document.getElementById('tGrid');
+      const data=JSON.parse(localStorage.getItem('testimonials')||'[]');
+      const list=data.length?data:samples;
+      grid.innerHTML=list.map(t=>`<article class="card"><div class="stars">${'★'.repeat(t.rating)}${'☆'.repeat(5-t.rating)}</div><p>${t.text}</p><strong>— ${t.name}</strong></article>`).join('');
+    })();
+  </script>
+</body>
+</html>

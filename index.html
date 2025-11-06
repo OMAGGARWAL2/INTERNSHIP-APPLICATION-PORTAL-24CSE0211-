@@ -1,0 +1,2264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InternHub - Your Gateway to Amazing Internships</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="market-enhancements.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700;800;900&family=SF+Pro+Text:wght@300;400;500;600;700&display=swap');
+    </style>
+    <style>
+        /* Three-color professional theme: Cream, Blue, Sea Blue */
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+
+            --primary-bg: var(--cream);
+            --secondary-bg: #ffffff;
+            --header-bg: rgba(246, 241, 231, 0.9);
+            --text-primary: var(--blue);
+            --text-secondary: rgba(30, 58, 138, 0.8);
+            --accent-color: var(--sea-blue);
+            --hover-color: var(--blue);
+            --border-color: rgba(30, 58, 138, 0.15);
+            --shadow-color: rgba(30, 58, 138, 0.12);
+            --tag-bg: rgba(14, 165, 233, 0.12);
+            --primary-gradient: linear-gradient(135deg, var(--blue), var(--sea-blue));
+            --secondary-gradient: linear-gradient(135deg, var(--sea-blue), var(--blue));
+            --success-color: var(--sea-blue);
+        }
+
+        body { background: var(--primary-bg) !important; color: var(--text-primary) !important; }
+        header { background: var(--header-bg) !important; }
+        footer { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%) !important; }
+        a { color: var(--accent-color) !important; }
+        .btn, .btn-primary, .btn-submit, .menu-toggle, .theme-toggle, .apply-btn, .send-button { background: var(--primary-gradient) !important; color: #ffffff !important; border-color: transparent !important; }
+        .btn-secondary { border-color: var(--accent-color) !important; color: var(--accent-color) !important; background: transparent !important; }
+        .sidebar, .feature-card, .internship-card, .modal-content, .application-card, .team-member, .value-card, .stats-section, .assignment-section, .results, .chat-container { background: #ffffff !important; border-color: var(--border-color) !important; }
+        .hero { background: var(--primary-bg) !important; }
+        .filter-btn.active { background: var(--accent-color) !important; color: #ffffff !important; border-color: var(--accent-color) !important; }
+        .tag { background: var(--tag-bg) !important; color: var(--text-secondary) !important; }
+        .chat-header { background: var(--primary-gradient) !important; }
+        .chat-messages { background: var(--primary-bg) !important; }
+        .message-content { background: rgba(14, 165, 233, 0.12) !important; color: var(--text-primary) !important; }
+        .message.user .message-content { background: rgba(30, 58, 138, 0.1) !important; }
+        input, select, textarea, .chat-input { background: rgba(255, 255, 255, 0.8) !important; border-color: var(--border-color) !important; color: var(--text-primary) !important; }
+        input:focus, select:focus, textarea:focus, .chat-input:focus { border-color: var(--accent-color) !important; box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25) !important; outline: none !important; }
+        .scroll-top { background: var(--primary-gradient) !important; color: #ffffff !important; }
+        .notification { background: #ffffff !important; border-color: var(--border-color) !important; }
+        .notification.success { border-left-color: var(--sea-blue) !important; }
+        .logo i { color: var(--accent-color) !important; -webkit-text-fill-color: var(--accent-color) !important; }
+        .section-title { color: var(--text-primary) !important; }
+        /* Typography refinements */
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif !important; line-height: 1.6 !important; }
+        h1,h2,h3,h4,h5,h6 { font-family: 'Inter', sans-serif !important; font-weight: 700 !important; letter-spacing: -0.01em; }
+        /* Hero background and CTA styles to keep 3-color palette */
+        .hero { background: var(--primary-bg) !important; }
+        .hero .btn.btn-primary { background: var(--primary-gradient) !important; color: #ffffff !important; border: none !important; }
+        .hero .btn.btn-secondary { background: transparent !important; color: var(--accent-color) !important; border: 2px solid var(--accent-color) !important; }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* === CREAM AND BLUE PALETTE === */
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+            
+            --primary-bg-color: var(--cream); /* Cream base */
+            --primary-bg: var(--cream); /* Cream background */
+            --secondary-bg: #ffffff; /* White card/element background */
+            --header-bg: rgba(255, 255, 255, 0.95); /* White header with transparency */
+            --section-bg: linear-gradient(135deg, var(--blue) 0%, var(--sea-blue) 100%); /* Blue section backgrounds */
+            
+            --text-primary: var(--blue); /* Deep blue for main text */
+            --text-secondary: rgba(30, 58, 138, 0.8); /* Medium blue for secondary text */
+            --text-on-blue: #ffffff; /* White text on blue backgrounds */
+            
+            --accent-color: var(--sea-blue); /* Sea blue accent */
+            --accent-light: var(--sea-blue); /* Sea blue */
+            --accent-dark: var(--blue); /* Deep blue */
+            --hover-color: var(--blue); /* Hover blue */
+            --success-color: var(--sea-blue); /* Success sea blue */
+            
+            --border-color: rgba(30, 58, 138, 0.15); /* Blue border */
+            --shadow-color: rgba(30, 58, 138, 0.12); /* Blue shadow */
+            --tag-bg: rgba(14, 165, 233, 0.12); /* Light sea blue tag background */
+            --card-gradient: linear-gradient(135deg, #ffffff 0%, var(--cream) 100%); /* Subtle cream tint on cards */
+
+            /* Cream and Blue gradients */
+            --primary-gradient: linear-gradient(135deg, var(--blue), var(--sea-blue));
+            --secondary-gradient: linear-gradient(135deg, var(--sea-blue), var(--blue));
+            --hero-gradient: linear-gradient(135deg, var(--blue) 0%, var(--sea-blue) 100%);
+            --success-gradient: linear-gradient(135deg, var(--sea-blue) 0%, var(--blue) 100%);
+
+            /* Consistent Border Radius */
+            --border-radius-main: 16px;
+            --border-radius-small: 12px;
+        }
+
+        [data-theme="dark"] {
+            /* === APPLE DARK MODE PALETTE === */
+            --primary-bg: #000000; /* True black page background */
+            --secondary-bg: #1d1d1f; /* Dark gray card/element background */
+            --header-bg: rgba(29, 29, 31, 0.8); /* Translucent header */
+            
+            --text-primary: #f5f5f7; /* Off-white for main text */
+            --text-secondary: #a1a1a6; /* Light gray for secondary text */
+            
+            --accent-color: #0a84ff; /* Brighter blue for dark mode */
+            --hover-color: #007aff; /* Standard blue for hover */
+            --success-color: #30d158; /* Brighter green for dark mode */
+            
+            --border-color: rgba(255, 255, 255, 0.15); /* Subtle white border */
+            --shadow-color: rgba(0, 0, 0, 0.25); /* Darker shadow for visibility */
+            --tag-bg: #3a3a3c; /* Dark gray for tags */
+
+            --primary-gradient: linear-gradient(135deg, #0a84ff 0%, #007aff 100%);
+            --secondary-gradient: linear-gradient(135deg, #a1a1a6 0%, #b2b2b7 100%);
+            --success-gradient: linear-gradient(135deg, #30d158 0%, #34c759 100%);
+        }
+
+        body {
+            /* === APPLYING SF FONT GLOBALLY === */
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--primary-bg);
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased; /* Smoother font rendering */
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 400; /* Standard weight for body text */
+        }
+
+        /* Standardize headings */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'SF Pro Display', sans-serif;
+            font-weight: 700; /* Bold for headings */
+            color: var(--text-primary);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Header */
+        header {
+            background: var(--header-bg); /* White/cream header */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--accent-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header .logo {
+            color: var(--text-primary) !important;
+        }
+
+        header .logo i {
+            color: var(--accent-color) !important;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav .menu-toggle,
+        nav .theme-toggle {
+            color: #ffffff !important;
+            background: var(--primary-gradient) !important;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'SF Pro Display', sans-serif;
+            color: var(--text-primary);
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+            -webkit-text-fill-color: unset;
+            cursor: pointer;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent-color); /* === STYLE CHANGE === */
+            -webkit-text-fill-color: var(--accent-color); /* Ensure icon gets color */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 80px; /* Adjusted to match common header heights, was 80px */
+            width: 280px;
+            height: calc(100vh - 80px);
+            background: var(--secondary-bg); /* Use card background */
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 0;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 999;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 1rem 2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            font-weight: 500; /* Medium weight for nav links */
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: var(--tag-bg); /* Cream and blue accent color tint */
+            color: var(--accent-dark);
+            border-left-color: var(--accent-color);
+            transform: translateX(5px);
+        }
+
+        .sidebar-menu i {
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center; /* Ensure icons line up */
+        }
+
+        /* Toggle Buttons */
+        .nav-toggle {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .menu-toggle,
+        .theme-toggle {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 0.6rem 1rem; /* Slightly smaller padding */
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .menu-toggle:hover,
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px var(--shadow-color); /* Subtle shadow */
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #f6f1e7 0%, #e8dfd0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Adjust dark mode hero bg */
+        [data-theme="dark"] .hero {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        /* REMOVED: Concentric circle animations */
+        .hero::before,
+        .hero::after {
+            display: none;
+        }
+
+        .hero-content {
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero-text {
+            color: var(--text-primary) !important;
+        }
+
+        .hero-text h1 {
+            color: var(--text-primary) !important;
+            text-shadow: none;
+        }
+
+        .hero-text p {
+            color: var(--text-secondary) !important;
+        }
+        
+        [data-theme="dark"] .hero::before {
+             background: radial-gradient(circle, rgba(14, 165, 233, 0.3) 0%, transparent 70%);
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            z-index: 1;
+            position: relative;
+        }
+
+        .hero-text h1 {
+            font-family: 'Poppins', 'Inter', sans-serif;
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 1s ease;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-text p {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            animation: fadeIn 1s ease 0.2s backwards;
+            max-width: 550px;
+            line-height: 1.7;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+            animation: fadeIn 1s ease 0.4s backwards;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 1.1rem 2.8rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.35);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(30, 58, 138, 0.45);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--blue);
+            border: 2px solid var(--blue);
+        }
+
+        .btn-secondary:hover {
+            background: var(--blue);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(30, 58, 138, 0.3);
+        }
+
+        .hero-image {
+            position: relative;
+            /* animation: bounce 3s ease-in-out infinite; */
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--card-gradient);
+            position: relative;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: 'SF Pro Display', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 4rem;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 500;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--card-gradient);
+            padding: 2.5rem;
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            transition: all 0.4s ease;
+            animation: fadeIn 0.6s ease backwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+        .feature-card:nth-child(4) { animation-delay: 0.4s; }
+        .feature-card:nth-child(5) { animation-delay: 0.5s; }
+        .feature-card:nth-child(6) { animation-delay: 0.6s; }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(30, 58, 138, 0.2);
+            border-color: var(--accent-color);
+            background: var(--card-gradient);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600; /* Semibold for card titles */
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Internship Listings */
+        .internships {
+            padding: 6rem 2rem;
+            background: var(--card-gradient);
+            position: relative;
+        }
+
+        .internships::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        [data-theme="dark"] .internships {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        .internships-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--secondary-bg); /* Use card bg */
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+             border-color: var(--accent-color);
+             color: var(--accent-color);
+        }
+        
+        .filter-btn.active {
+            background: var(--primary-gradient);
+            border-color: var(--accent-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .internship-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .internship-card {
+            background: var(--card-gradient);
+            padding: 2rem;
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .internship-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary-gradient);
+            transform: scaleY(0);
+            transition: transform 0.4s ease;
+        }
+
+        .internship-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .internship-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-top: 60px solid rgba(14, 165, 233, 0.1);
+            border-left: 60px solid transparent;
+            transition: all 0.4s ease;
+        }
+
+        .internship-card:hover::after {
+            width: 100px;
+            height: 100px;
+        }
+
+        .internship-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(30, 58, 138, 0.2);
+            border-color: var(--accent-color);
+            background: var(--card-gradient);
+        }
+
+        .company-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--border-radius-small); /* Use var */
+            background: var(--primary-bg); /* Use main bg for contrast */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem; /* Larger icon */
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .internship-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600; /* Semibold */
+        }
+
+        .company-name {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            padding: 0.4rem 1rem;
+            background: var(--tag-bg);
+            color: var(--accent-dark);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover {
+            background: var(--accent-color);
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+
+        .salary {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--success-color);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .apply-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: var(--border-radius-small);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .apply-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6); /* Darker overlay */
+            backdrop-filter: blur(10px); /* Add blur to bg */
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--secondary-bg);
+            padding: 3rem;
+            border-radius: var(--border-radius-main); /* Use var */
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary); /* Use secondary text color */
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-bg); /* Use main bg for input */
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-small); /* Use var */
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3); /* Focus ring */
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: var(--border-radius-small); /* Use var */
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); /* Accent shadow */
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            padding: 4rem 2rem 2rem;
+            border-top: 4px solid var(--accent-light);
+            color: #ffffff;
+        }
+
+        footer h3,
+        footer a,
+        footer p {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        footer a:hover {
+            color: var(--accent-color) !important;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 600; /* Semibold */
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .social-links a:hover {
+            background: #ffffff;
+            color: var(--accent-color) !important;
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-overlay {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-text h1 {
+                font-size: 3rem; /* Adjusted */
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+
+            .internship-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 0 1rem;
+            }
+
+            .sidebar {
+                width: 100%;
+                top: 73px; 
+                height: calc(100vh - 73px);
+            }
+
+            .mobile-overlay {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.6);
+                z-index: 998;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .mobile-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .hero {
+                min-height: 80vh;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem; /* Adjusted */
+            }
+
+            .cta-buttons {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .feature-card,
+            .internship-card {
+                padding: 1.5rem;
+            }
+            .modal-content {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Scroll to Top Button */
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .scroll-top.active {
+            display: flex;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); /* Accent shadow */
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 1.5rem 2rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-main); /* Use var */
+            box-shadow: 0 8px 25px var(--shadow-color); /* Subtle shadow */
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 350px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .notification.error {
+            border-left: 4px solid #ef4444; /* Keep error red */
+        }
+
+        .notification.info {
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+        }
+        
+        /* Specific icon colors for notifications */
+        .notification.success .notification-icon { color: var(--success-color); }
+        .notification.error .notification-icon { color: #ef4444; }
+        .notification.info .notification-icon { color: var(--accent-color); }
+        
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .notification-message {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .notification-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* Job Detail Modal */
+        .job-detail-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 10000;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .job-detail-modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .job-detail-content {
+            background: var(--secondary-bg);
+            max-width: 900px;
+            width: 100%;
+            border-radius: var(--border-radius-main);
+            padding: 3rem;
+            margin: 2rem auto;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            position: relative;
+        }
+
+        .job-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .job-detail-header h2 {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .job-detail-company {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .job-detail-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .job-detail-info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .job-detail-info-item i {
+            color: var(--accent-color);
+        }
+
+        .job-detail-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-message {
+            flex: 1;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 2px solid var(--accent-color);
+            border-radius: 50px;
+            color: var(--accent-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-message:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .resume-upload-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--primary-bg);
+            border-radius: var(--border-radius-small);
+            border: 2px dashed var(--border-color);
+        }
+
+        .file-info {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(14, 165, 233, 0.1);
+            border-radius: 5px;
+            color: var(--accent-color);
+            font-size: 0.9rem;
+        }
+
+        .internship-card {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-rocket"></i>
+                <span>InternHub</span>
+            </div>
+            <div class="nav-toggle">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i> Menu
+                </button>
+                <button class="theme-toggle">
+                    <i class="fas fa-sun"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="mobile-overlay" onclick="toggleSidebar()"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="index.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+            <li><a href="help.html"><i class="fas fa-envelope"></i> Help</a></li>
+            <li><a href="login.html" id="loginLink"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            <li><a href="signup.html" id="signupLink"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+            <li style="display: none;" id="profileLink"><a href="#" onclick="showProfile(); return false;"><i class="fas fa-user-circle"></i> <span id="profileName">Profile</span></a></li>
+            <li style="display: none;" id="logoutLink"><a href="#" onclick="logout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Your Dream Internship Awaits</h1>
+                <p>Connect with the best companies and kickstart your career journey. Personalized matches, expert guidance, and endless opportunities in one place.</p>
+                <div class="cta-buttons">
+                    <a href="find-internships.html" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Find Internships
+                    </a>
+                    <a href="signup.html" class="btn btn-secondary">
+                        <i class="fas fa-user-plus"></i> Get Started
+                    </a>
+                </div>
+                <div style="margin-top: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; max-width: 500px;">
+                    <a href="hirer-auth.html" class="btn" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; text-decoration: none; box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);">
+                        <i class="fas fa-building"></i> I'm a Hirer
+                    </a>
+                    <a href="student-dashboard.html" class="btn" style="background: linear-gradient(135deg, #0ea5e9, #06b6d4); color: white; text-decoration: none; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);">
+                        <i class="fas fa-user-graduate"></i> I'm an Intern
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <!-- Blank space for clean design -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof & Stats Section -->
+    <section style="padding: 4rem 2rem; background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%); color: white; text-align: center;">
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <h2 style="color: white; margin-bottom: 3rem; font-size: 2.5rem;"><i class="fas fa-trophy"></i> Trusted by Thousands</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 2rem; border-radius: 12px; border: 2px solid rgba(255,255,255,0.2);">
+                    <div style="font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem;">10,000+</div>
+                    <div style="font-size: 1.1rem; opacity: 0.9;">Students Placed</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 2rem; border-radius: 12px; border: 2px solid rgba(255,255,255,0.2);">
+                    <div style="font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem;">500+</div>
+                    <div style="font-size: 1.1rem; opacity: 0.9;">Partner Companies</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 2rem; border-radius: 12px; border: 2px solid rgba(255,255,255,0.2);">
+                    <div style="font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem;">₹25k</div>
+                    <div style="font-size: 1.1rem; opacity: 0.9;">Avg. Stipend</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 2rem; border-radius: 12px; border: 2px solid rgba(255,255,255,0.2);">
+                    <div style="font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem;">95%</div>
+                    <div style="font-size: 1.1rem; opacity: 0.9;">Success Rate</div>
+                </div>
+            </div>
+            
+            <!-- Company Logos -->
+            <div style="margin-top: 3rem;">
+                <h3 style="color: rgba(255,255,255,0.9); margin-bottom: 2rem; font-size: 1.2rem;">TRUSTED BY LEADING COMPANIES</h3>
+                <div style="display: flex; gap: 3rem; justify-content: center; align-items: center; flex-wrap: wrap; opacity: 0.9;">
+                    <div style="background: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 700; color: #1e3a8a;"><i class="fab fa-google"></i> Google</div>
+                    <div style="background: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 700; color: #1e3a8a;"><i class="fab fa-microsoft"></i> Microsoft</div>
+                    <div style="background: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 700; color: #1e3a8a;"><i class="fab fa-amazon"></i> Amazon</div>
+                    <div style="background: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 700; color: #1e3a8a;"><i class="fab fa-meta"></i> Meta</div>
+                    <div style="background: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 700; color: #1e3a8a;"><i class="fab fa-apple"></i> Apple</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section style="padding: 4rem 2rem; background: #f6f1e7;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title"><i class="fas fa-comments"></i> Success Stories</h2>
+            <p class="section-subtitle">Hear from students who landed their dream internships</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                <div style="background: white; padding: 2rem; border-radius: 12px; border: 2px solid rgba(30,58,138,0.1); box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center;">
+                        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #1e3a8a, #0ea5e9); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.5rem;">PS</div>
+                        <div>
+                            <div style="font-weight: 700; color: #1e3a8a;">Priya Sharma</div>
+                            <div style="font-size: 0.9rem; color: #6b7280;">Frontend Developer @ Google</div>
+                        </div>
+                    </div>
+                    <div style="color: #f59e0b; margin-bottom: 1rem; font-size: 1.2rem;">★★★★★</div>
+                    <p style="color: #4b5563; line-height: 1.6; font-style: italic;">"InternHub helped me land my dream internship at Google! The platform made it so easy to find opportunities matching my skills. Highly recommended!"</p>
+                </div>
+                
+                <div style="background: white; padding: 2rem; border-radius: 12px; border: 2px solid rgba(30,58,138,0.1); box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center;">
+                        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #ec4899); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.5rem;">RK</div>
+                        <div>
+                            <div style="font-weight: 700; color: #1e3a8a;">Rahul Kumar</div>
+                            <div style="font-size: 0.9rem; color: #6b7280;">Data Analyst @ Microsoft</div>
+                        </div>
+                    </div>
+                    <div style="color: #f59e0b; margin-bottom: 1rem; font-size: 1.2rem;">★★★★★</div>
+                    <p style="color: #4b5563; line-height: 1.6; font-style: italic;">"The ATS system and skill matching saved me hours! Got 3 interview calls in the first week. Best internship platform out there."</p>
+                </div>
+                
+                <div style="background: white; padding: 2rem; border-radius: 12px; border: 2px solid rgba(30,58,138,0.1); box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center;">
+                        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.5rem;">AD</div>
+                        <div>
+                            <div style="font-weight: 700; color: #1e3a8a;">Ananya Das</div>
+                            <div style="font-size: 0.9rem; color: #6b7280;">Product Manager @ Amazon</div>
+                        </div>
+                    </div>
+                    <div style="color: #f59e0b; margin-bottom: 1rem; font-size: 1.2rem;">★★★★★</div>
+                    <p style="color: #4b5563; line-height: 1.6; font-style: italic;">"From application to offer in 2 weeks! The resume builder and interview prep resources were invaluable. Thank you InternHub!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="about">
+        <h2 class="section-title">Why Choose InternConnect?</h2>
+        <p class="section-subtitle">We're redefining internship discovery with innovative features</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-user-check"></i></div>
+                <h3>AI-Powered Matching</h3>
+                <p>Advanced algorithms match you with internships that align perfectly with your skills, interests, and career goals.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Skills Analytics</h3>
+                <p>Track your skill development with detailed analytics and personalized recommendations for growth.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-users"></i></div>
+                <h3>Mentor Connect</h3>
+                <p>Connect with industry mentors for guidance, mock interviews, and valuable career insights.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-certificate"></i></div>
+                <h3>Certification Programs</h3>
+                <p>Boost your profile with free certification courses to enhance your internship applications.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                <h3>Real-time Notifications</h3>
+                <p>Never miss an opportunity with instant alerts about matching internships and application updates.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3>Verified Companies</h3>
+                <p>Every company is thoroughly verified to ensure legitimacy and protect your interests.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="internships" id="internships">
+        <div class="internships-container">
+            <h2 class="section-title">Featured Internships</h2>
+            <p class="section-subtitle">Discover opportunities tailored for you</p>
+            
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterInternships('all')">All</button>
+                <button class="filter-btn" onclick="filterInternships('remote')">Remote</button>
+                <button class="filter-btn" onclick="filterInternships('part-time')">Part-time</button>
+                <button class="filter-btn" onclick="filterInternships('full-time')">Full-time</button>
+                <button class="filter-btn" onclick="filterInternships('paid')">Paid</button>
+            </div>
+            
+            <div class="internship-grid" id="internshipGrid">
+                </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>InternHub</h3>
+                <p style="color: var(--text-secondary); margin-top: 1rem;">Your gateway to amazing internship opportunities. Connecting students with their dream careers.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#internships">Find Internships</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Career Guide</a></li>
+                    <li><a href="#">Resume Builder</a></li>
+                    <li><a href="#">Interview Tips</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 InternHub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <button class="scroll-top" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <div id="notificationContainer"></div>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login</h2>
+                <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" required>
+                </div>
+                <button type="submit" class="btn-submit">Login</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem; color: var(--text-secondary);">
+                Don't have an account? <a href="#" onclick="closeModal('loginModal'); openModal('signupModal'); return false;" style="color: var(--accent-color);">Sign up</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Sign Up</h2>
+                <button class="close-btn" onclick="closeModal('signupModal')">&times;</button>
+            </div>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" required>
+                </div>
+                <button type="submit" class="btn-submit">Sign Up</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem; color: var(--text-secondary);">
+                Already have an account? <a href="#" onclick="closeModal('signupModal'); openModal('loginModal'); return false;" style="color: var(--accent-color);">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="modal" id="postJobModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Post an Internship</h2>
+                <button class="close-btn" onclick="closeModal('postJobModal')">&times;</button>
+            </div>
+            <form id="postJobForm">
+                <div class="form-group">
+                    <label>Company Name</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group">
+                    <label>Position</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select required>
+                        <option value="">Select Type</option>
+                        <option value="full-time">Full-time</option>
+                        <option value="part-time">Part-time</option>
+                        <option value="remote">Remote</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Stipend</label>
+                    <input type="text" placeholder="e.g., ₹5,000 - ₹10,000" required>
+                </div>
+                <button type="submit" class="btn-submit">Post Internship</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Job Detail Modal -->
+    <div class="job-detail-modal" id="jobDetailModal" onclick="if(event.target === this) closeJobDetail()">
+        <div class="job-detail-content" id="jobDetailContent" onclick="event.stopPropagation()">
+            <!-- Content will be dynamically loaded -->
+        </div>
+    </div>
+
+    <!-- Apply Modal -->
+    <div class="modal" id="applyModal" onclick="if(event.target === this) closeApplyModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Apply for Position</h2>
+                <button class="close-btn" onclick="closeApplyModal()">&times;</button>
+            </div>
+            <form id="applyForm" onsubmit="handleApplySubmit(event)">
+                <div style="margin-bottom: 1.5rem; padding: 1rem; background: var(--primary-bg); border-radius: var(--border-radius-small);">
+                    <h3 style="margin-bottom: 0.5rem; color: var(--text-primary);" id="applyJobTitle">Job Title</h3>
+                    <p style="color: var(--text-secondary);" id="applyCompanyName">Company Name</p>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Full Name</label>
+                    <input type="text" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" required placeholder="your.email@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Phone Number</label>
+                    <input type="tel" required placeholder="+91 1234567890">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-comment-alt"></i> Cover Letter (Optional)</label>
+                    <textarea rows="5" placeholder="Tell us why you're interested in this position..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" id="resumeCheckbox" onchange="toggleResumeUpload()" style="width: 18px; height: 18px; cursor: pointer;">
+                        <span style="font-weight: 600;">Apply with Resume (PDF/DOC)</span>
+                    </label>
+                </div>
+
+                <div class="resume-upload-section" id="resumeUploadSection" style="display: none;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                        <i class="fas fa-file-upload"></i> Upload Resume
+                    </label>
+                    <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" onchange="handleResumeUpload(event)" style="width: 100%; padding: 0.5rem; border: 2px solid var(--border-color); border-radius: var(--border-radius-small); background: var(--secondary-bg);">
+                    <div id="resumeFileInfo" class="file-info" style="display: none;"></div>
+                </div>
+
+                <button type="submit" class="btn-submit" style="width: 100%; margin-top: 1rem;">
+                    <i class="fas fa-paper-plane"></i> Submit Application
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample internship data
+        const internships = [
+            {
+                id: 1,
+                company: "TechNova",
+                position: "Frontend Developer Intern",
+                type: "remote",
+                tags: ["React", "JavaScript", "Remote"],
+                stipend: "₹15,000 - ₹25,000",
+                icon: "💼",
+                location: "Remote",
+                duration: "3-6 months",
+                description: "Work on cutting-edge web applications using React and modern JavaScript frameworks. You'll collaborate with experienced developers to build responsive user interfaces and improve user experience."
+            },
+            {
+                id: 2,
+                company: "DataDrive",
+                position: "Data Science Intern",
+                type: "full-time",
+                tags: ["Python", "Machine Learning", "Full-time"],
+                stipend: "₹20,000 - ₹35,000",
+                icon: "📊",
+                location: "Bangalore",
+                duration: "6 months",
+                description: "Analyze large datasets and build predictive models for business insights. Work with data scientists to develop machine learning models and create data visualizations."
+            },
+            {
+                id: 3,
+                company: "DesignHub",
+                position: "UI/UX Designer Intern",
+                type: "remote",
+                tags: ["Figma", "Design", "Remote"],
+                stipend: "₹12,000 - ₹20,000",
+                icon: "🎨",
+                location: "Remote",
+                duration: "3-6 months",
+                description: "Create beautiful and intuitive user interfaces for mobile and web applications. Collaborate with product managers and developers to design user-centric solutions."
+            },
+            {
+                id: 4,
+                company: "CloudTech",
+                position: "Backend Developer Intern",
+                type: "full-time",
+                tags: ["Node.js", "MongoDB", "Full-time"],
+                stipend: "₹18,000 - ₹28,000",
+                icon: "⚙️",
+                location: "Delhi",
+                duration: "6 months",
+                description: "Build scalable backend systems and APIs for cloud-based applications. Work with modern technologies like Node.js, MongoDB, and cloud services."
+            },
+            {
+                id: 5,
+                company: "MediaVerse",
+                position: "Content Writer Intern",
+                type: "part-time",
+                tags: ["Writing", "SEO", "Part-time"],
+                stipend: "₹8,000 - ₹15,000",
+                icon: "✍️",
+                location: "Pune",
+                duration: "3 months",
+                description: "Create engaging content and manage social media campaigns. Write blog posts, social media content, and marketing materials."
+            },
+            {
+                id: 6,
+                company: "AI Innovations",
+                position: "Machine Learning Intern",
+                type: "full-time",
+                tags: ["TensorFlow", "Deep Learning", "Full-time"],
+                stipend: "₹25,000 - ₹40,000",
+                icon: "🤖",
+                location: "Hyderabad",
+                duration: "6 months",
+                description: "Research and develop cutting-edge AI solutions for real-world problems. Work on deep learning models, computer vision, and NLP projects."
+            }
+        ];
+
+        // Display internships
+        function displayInternships(filteredInternships) {
+            const grid = document.getElementById('internshipGrid');
+            grid.innerHTML = '';
+            
+            filteredInternships.forEach(internship => {
+                const card = document.createElement('div');
+                card.className = 'internship-card';
+                card.onclick = (e) => {
+                    if (e.target.closest('button')) return;
+                    showJobDetail(internship.id);
+                };
+                card.innerHTML = `
+                    <div class="company-logo">${internship.icon}</div>
+                    <h3>${internship.position}</h3>
+                    <p class="company-name">${internship.company}</p>
+                    <div class="tags">
+                        ${internship.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                    <div class="salary">${internship.stipend}</div>
+                    <button class="apply-btn" onclick="event.stopPropagation(); applyForInternship(${internship.id})">
+                        <i class="fas fa-paper-plane"></i> Apply Now
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+            
+            // Animate cards
+            const cards = grid.querySelectorAll('.internship-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.style.animation = 'fadeIn 0.6s ease backwards';
+            });
+        }
+
+        // Filter internships
+        function filterInternships(filter) {
+            const filtered = filter === 'all' 
+                ? internships 
+                : internships.filter(i => i.type === filter || (filter === 'paid' && parseInt(i.stipend.replace(/[₹,]/g, '')) > 10000));
+            
+            displayInternships(filtered);
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Sidebar toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.mobile-overlay');
+            
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Close sidebar if open
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal(modal.id);
+                }
+            });
+        });
+
+        // Notification system
+        function showNotification(type, title, message) {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const icons = {
+                success: '<i class="fas fa-check-circle"></i>',
+                error: '<i class="fas fa-exclamation-circle"></i>',
+                info: '<i class="fas fa-info-circle"></i>'
+            };
+            
+            notification.innerHTML = `
+                <div class="notification-icon">${icons[type]}</div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+                <button class="notification-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Form submissions
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // In a real app, you'd verify credentials here
+            // Simulating a successful login
+            const email = e.target.querySelector('input[type="email"]').value;
+            const user = { name: email.split('@')[0], email: email }; // Mock user
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            
+            showNotification('success', 'Welcome Back!', 'You have successfully logged in.');
+            closeModal('loginModal');
+            updateUIForUser();
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // In a real app, you'd create the account here
+            const name = e.target.querySelector('input[type="text"]').value;
+            const email = e.target.querySelector('input[type="email"]').value;
+            const user = { name: name, email: email };
+            localStorage.setItem('currentUser', JSON.stringify(user));
+
+            showNotification('success', 'Account Created!', 'Your account has been successfully created.');
+            closeModal('signupModal');
+            updateUIForUser();
+        });
+
+        document.getElementById('postJobForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            showNotification('success', 'Internship Posted!', 'Your internship listing has been published.');
+            closeModal('postJobModal');
+        });
+
+        // Show job detail modal
+        let currentApplyingId = null;
+        function showJobDetail(id) {
+            const internship = internships.find(i => i.id === id);
+            if (!internship) return;
+
+            const modal = document.getElementById('jobDetailModal');
+            const content = document.getElementById('jobDetailContent');
+            
+            content.innerHTML = `
+                <div class="job-detail-header">
+                    <div>
+                        <h2>${internship.position}</h2>
+                        <div class="job-detail-company">
+                            <i class="fas fa-building"></i> ${internship.company}
+                        </div>
+                    </div>
+                    <button class="close-btn" onclick="closeJobDetail()">&times;</button>
+                </div>
+                
+                <div class="job-detail-info">
+                    <div class="job-detail-info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>${internship.location || 'Not specified'}</span>
+                    </div>
+                    <div class="job-detail-info-item">
+                        <i class="fas fa-clock"></i>
+                        <span>${internship.type.charAt(0).toUpperCase() + internship.type.slice(1)}</span>
+                    </div>
+                    <div class="job-detail-info-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>${internship.duration || 'Not specified'}</span>
+                    </div>
+                    <div class="job-detail-info-item">
+                        <i class="fas fa-rupee-sign"></i>
+                        <span>${internship.stipend}</span>
+                    </div>
+                </div>
+
+                <div class="tags" style="margin-bottom: 2rem;">
+                    ${internship.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--text-primary);">Job Description</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.8; white-space: pre-wrap;">${internship.description || 'No description available.'}</p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--text-primary);">Requirements</h3>
+                    <ul style="color: var(--text-secondary); line-height: 2; padding-left: 1.5rem;">
+                        ${internship.tags.map(tag => `<li>Proficiency in ${tag}</li>`).join('')}
+                        <li>Strong problem-solving skills</li>
+                        <li>Good communication skills</li>
+                    </ul>
+                </div>
+
+                <div class="job-detail-actions">
+                    <button class="btn btn-primary" onclick="openApplyModal(${internship.id})" style="flex: 1;">
+                        <i class="fas fa-paper-plane"></i> Apply Now
+                    </button>
+                    <button class="btn-message" onclick="messageCompany(${internship.id})">
+                        <i class="fas fa-comments"></i> Message Company
+                    </button>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeJobDetail() {
+            document.getElementById('jobDetailModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Apply for internship
+        function applyForInternship(id) {
+            const internship = internships.find(i => i.id === id);
+            if (!internship) return;
+
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (!currentUser) {
+                showNotification('info', 'Login Required', 'Please login to apply for internships.');
+                setTimeout(() => {
+                    openModal('loginModal');
+                }, 1000);
+                return;
+            }
+
+            // Store internship data for autofill page
+            sessionStorage.setItem('applyInternship', JSON.stringify({
+                id: internship.id,
+                title: internship.position,
+                company: internship.company,
+                location: internship.location,
+                stipend: internship.salary
+            }));
+
+            // Redirect to autofill confirmation page
+            window.location.href = 'autofill.html';
+        }
+
+        function openApplyModal(id) {
+            // Redirect to autofill page instead
+            applyForInternship(id);
+        }
+
+        function closeApplyModal() {
+            document.getElementById('applyModal').classList.remove('active');
+            document.getElementById('applyForm').reset();
+            document.getElementById('resumeUploadSection').style.display = 'none';
+            document.getElementById('resumeCheckbox').checked = false;
+            document.body.style.overflow = '';
+        }
+
+        function toggleResumeUpload() {
+            const checkbox = document.getElementById('resumeCheckbox');
+            const section = document.getElementById('resumeUploadSection');
+            section.style.display = checkbox.checked ? 'block' : 'none';
+        }
+
+        function handleResumeUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            if (!allowedTypes.includes(file.type)) {
+                showNotification('error', 'Invalid File', 'Please upload a PDF or DOC/DOCX file.');
+                e.target.value = '';
+                return;
+            }
+
+            const fileInfo = document.getElementById('resumeFileInfo');
+            fileInfo.innerHTML = `<i class="fas fa-file"></i> ${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
+            fileInfo.style.display = 'block';
+        }
+
+        function messageCompany(id) {
+            const internship = internships.find(i => i.id === id);
+            if (!internship) return;
+
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (!currentUser) {
+                showNotification('info', 'Login Required', 'Please login to message companies.');
+                return;
+            }
+
+            sessionStorage.setItem('newConversation', JSON.stringify({
+                company: internship.company,
+                title: internship.position,
+                internshipId: internship.id
+            }));
+
+            window.location.href = 'messages.html';
+        }
+
+        function handleApplySubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const resumeFile = document.getElementById('resumeFile').files[0];
+            const applyWithResume = document.getElementById('resumeCheckbox').checked;
+
+            const internship = internships.find(i => i.id === currentApplyingId);
+            if (!internship) return;
+
+            const applications = JSON.parse(localStorage.getItem('applications') || '[]');
+            const application = {
+                id: Date.now(),
+                internshipId: currentApplyingId,
+                jobTitle: internship.position,
+                company: internship.company,
+                applicantName: form.querySelector('input[type="text"]').value,
+                applicantEmail: form.querySelector('input[type="email"]').value,
+                applicantPhone: form.querySelector('input[type="tel"]').value,
+                coverLetter: form.querySelector('textarea').value,
+                hasResume: applyWithResume && resumeFile,
+                resumeFileName: resumeFile ? resumeFile.name : null,
+                appliedDate: new Date().toISOString(),
+                status: 'Pending'
+            };
+
+            if (applyWithResume && resumeFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    application.resumeData = e.target.result;
+                    application.resumeType = resumeFile.type;
+                    
+                    applications.push(application);
+                    localStorage.setItem('applications', JSON.stringify(applications));
+                    
+                    showNotification('success', 'Application Submitted!', `Your application for ${internship.position} has been submitted successfully.`);
+                    closeApplyModal();
+                    closeJobDetail();
+                };
+                reader.readAsDataURL(resumeFile);
+            } else {
+                applications.push(application);
+                localStorage.setItem('applications', JSON.stringify(applications));
+                
+                showNotification('success', 'Application Submitted!', `Your application for ${internship.position} has been submitted successfully.`);
+                closeApplyModal();
+                closeJobDetail();
+            }
+        }
+
+        // Profile functions
+        function showProfile() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (currentUser) {
+                showNotification('info', 'Profile', `Welcome ${currentUser.name}! Profile page coming soon.`);
+            }
+            if (document.getElementById('sidebar').classList.contains('active')) {
+                toggleSidebar();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            showNotification('success', 'Logged Out', 'You have been successfully logged out.');
+            updateUIForUser();
+             if (document.getElementById('sidebar').classList.contains('active')) {
+                toggleSidebar();
+            }
+        }
+
+        function updateUIForUser() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            const loginLink = document.getElementById('loginLink');
+            const signupLink = document.getElementById('signupLink');
+            const profileLink = document.getElementById('profileLink');
+            const logoutLink = document.getElementById('logoutLink');
+            const profileName = document.getElementById('profileName');
+
+            // Handle main nav links (which are in the sidebar)
+            if (currentUser) {
+                loginLink.style.display = 'none';
+                signupLink.style.display = 'none';
+                profileLink.style.display = 'block';
+                logoutLink.style.display = 'block';
+                profileName.textContent = currentUser.name.split(' ')[0] || 'Profile'; // Show first name
+            } else {
+                loginLink.style.display = 'block';
+                signupLink.style.display = 'block';
+                profileLink.style.display = 'none';
+                logoutLink.style.display = 'none';
+            }
+            
+            // Handle redirect links for login/signup in sidebar
+            const loginHref = document.querySelector('.sidebar-menu a[href="login.html"]');
+            const signupHref = document.querySelector('.sidebar-menu a[href="signup.html"]');
+            
+            if (loginHref) {
+                loginHref.onclick = (e) => { e.preventDefault(); openModal('loginModal'); };
+            }
+            if (signupHref) {
+                signupHref.onclick = (e) => { e.preventDefault(); openModal('signupModal'); };
+            }
+            
+            // Handle redirect links in hero section
+             const getStartedBtn = document.querySelector('.hero-content a[href="signup.html"]');
+             if (getStartedBtn) {
+                 getStartedBtn.onclick = (e) => { e.preventDefault(); openModal('signupModal'); };
+             }
+        }
+
+        // Scroll functions
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show/hide scroll to top button
+        window.addEventListener('scroll', () => {
+            const scrollBtn = document.querySelector('.scroll-top');
+            if (window.scrollY > 300) {
+                scrollBtn.classList.add('active');
+            } else {
+                scrollBtn.classList.remove('active');
+            }
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                
+                // Don't scroll for modal-only links
+                if (targetId === "#") return; 
+                
+                const target = document.querySelector(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                    // Close sidebar on mobile
+                    if (document.getElementById('sidebar').classList.contains('active')) {
+                        toggleSidebar();
+                    }
+                }
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            displayInternships(internships);
+            
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const themeIcon = document.querySelector('.theme-toggle i');
+            themeIcon.className = savedTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+
+            updateUIForUser(); // This will also update link behaviors
+
+            // Close modals on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeJobDetail();
+                    closeApplyModal();
+                }
+            });
+        });
+
+        // Theme toggle
+        document.querySelector('.theme-toggle').addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update icon
+            const icon = document.querySelector('.theme-toggle i');
+            icon.className = newTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+            
+            showNotification('info', 'Theme Changed!', `Switched to ${newTheme} mode.`);
+        });
+    </script>
+</body>
+</html>
