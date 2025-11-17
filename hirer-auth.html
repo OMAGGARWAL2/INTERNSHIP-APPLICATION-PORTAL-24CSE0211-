@@ -211,6 +211,7 @@
             </form>
 
             <div class="back-link">
+                <p>Don't have an account? <a href="#" id="showSignup">Sign up here</a></p>
                 <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a>
             </div>
         </div>
@@ -243,6 +244,41 @@
                     <i class="fas fa-check-circle"></i> Complete Setup
                 </button>
             </form>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signupSection" style="display: none;">
+            <div class="info-box">
+                <i class="fas fa-user-plus"></i>
+                <strong>Create New Account:</strong> Set up your company credentials
+            </div>
+
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupCompany">Company Name</label>
+                    <input type="text" id="signupCompany" required placeholder="Your company name">
+                </div>
+                <div class="form-group">
+                    <label for="signupUsername">Choose Username</label>
+                    <input type="text" id="signupUsername" required placeholder="Unique username for login">
+                </div>
+                <div class="form-group">
+                    <label for="signupPasscode">Set 4-Digit Passcode</label>
+                    <input type="password" id="signupPasscode" class="passcode-input" maxlength="4" pattern="[0-9]{4}" required placeholder="****">
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirmPasscode">Confirm Passcode</label>
+                    <input type="password" id="signupConfirmPasscode" class="passcode-input" maxlength="4" pattern="[0-9]{4}" required placeholder="****">
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+
+            <div class="back-link">
+                <p>Already have an account? <a href="#" id="showLogin">Log in here</a></p>
+                <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            </div>
         </div>
     </div>
 
@@ -372,6 +408,73 @@
             input.addEventListener('input', (e) => {
                 e.target.value = e.target.value.replace(/[^0-9]/g, '');
             });
+        });
+
+        // Switch to signup form
+        document.getElementById('showSignup').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('signupSection').style.display = 'block';
+        });
+
+        // Switch to login form
+        document.getElementById('showLogin').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('signupSection').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'block';
+        });
+
+        // Signup Form Handler
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const company = document.getElementById('signupCompany').value.trim();
+            const username = document.getElementById('signupUsername').value.trim();
+            const passcode = document.getElementById('signupPasscode').value;
+            const confirmPasscode = document.getElementById('signupConfirmPasscode').value;
+
+            // Validation
+            if (passcode !== confirmPasscode) {
+                showError('Passcodes do not match!');
+                return;
+            }
+
+            if (!/^\d{4}$/.test(passcode)) {
+                showError('Passcode must be exactly 4 digits!');
+                return;
+            }
+
+            // Check if username already exists
+            const existingCredentials = JSON.parse(localStorage.getItem('hirerCredentials') || 'null');
+            if (existingCredentials && existingCredentials.username === username) {
+                showError('Username already exists! Please choose a different username.');
+                return;
+            }
+
+            // Save credentials
+            const credentials = {
+                company: company,
+                username: username,
+                passcode: passcode,
+                createdAt: Date.now()
+            };
+
+            localStorage.setItem('hirerCredentials', JSON.stringify(credentials));
+            
+            // Initialize activity log
+            localStorage.setItem('hirerActivityLog', JSON.stringify([]));
+
+            showSuccess('Account created successfully! Redirecting to dashboard...');
+            
+            // Set session and redirect
+            sessionStorage.setItem('hirerAuthorized', 'true');
+            sessionStorage.setItem('hirerCompany', company);
+            sessionStorage.setItem('hirerUsername', username);
+            sessionStorage.setItem('hirerLoginTime', Date.now());
+
+            setTimeout(() => {
+                window.location.href = 'hirer.html';
+            }, 1500);
         });
     </script>
 </body>
