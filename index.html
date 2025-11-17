@@ -7,6 +7,21 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="market-enhancements.js"></script>
+    <script>
+        // Request notification permissions only once on index.html
+        document.addEventListener('DOMContentLoaded', async function() {
+            const notificationStatus = localStorage.getItem('notificationPermissionRequested');
+            if (!notificationStatus && 'Notification' in window && Notification.permission === 'default') {
+                try {
+                    const permission = await Notification.requestPermission();
+                    localStorage.setItem('notificationPermissionRequested', 'true');
+                    console.log('Notification permission:', permission);
+                } catch (error) {
+                    console.error('Error requesting notification permission:', error);
+                }
+            }
+        });
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700;800;900&family=SF+Pro+Text:wght@300;400;500;600;700&display=swap');
     </style>
@@ -74,26 +89,26 @@
             --blue: #1e3a8a;
             --sea-blue: #0ea5e9;
             
-            --primary-bg-color: var(--cream); /* Cream base */
-            --primary-bg: var(--cream); /* Cream background */
-            --secondary-bg: #ffffff; /* White card/element background */
-            --header-bg: rgba(255, 255, 255, 0.95); /* White header with transparency */
-            --section-bg: linear-gradient(135deg, var(--blue) 0%, var(--sea-blue) 100%); /* Blue section backgrounds */
+            --primary-bg-color: var(--cream);
+            --primary-bg: var(--cream);
+            --secondary-bg: #ffffff;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --section-bg: linear-gradient(135deg, var(--blue) 0%, var(--sea-blue) 100%);
             
-            --text-primary: var(--blue); /* Deep blue for main text */
-            --text-secondary: rgba(30, 58, 138, 0.8); /* Medium blue for secondary text */
-            --text-on-blue: #ffffff; /* White text on blue backgrounds */
+            --text-primary: var(--blue);
+            --text-secondary: rgba(30, 58, 138, 0.8);
+            --text-on-blue: #ffffff;
             
-            --accent-color: var(--sea-blue); /* Sea blue accent */
-            --accent-light: var(--sea-blue); /* Sea blue */
-            --accent-dark: var(--blue); /* Deep blue */
-            --hover-color: var(--blue); /* Hover blue */
-            --success-color: var(--sea-blue); /* Success sea blue */
+            --accent-color: var(--sea-blue);
+            --accent-light: var(--sea-blue);
+            --accent-dark: var(--blue);
+            --hover-color: var(--blue);
+            --success-color: var(--sea-blue);
             
-            --border-color: rgba(30, 58, 138, 0.15); /* Blue border */
-            --shadow-color: rgba(30, 58, 138, 0.12); /* Blue shadow */
-            --tag-bg: rgba(14, 165, 233, 0.12); /* Light sea blue tag background */
-            --card-gradient: linear-gradient(135deg, #ffffff 0%, var(--cream) 100%); /* Subtle cream tint on cards */
+            --border-color: rgba(30, 58, 138, 0.15);
+            --shadow-color: rgba(30, 58, 138, 0.12);
+            --tag-bg: rgba(14, 165, 233, 0.12);
+            --card-gradient: linear-gradient(135deg, #ffffff 0%, var(--cream) 100%);
 
             /* Cream and Blue gradients */
             --primary-gradient: linear-gradient(135deg, var(--blue), var(--sea-blue));
@@ -1283,17 +1298,17 @@
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">
-                <i class="fas fa-rocket"></i>
+    <header style="background: rgba(246, 241, 231, 0.95); backdrop-filter: blur(20px); padding: 1rem 0; position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid #0ea5e9; box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);">
+        <nav style="display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
+            <div class="logo" style="display: flex; align-items: center; gap: 12px; font-size: 2rem; font-weight: 800; color: #1e3a8a; text-decoration: none;">
+                <i class="fas fa-rocket" style="font-size: 2.2rem; color: #0ea5e9;"></i>
                 <span>InternHub</span>
             </div>
-            <div class="nav-toggle">
-                <button class="menu-toggle" onclick="toggleSidebar()">
+            <div class="nav-toggle" style="display: flex; gap: 1rem; align-items: center;">
+                <button class="menu-toggle" onclick="toggleSidebar()" style="background: linear-gradient(135deg, #1e3a8a, #0ea5e9); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3); transition: all 0.3s ease;">
                     <i class="fas fa-bars"></i> Menu
                 </button>
-                <button class="theme-toggle">
+                <button class="theme-toggle" style="background: white; border: 2px solid #1e3a8a; color: #1e3a8a; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;">
                     <i class="fas fa-sun"></i>
                 </button>
             </div>
@@ -1302,168 +1317,248 @@
 
     <div class="mobile-overlay" onclick="toggleSidebar()"></div>
 
-    <aside class="sidebar" id="sidebar">
-        <ul class="sidebar-menu">
-            <li><a href="index.html" class="active"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
-            <li><a href="help.html"><i class="fas fa-envelope"></i> Help</a></li>
-            <li><a href="login.html" id="loginLink"><i class="fas fa-sign-in-alt"></i> Login</a></li>
-            <li><a href="signup.html" id="signupLink"><i class="fas fa-user-plus"></i> Sign Up</a></li>
-            <li style="display: none;" id="profileLink"><a href="#" onclick="showProfile(); return false;"><i class="fas fa-user-circle"></i> <span id="profileName">Profile</span></a></li>
-            <li style="display: none;" id="logoutLink"><a href="#" onclick="logout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    <aside class="sidebar" id="sidebar" style="background: rgba(246, 241, 231, 0.95); backdrop-filter: blur(20px); border-right: 2px solid rgba(30, 58, 138, 0.1); box-shadow: 5px 0 25px rgba(0, 0, 0, 0.1); padding: 2rem 0;">
+        <ul class="sidebar-menu" style="list-style: none; padding: 0 1.5rem;">
+            <li style="margin-bottom: 0.5rem;"><a href="index.html" class="active" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 12px; color: #1e3a8a; text-decoration: none; font-weight: 600; transition: all 0.3s ease; background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(14, 165, 233, 0.1)); border: 2px solid rgba(30, 58, 138, 0.2);">
+                <i class="fas fa-home"></i> Home
+            </a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="about.html" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 12px; color: #1e3a8a; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+                <i class="fas fa-info-circle"></i> About Us
+            </a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="community.html" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 12px; color: #1e3a8a; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+                <i class="fas fa-users"></i> Community
+            </a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="analytics.html" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 12px; color: #1e3a8a; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+                <i class="fas fa-chart-line"></i> Analytics
+            </a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="help.html" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 12px; color: #1e3a8a; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+                <i class="fas fa-envelope"></i> Help
+            </a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="login.html" id="loginLink" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 12px; color: #1e3a8a; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="signup.html" id="signupLink" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 12px; color: #1e3a8a; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+                <i class="fas fa-user-plus"></i> Sign Up
+            </a></li>
+            <li style="margin-bottom: 0.5rem; display: none;" id="profileLink"><a href="#" onclick="showProfile(); return false;" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 12px; color: #1e3a8a; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+                <i class="fas fa-user-circle"></i> <span id="profileName">Profile</span>
+            </a></li>
+            <li style="margin-bottom: 0.5rem; display: none;" id="logoutLink"><a href="#" onclick="logout(); return false;" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 12px; color: #1e3a8a; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a></li>
         </ul>
     </aside>
 
-    <section class="hero" id="home">
-        <div class="hero-content">
+    <section class="hero" id="home" style="position: relative; overflow: hidden; padding: 4rem 0;">
+        <div style="position: absolute; top: -200px; right: -200px; width: 500px; height: 500px; border-radius: 50%; background: linear-gradient(135deg, rgba(30, 58, 138, 0.05), transparent);"></div>
+        <div style="position: absolute; bottom: -300px; left: -300px; width: 700px; height: 700px; border-radius: 50%; background: linear-gradient(135deg, transparent, rgba(14, 165, 233, 0.05));"></div>
+        <div class="hero-content" style="max-width: 1400px; margin: 0 auto; padding: 4rem 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; z-index: 1; position: relative;">
             <div class="hero-text">
-                <h1>Your Dream Internship Awaits</h1>
-                <p>Connect with the best companies and kickstart your career journey. Personalized matches, expert guidance, and endless opportunities in one place.</p>
-                <div class="cta-buttons">
-                    <a href="find-internships.html" class="btn btn-primary">
+                <h1 style="font-family: 'Poppins', 'Inter', sans-serif; font-size: 3.5rem; line-height: 1.2; font-weight: 800; margin-bottom: 1.5rem; animation: fadeIn 1s ease; letter-spacing: -0.02em;">
+                    Your Dream <span style="background: linear-gradient(135deg, #1e3a8a, #0ea5e9); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Internship</span> Awaits
+                </h1>
+                <p style="font-family: 'Inter', sans-serif; font-size: 1.3rem; color: rgba(30, 58, 138, 0.8); margin-bottom: 2rem; animation: fadeIn 1s ease 0.2s backwards; max-width: 600px; line-height: 1.7;">
+                    Connect with the best companies and kickstart your career journey. Personalized matches, expert guidance, and endless opportunities in one elegant platform.
+                </p>
+                <div class="cta-buttons" style="display: flex; gap: 1.25rem; flex-wrap: wrap; animation: fadeIn 1s ease 0.4s backwards; margin-bottom: 2rem;">
+                    <a href="find-internships.html" class="btn btn-primary" style="padding: 1.1rem 2.8rem; border: none; border-radius: 12px; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; box-shadow: 0 6px 20px rgba(30, 58, 138, 0.35); background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%); color: white;">
                         <i class="fas fa-search"></i> Find Internships
                     </a>
-                    <a href="signup.html" class="btn btn-secondary">
+                    <a href="signup.html" class="btn btn-secondary" style="padding: 1.1rem 2.8rem; border: none; border-radius: 12px; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); background: white; color: #1e3a8a; border: 2px solid #1e3a8a;">
                         <i class="fas fa-user-plus"></i> Get Started
                     </a>
                 </div>
                 <div style="margin-top: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; max-width: 500px;">
-                    <a href="hirer-auth.html" class="btn" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; text-decoration: none; box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);">
+                    <a href="hirer-auth.html" class="btn" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; text-decoration: none; box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3); display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 1.1rem 1.5rem; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
                         <i class="fas fa-building"></i> I'm a Hirer
                     </a>
-                    <a href="student-dashboard.html" class="btn" style="background: linear-gradient(135deg, #0ea5e9, #06b6d4); color: white; text-decoration: none; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);">
+                    <a href="student-dashboard.html" class="btn" style="background: linear-gradient(135deg, #0ea5e9, #06b6d4); color: white; text-decoration: none; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3); display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 1.1rem 1.5rem; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
                         <i class="fas fa-user-graduate"></i> I'm an Intern
                     </a>
                 </div>
             </div>
-            <div class="hero-image">
-                <!-- Blank space for clean design -->
+            <div class="hero-image" style="display: flex; justify-content: center; align-items: center; position: relative;">
+                <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; border-radius: 50%; background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), transparent);"></div>
+                <div style="position: absolute; bottom: -70px; left: -70px; width: 250px; height: 250px; border-radius: 50%; background: linear-gradient(135deg, transparent, rgba(14, 165, 233, 0.1));"></div>
+                <div style="width: 100%; max-width: 500px; height: 400px; background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(14, 165, 233, 0.1)); border-radius: 20px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); border: 1px solid rgba(30, 58, 138, 0.2); box-shadow: 0 20px 50px rgba(30, 58, 138, 0.15); position: relative; z-index: 1;">
+                    <div style="text-align: center; padding: 2rem;">
+                        <i class="fas fa-rocket" style="font-size: 5rem; color: #0ea5e9; margin-bottom: 1rem;"></i>
+                        <h3 style="color: #1e3a8a; margin-bottom: 0.5rem; font-size: 1.8rem; font-weight: 700;">Launch Your Career</h3>
+                        <p style="color: rgba(30, 58, 138, 0.8); font-size: 1.1rem;">Discover opportunities that match your skills</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Social Proof & Stats Section -->
-    <section style="padding: 4rem 2rem; background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%); color: white; text-align: center;">
-        <div style="max-width: 1400px; margin: 0 auto;">
-            <h2 style="color: white; margin-bottom: 3rem; font-size: 2.5rem;"><i class="fas fa-trophy"></i> Trusted by Thousands</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
-                <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 2rem; border-radius: 12px; border: 2px solid rgba(255,255,255,0.2);">
-                    <div style="font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem;">10,000+</div>
-                    <div style="font-size: 1.1rem; opacity: 0.9;">Students Placed</div>
+    <section style="padding: 6rem 2rem; background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%); color: white; text-align: center; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -200px; left: -200px; width: 500px; height: 500px; border-radius: 50%; background: rgba(255,255,255,0.05);"></div>
+        <div style="position: absolute; bottom: -300px; right: -300px; width: 700px; height: 700px; border-radius: 50%; background: rgba(255,255,255,0.05);"></div>
+        <div style="max-width: 1400px; margin: 0 auto; position: relative; z-index: 1;">
+            <h2 style="color: white; margin-bottom: 3rem; font-size: 2.8rem; font-weight: 800;"><i class="fas fa-trophy"></i> Trusted by Thousands</h2>
+            <p style="max-width: 700px; margin: 0 auto 3rem; font-size: 1.2rem; opacity: 0.9;">Join our growing community of students and companies achieving success together</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin-bottom: 4rem;">
+                <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 2.5rem 1.5rem; border-radius: 16px; border: 2px solid rgba(255,255,255,0.2); transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                    <div style="font-size: 3.5rem; font-weight: 800; margin-bottom: 0.5rem;">10,000+</div>
+                    <div style="font-size: 1.2rem; opacity: 0.9;">Students Placed</div>
                 </div>
-                <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 2rem; border-radius: 12px; border: 2px solid rgba(255,255,255,0.2);">
-                    <div style="font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem;">500+</div>
-                    <div style="font-size: 1.1rem; opacity: 0.9;">Partner Companies</div>
+                <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 2.5rem 1.5rem; border-radius: 16px; border: 2px solid rgba(255,255,255,0.2); transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                    <div style="font-size: 3.5rem; font-weight: 800; margin-bottom: 0.5rem;">500+</div>
+                    <div style="font-size: 1.2rem; opacity: 0.9;">Partner Companies</div>
                 </div>
-                <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 2rem; border-radius: 12px; border: 2px solid rgba(255,255,255,0.2);">
-                    <div style="font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem;">₹25k</div>
-                    <div style="font-size: 1.1rem; opacity: 0.9;">Avg. Stipend</div>
+                <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 2.5rem 1.5rem; border-radius: 16px; border: 2px solid rgba(255,255,255,0.2); transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                    <div style="font-size: 3.5rem; font-weight: 800; margin-bottom: 0.5rem;">₹25k</div>
+                    <div style="font-size: 1.2rem; opacity: 0.9;">Avg. Stipend</div>
                 </div>
-                <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 2rem; border-radius: 12px; border: 2px solid rgba(255,255,255,0.2);">
-                    <div style="font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem;">95%</div>
-                    <div style="font-size: 1.1rem; opacity: 0.9;">Success Rate</div>
+                <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 2.5rem 1.5rem; border-radius: 16px; border: 2px solid rgba(255,255,255,0.2); transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                    <div style="font-size: 3.5rem; font-weight: 800; margin-bottom: 0.5rem;">95%</div>
+                    <div style="font-size: 1.2rem; opacity: 0.9;">Success Rate</div>
                 </div>
             </div>
             
             <!-- Company Logos -->
             <div style="margin-top: 3rem;">
-                <h3 style="color: rgba(255,255,255,0.9); margin-bottom: 2rem; font-size: 1.2rem;">TRUSTED BY LEADING COMPANIES</h3>
+                <h3 style="color: rgba(255,255,255,0.9); margin-bottom: 2.5rem; font-size: 1.3rem; font-weight: 600;">TRUSTED BY LEADING COMPANIES</h3>
                 <div style="display: flex; gap: 3rem; justify-content: center; align-items: center; flex-wrap: wrap; opacity: 0.9;">
-                    <div style="background: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 700; color: #1e3a8a;"><i class="fab fa-google"></i> Google</div>
-                    <div style="background: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 700; color: #1e3a8a;"><i class="fab fa-microsoft"></i> Microsoft</div>
-                    <div style="background: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 700; color: #1e3a8a;"><i class="fab fa-amazon"></i> Amazon</div>
-                    <div style="background: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 700; color: #1e3a8a;"><i class="fab fa-meta"></i> Meta</div>
-                    <div style="background: white; padding: 1rem 2rem; border-radius: 8px; font-weight: 700; color: #1e3a8a;"><i class="fab fa-apple"></i> Apple</div>
+                    <div style="background: white; padding: 1.2rem 2.5rem; border-radius: 12px; font-weight: 700; color: #1e3a8a; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.3s ease;"><i class="fab fa-google"></i> Google</div>
+                    <div style="background: white; padding: 1.2rem 2.5rem; border-radius: 12px; font-weight: 700; color: #1e3a8a; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.3s ease;"><i class="fab fa-microsoft"></i> Microsoft</div>
+                    <div style="background: white; padding: 1.2rem 2.5rem; border-radius: 12px; font-weight: 700; color: #1e3a8a; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.3s ease;"><i class="fab fa-amazon"></i> Amazon</div>
+                    <div style="background: white; padding: 1.2rem 2.5rem; border-radius: 12px; font-weight: 700; color: #1e3a8a; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.3s ease;"><i class="fab fa-meta"></i> Meta</div>
+                    <div style="background: white; padding: 1.2rem 2.5rem; border-radius: 12px; font-weight: 700; color: #1e3a8a; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.3s ease;"><i class="fab fa-apple"></i> Apple</div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Testimonials Section -->
-    <section style="padding: 4rem 2rem; background: #f6f1e7;">
-        <div style="max-width: 1200px; margin: 0 auto;">
-            <h2 class="section-title"><i class="fas fa-comments"></i> Success Stories</h2>
-            <p class="section-subtitle">Hear from students who landed their dream internships</p>
+    <section style="padding: 6rem 2rem; background: #f6f1e7; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -100px; right: -100px; width: 300px; height: 300px; border-radius: 50%; background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), transparent);"></div>
+        <div style="position: absolute; bottom: -150px; left: -150px; width: 400px; height: 400px; border-radius: 50%; background: linear-gradient(135deg, transparent, rgba(14, 165, 233, 0.1));"></div>
+        <div style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;">
+            <h2 class="section-title" style="text-align: center;"><i class="fas fa-comments"></i> Success Stories</h2>
+            <p class="section-subtitle" style="text-align: center; margin-bottom: 4rem;">Hear from students who landed their dream internships</p>
             
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
-                <div style="background: white; padding: 2rem; border-radius: 12px; border: 2px solid rgba(30,58,138,0.1); box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
-                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center;">
-                        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #1e3a8a, #0ea5e9); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.5rem;">PS</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2.5rem; margin-top: 2rem;">
+                <div style="background: white; padding: 2.5rem; border-radius: 16px; border: 2px solid rgba(30,58,138,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #1e3a8a, #0ea5e9);"></div>
+                    <div style="display: flex; gap: 1.2rem; margin-bottom: 1.5rem; align-items: center;">
+                        <div style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #1e3a8a, #0ea5e9); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.7rem;">PS</div>
                         <div>
-                            <div style="font-weight: 700; color: #1e3a8a;">Priya Sharma</div>
-                            <div style="font-size: 0.9rem; color: #6b7280;">Frontend Developer @ Google</div>
+                            <div style="font-weight: 700; color: #1e3a8a; font-size: 1.2rem;">Priya Sharma</div>
+                            <div style="font-size: 1rem; color: #6b7280;">Frontend Developer @ Google</div>
                         </div>
                     </div>
-                    <div style="color: #f59e0b; margin-bottom: 1rem; font-size: 1.2rem;">★★★★★</div>
-                    <p style="color: #4b5563; line-height: 1.6; font-style: italic;">"InternHub helped me land my dream internship at Google! The platform made it so easy to find opportunities matching my skills. Highly recommended!"</p>
+                    <div style="color: #f59e0b; margin-bottom: 1.2rem; font-size: 1.3rem;">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p style="color: #4b5563; line-height: 1.7; font-style: italic; font-size: 1.05rem;">"InternHub helped me land my dream internship at Google! The platform made it so easy to find opportunities matching my skills. Highly recommended!"</p>
                 </div>
                 
-                <div style="background: white; padding: 2rem; border-radius: 12px; border: 2px solid rgba(30,58,138,0.1); box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
-                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center;">
-                        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #ec4899); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.5rem;">RK</div>
+                <div style="background: white; padding: 2.5rem; border-radius: 16px; border: 2px solid rgba(30,58,138,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #8b5cf6, #ec4899);"></div>
+                    <div style="display: flex; gap: 1.2rem; margin-bottom: 1.5rem; align-items: center;">
+                        <div style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #ec4899); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.7rem;">RK</div>
                         <div>
-                            <div style="font-weight: 700; color: #1e3a8a;">Rahul Kumar</div>
-                            <div style="font-size: 0.9rem; color: #6b7280;">Data Analyst @ Microsoft</div>
+                            <div style="font-weight: 700; color: #1e3a8a; font-size: 1.2rem;">Rahul Kumar</div>
+                            <div style="font-size: 1rem; color: #6b7280;">Data Analyst @ Microsoft</div>
                         </div>
                     </div>
-                    <div style="color: #f59e0b; margin-bottom: 1rem; font-size: 1.2rem;">★★★★★</div>
-                    <p style="color: #4b5563; line-height: 1.6; font-style: italic;">"The ATS system and skill matching saved me hours! Got 3 interview calls in the first week. Best internship platform out there."</p>
+                    <div style="color: #f59e0b; margin-bottom: 1.2rem; font-size: 1.3rem;">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p style="color: #4b5563; line-height: 1.7; font-style: italic; font-size: 1.05rem;">"The ATS system and skill matching saved me hours! Got 3 interview calls in the first week. Best internship platform out there."</p>
                 </div>
                 
-                <div style="background: white; padding: 2rem; border-radius: 12px; border: 2px solid rgba(30,58,138,0.1); box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
-                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center;">
-                        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.5rem;">AD</div>
+                <div style="background: white; padding: 2.5rem; border-radius: 16px; border: 2px solid rgba(30,58,138,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #10b981, #059669);"></div>
+                    <div style="display: flex; gap: 1.2rem; margin-bottom: 1.5rem; align-items: center;">
+                        <div style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.7rem;">AD</div>
                         <div>
-                            <div style="font-weight: 700; color: #1e3a8a;">Ananya Das</div>
-                            <div style="font-size: 0.9rem; color: #6b7280;">Product Manager @ Amazon</div>
+                            <div style="font-weight: 700; color: #1e3a8a; font-size: 1.2rem;">Ananya Das</div>
+                            <div style="font-size: 1rem; color: #6b7280;">Product Manager @ Amazon</div>
                         </div>
                     </div>
-                    <div style="color: #f59e0b; margin-bottom: 1rem; font-size: 1.2rem;">★★★★★</div>
-                    <p style="color: #4b5563; line-height: 1.6; font-style: italic;">"From application to offer in 2 weeks! The resume builder and interview prep resources were invaluable. Thank you InternHub!"</p>
+                    <div style="color: #f59e0b; margin-bottom: 1.2rem; font-size: 1.3rem;">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p style="color: #4b5563; line-height: 1.7; font-style: italic; font-size: 1.05rem;">"From application to offer in 2 weeks! The resume builder and interview prep resources were invaluable. Thank you InternHub!"</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="features" id="about">
-        <h2 class="section-title">Why Choose InternConnect?</h2>
-        <p class="section-subtitle">We're redefining internship discovery with innovative features</p>
+    <section class="features" id="about" style="padding: 6rem 2rem; max-width: 1400px; margin: 0 auto; background: rgba(246, 241, 231, 0.3); position: relative; overflow: hidden; border-radius: 20px; margin: 4rem auto;">
+        <div style="position: absolute; top: -100px; right: -100px; width: 300px; height: 300px; border-radius: 50%; background: linear-gradient(135deg, rgba(30, 58, 138, 0.05), transparent);"></div>
+        <div style="position: absolute; bottom: -150px; left: -150px; width: 400px; height: 400px; border-radius: 50%; background: linear-gradient(135deg, transparent, rgba(14, 165, 233, 0.05));"></div>
+        <h2 class="section-title" style="text-align: center; font-family: 'SF Pro Display', sans-serif; font-size: 3rem; margin-bottom: 1rem; font-weight: 800; background: linear-gradient(135deg, #1e3a8a, #0ea5e9); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; position: relative; display: inline-block; width: 100%;">Why Choose InternHub?</h2>
+        <p class="section-subtitle" style="text-align: center; color: rgba(30, 58, 138, 0.8); margin-bottom: 4rem; font-size: 1.2rem; max-width: 600px; margin-left: auto; margin-right: auto; font-weight: 500;">We're redefining internship discovery with innovative features designed for your success</p>
         
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-user-check"></i></div>
-                <h3>AI-Powered Matching</h3>
-                <p>Advanced algorithms match you with internships that align perfectly with your skills, interests, and career goals.</p>
+        <div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; position: relative; z-index: 1;">
+            <div class="feature-card" style="text-align: center; background: white; padding: 2.5rem; border-radius: 16px; border: 2px solid rgba(30,58,138,0.1); transition: all 0.4s ease; animation: fadeIn 0.6s ease backwards; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #1e3a8a, #0ea5e9); transform: scaleX(0); transition: transform 0.4s ease;"></div>
+                <div style="background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(14, 165, 233, 0.1)); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                    <div class="feature-icon" style="font-size: 2rem; color: #1e3a8a;"><i class="fas fa-user-check"></i></div>
+                </div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #1e3a8a; font-weight: 700;">AI-Powered Matching</h3>
+                <p style="color: rgba(30, 58, 138, 0.8); line-height: 1.7;">Advanced algorithms match you with internships that align perfectly with your skills, interests, and career goals.</p>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
-                <h3>Skills Analytics</h3>
-                <p>Track your skill development with detailed analytics and personalized recommendations for growth.</p>
+            <div class="feature-card" style="text-align: center; background: white; padding: 2.5rem; border-radius: 16px; border: 2px solid rgba(30,58,138,0.1); transition: all 0.4s ease; animation: fadeIn 0.6s ease backwards; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #1e3a8a, #0ea5e9); transform: scaleX(0); transition: transform 0.4s ease;"></div>
+                <div style="background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(14, 165, 233, 0.1)); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                    <div class="feature-icon" style="font-size: 2rem; color: #1e3a8a;"><i class="fas fa-chart-line"></i></div>
+                </div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #1e3a8a; font-weight: 700;">Skills Analytics</h3>
+                <p style="color: rgba(30, 58, 138, 0.8); line-height: 1.7;">Track your skill development with detailed analytics and personalized recommendations for growth.</p>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-users"></i></div>
-                <h3>Mentor Connect</h3>
-                <p>Connect with industry mentors for guidance, mock interviews, and valuable career insights.</p>
+            <div class="feature-card" style="text-align: center; background: white; padding: 2.5rem; border-radius: 16px; border: 2px solid rgba(30,58,138,0.1); transition: all 0.4s ease; animation: fadeIn 0.6s ease backwards; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #1e3a8a, #0ea5e9); transform: scaleX(0); transition: transform 0.4s ease;"></div>
+                <div style="background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(14, 165, 233, 0.1)); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                    <div class="feature-icon" style="font-size: 2rem; color: #1e3a8a;"><i class="fas fa-users"></i></div>
+                </div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #1e3a8a; font-weight: 700;">Mentor Connect</h3>
+                <p style="color: rgba(30, 58, 138, 0.8); line-height: 1.7;">Connect with industry mentors for guidance, mock interviews, and valuable career insights.</p>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-certificate"></i></div>
-                <h3>Certification Programs</h3>
-                <p>Boost your profile with free certification courses to enhance your internship applications.</p>
+            <div class="feature-card" style="text-align: center; background: white; padding: 2.5rem; border-radius: 16px; border: 2px solid rgba(30,58,138,0.1); transition: all 0.4s ease; animation: fadeIn 0.6s ease backwards; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #1e3a8a, #0ea5e9); transform: scaleX(0); transition: transform 0.4s ease;"></div>
+                <div style="background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(14, 165, 233, 0.1)); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                    <div class="feature-icon" style="font-size: 2rem; color: #1e3a8a;"><i class="fas fa-certificate"></i></div>
+                </div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #1e3a8a; font-weight: 700;">Certification Programs</h3>
+                <p style="color: rgba(30, 58, 138, 0.8); line-height: 1.7;">Boost your profile with free certification courses to enhance your internship applications.</p>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-clock"></i></div>
-                <h3>Real-time Notifications</h3>
-                <p>Never miss an opportunity with instant alerts about matching internships and application updates.</p>
+            <div class="feature-card" style="text-align: center; background: white; padding: 2.5rem; border-radius: 16px; border: 2px solid rgba(30,58,138,0.1); transition: all 0.4s ease; animation: fadeIn 0.6s ease backwards; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #1e3a8a, #0ea5e9); transform: scaleX(0); transition: transform 0.4s ease;"></div>
+                <div style="background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(14, 165, 233, 0.1)); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                    <div class="feature-icon" style="font-size: 2rem; color: #1e3a8a;"><i class="fas fa-clock"></i></div>
+                </div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #1e3a8a; font-weight: 700;">Real-time Notifications</h3>
+                <p style="color: rgba(30, 58, 138, 0.8); line-height: 1.7;">Never miss an opportunity with instant alerts about matching internships and application updates.</p>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-                <h3>Verified Companies</h3>
-                <p>Every company is thoroughly verified to ensure legitimacy and protect your interests.</p>
+            <div class="feature-card" style="text-align: center; background: white; padding: 2.5rem; border-radius: 16px; border: 2px solid rgba(30,58,138,0.1); transition: all 0.4s ease; animation: fadeIn 0.6s ease backwards; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #1e3a8a, #0ea5e9); transform: scaleX(0); transition: transform 0.4s ease;"></div>
+                <div style="background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(14, 165, 233, 0.1)); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                    <div class="feature-icon" style="font-size: 2rem; color: #1e3a8a;"><i class="fas fa-shield-alt"></i></div>
+                </div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #1e3a8a; font-weight: 700;">Verified Companies</h3>
+                <p style="color: rgba(30, 58, 138, 0.8); line-height: 1.7;">Every company is thoroughly verified to ensure legitimacy and protect your interests.</p>
             </div>
         </div>
     </section>
@@ -2258,6 +2353,62 @@
             icon.className = newTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
             
             showNotification('info', 'Theme Changed!', `Switched to ${newTheme} mode.`);
+        });
+
+        // Add hover effects to feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px)';
+                this.style.boxShadow = '0 15px 40px rgba(30, 58, 138, 0.2)';
+                this.style.borderColor = '#0ea5e9';
+                this.querySelector('div[style*="position: absolute"]').style.transform = 'scaleX(1)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 10px 30px rgba(0,0,0,0.08)';
+                this.style.borderColor = 'rgba(30,58,138,0.1)';
+                this.querySelector('div[style*="position: absolute"]').style.transform = 'scaleX(0)';
+            });
+        });
+
+        // Add animation to stats cards
+        document.querySelectorAll('[style*="background: rgba(255,255,255,0.15)"]').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 15px 30px rgba(0,0,0,0.2)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 10px 30px rgba(0,0,0,0.15)';
+            });
+        });
+
+        // Add animation to company logos
+        document.querySelectorAll('[style*="background: white"][style*="padding: 1.2rem"]').forEach(logo => {
+            logo.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 8px 20px rgba(0,0,0,0.15)';
+            });
+            
+            logo.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+            });
+        });
+
+        // Add animation to testimonial cards
+        document.querySelectorAll('[style*="background: white"][style*="padding: 2.5rem"][style*="border-radius: 16px"]').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 15px 40px rgba(0,0,0,0.12)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 10px 30px rgba(0,0,0,0.08)';
+            });
         });
     </script>
 </body>

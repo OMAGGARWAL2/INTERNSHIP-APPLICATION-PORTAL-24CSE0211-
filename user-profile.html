@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="market-enhancements.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+            --primary-bg: var(--cream);
+            --secondary-bg: #ffffff;
+            --header-bg: rgba(246, 241, 231, 0.95);
+            --text-primary: var(--blue);
+            --text-secondary: rgba(30, 58, 138, 0.8);
+            --accent-color: var(--sea-blue);
+            --hover-color: var(--blue);
+            --border-color: rgba(30, 58, 138, 0.15);
+            --shadow-color: rgba(30, 58, 138, 0.12);
+            --tag-bg: rgba(14, 165, 233, 0.12);
+            --primary-gradient: linear-gradient(135deg, var(--blue), var(--sea-blue));
+            --border-radius-main: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: var(--header-bg);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--accent-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .btn {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .profile-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 3rem;
+            flex-shrink: 0;
+        }
+
+        .profile-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .profile-info h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .profile-info p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 1rem;
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            min-width: 120px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.8rem 1.5rem;
+            background: var(--secondary-bg);
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid var(--border-color);
+        }
+
+        .tab.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(14, 165, 233, 0.1);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* About Section */
+        .about-content {
+            background: var(--secondary-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            line-height: 1.7;
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .skill-item {
+            background: var(--secondary-bg);
+            padding: 1rem;
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .skill-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--tag-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+        }
+
+        /* Achievements Section */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .achievement-card {
+            background: var(--secondary-bg);
+            padding: 1.5rem;
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--shadow-color);
+        }
+
+        .achievement-icon {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .achievement-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .achievement-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .achievement-date {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Reviews Section */
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .review-item {
+            background: var(--secondary-bg);
+            padding: 1.5rem;
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+        }
+
+        .review-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        .reviewer-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .reviewer-info {
+            flex: 1;
+        }
+
+        .reviewer-name {
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+
+        .reviewer-role {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .review-rating {
+            font-size: 1.2rem;
+            color: #f59e0b;
+        }
+
+        .review-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .review-date {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary-bg);
+            border-top: 2px solid var(--border-color);
+            margin-top: 3rem;
+            padding: 2rem 0;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .footer-section a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .profile-stats {
+                justify-content: center;
+            }
+            
+            .profile-actions {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo"><i class="fas fa-graduation-cap"></i> InternHub</a>
+            <div class="nav-links">
+                <a href="find-internships.html">Internships</a>
+                <a href="student-dashboard.html">Dashboard</a>
+                <a href="community.html">Community</a>
+                <a href="analytics.html">Analytics</a>
+                <a href="notifications.html">Notifications</a>
+                <button class="btn" onclick="window.location.href='login.html'">Login</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="profile-header">
+            <div class="profile-avatar">JD</div>
+            <div class="profile-info">
+                <h1>John Doe</h1>
+                <p>Software Engineering Intern at TechCorp</p>
+                
+                <div class="profile-stats">
+                    <div class="stat">
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">Achievements</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">4.9</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">42</div>
+                        <div class="stat-label">Applications</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">Reviews</div>
+                    </div>
+                </div>
+                
+                <div class="profile-actions">
+                    <button class="btn"><i class="fas fa-envelope"></i> Message</button>
+                    <button class="btn btn-secondary"><i class="fas fa-user-plus"></i> Connect</button>
+                    <button class="btn btn-secondary"><i class="fas fa-share-alt"></i> Share</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('about')">About</div>
+            <div class="tab" onclick="switchTab('skills')">Skills</div>
+            <div class="tab" onclick="switchTab('achievements')">Achievements</div>
+            <div class="tab" onclick="switchTab('reviews')">Peer Reviews</div>
+        </div>
+
+        <div id="about" class="content-section active">
+            <div class="about-content">
+                <h2><i class="fas fa-user"></i> About Me</h2>
+                <p>Hello! I'm John, a passionate software engineering student with a strong foundation in full-stack development. I'm currently pursuing my Bachelor's degree in Computer Science at Tech University and interning at TechCorp.</p>
+                
+                <p>My journey in technology began 3 years ago when I built my first web application. Since then, I've developed a keen interest in creating scalable solutions that solve real-world problems. I'm particularly excited about cloud technologies and artificial intelligence.</p>
+                
+                <p>Outside of coding, I enjoy contributing to open-source projects, participating in hackathons, and mentoring fellow students. I believe in continuous learning and am always looking for opportunities to grow both technically and professionally.</p>
+                
+                <h3 style="margin-top: 1.5rem;"><i class="fas fa-briefcase"></i> Current Role</h3>
+                <p><strong>Software Engineering Intern</strong> at TechCorp (Jan 2024 - Present)</p>
+                <ul>
+                    <li>Developing and maintaining web applications using React and Node.js</li>
+                    <li>Collaborating with cross-functional teams to deliver high-quality software</li>
+                    <li>Participating in code reviews and Agile ceremonies</li>
+                    <li>Contributing to the company's internal tooling and documentation</li>
+                </ul>
+                
+                <h3 style="margin-top: 1.5rem;"><i class="fas fa-graduation-cap"></i> Education</h3>
+                <p><strong>Bachelor of Science in Computer Science</strong><br>
+                Tech University (2022 - 2025)</p>
+            </div>
+        </div>
+
+        <div id="skills" class="content-section">
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <div class="skill-icon">
+                        <i class="fab fa-js"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700;">JavaScript</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Advanced</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-icon">
+                        <i class="fab fa-react"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700;">React</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Advanced</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-icon">
+                        <i class="fab fa-node-js"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700;">Node.js</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Intermediate</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700;">MongoDB</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Intermediate</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-icon">
+                        <i class="fab fa-python"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700;">Python</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Intermediate</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700;">AWS</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Beginner</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-icon">
+                        <i class="fas fa-code-branch"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700;">Git</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Advanced</div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700;">Responsive Design</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Advanced</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="achievements" class="content-section">
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h3 class="achievement-title">Top Performer</h3>
+                    <p class="achievement-desc">Recognized as top performer among interns at TechCorp</p>
+                    <div class="achievement-date">Awarded: March 2024</div>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="achievement-title">Quick Learner</h3>
+                    <p class="achievement-desc">Completed onboarding training 2 weeks ahead of schedule</p>
+                    <div class="achievement-date">Awarded: February 2024</div>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="achievement-title">Team Player</h3>
+                    <p class="achievement-desc">Recognized for exceptional collaboration and support</p>
+                    <div class="achievement-date">Awarded: January 2024</div>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="achievement-title">Code Quality</h3>
+                    <p class="achievement-desc">Achieved 98% code review approval rate</p>
+                    <div class="achievement-date">Awarded: December 2023</div>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3 class="achievement-title">Hackathon Winner</h3>
+                    <p class="achievement-desc">First place in University Annual Hackathon 2023</p>
+                    <div class="achievement-date">Awarded: November 2023</div>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="achievement-title">Academic Excellence</h3>
+                    <p class="achievement-desc">Dean's List for consecutive semesters</p>
+                    <div class="achievement-date">Awarded: September 2023</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="reviews" class="content-section">
+            <div class="reviews-list">
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="reviewer-avatar">SA</div>
+                        <div class="reviewer-info">
+                            <div class="reviewer-name">Sarah Anderson</div>
+                            <div class="reviewer-role">Marketing Manager at TechCorp</div>
+                        </div>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="review-content">
+                        John has been an incredible teammate during our cross-departmental project. His technical skills are exceptional and he's always willing to help others. Highly recommend working with him!
+                    </div>
+                    <div class="review-date">Posted 2 weeks ago</div>
+                </div>
+                
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="reviewer-avatar">MP</div>
+                        <div class="reviewer-info">
+                            <div class="reviewer-name">Michael Park</div>
+                            <div class="reviewer-role">Senior Software Engineer at TechCorp</div>
+                        </div>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <div class="review-content">
+                        John is one of the most dedicated interns I've mentored. He picks up new technologies quickly and isn't afraid to tackle challenging problems. His contributions to our codebase have been significant.
+                    </div>
+                    <div class="review-date">Posted 1 month ago</div>
+                </div>
+                
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="reviewer-avatar">EK</div>
+                        <div class="reviewer-info">
+                            <div class="reviewer-name">Emma Kumar</div>
+                            <div class="reviewer-role">Product Designer at TechCorp</div>
+                        </div>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="review-content">
+                        Working with John on the user interface redesign was a pleasure. He understood our design requirements perfectly and implemented them with precision. His attention to detail is impressive.
+                    </div>
+                    <div class="review-date">Posted 2 months ago</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="cookies.html">Cookie Policy</a>
+            </div>
+            <div class="footer-section">
+                <h4>Trust</h4>
+                <a href="accessibility.html">Accessibility</a>
+                <a href="security.html">Security</a>
+                <a href="sitemap.xml">Sitemap</a>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="careers.html">Careers</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(tabId) {
+            // Hide all content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected content section
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

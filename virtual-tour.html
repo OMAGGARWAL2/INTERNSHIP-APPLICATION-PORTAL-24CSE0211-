@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Office Tour - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+            --dark-blue: #0f172a;
+            --light-gray: #f1f5f9;
+            --gray: #94a3b8;
+            --dark-gray: #64748b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--cream);
+            color: var(--dark-blue);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--blue);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--blue);
+        }
+
+        .tour-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            color: var(--blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .instructions {
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .instructions h3 {
+            margin-bottom: 1rem;
+            color: var(--blue);
+        }
+
+        .instructions ol {
+            padding-left: 1.5rem;
+        }
+
+        .instructions li {
+            margin-bottom: 0.5rem;
+        }
+
+        .ar-container {
+            width: 100%;
+            height: 70vh;
+            border: 2px solid var(--gray);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ar-overlay {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            z-index: 100;
+        }
+
+        .tour-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .tour-card {
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .tour-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .tour-image {
+            height: 150px;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .tour-info {
+            padding: 1.5rem;
+        }
+
+        .tour-info h3 {
+            margin-bottom: 0.5rem;
+            color: var(--blue);
+        }
+
+        .tour-info p {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        footer {
+            background-color: var(--dark-blue);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .ar-container {
+                height: 50vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            <span>InternHub</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="community.html"><i class="fas fa-users"></i> Community</a></li>
+                <li><a href="#" id="dashboardLink"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="virtual-tour.html" style="color: var(--sea-blue);"><i class="fas fa-vr-cardboard"></i> Virtual Tour</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">Virtual Office Tour</h1>
+
+        <div class="instructions">
+            <h3>How to Use Augmented Reality</h3>
+            <ol>
+                <li>Print or display the <a href="#" id="markerLink">AR marker</a> on your screen or print it</li>
+                <li>Allow camera access when prompted</li>
+                <li>Point your camera at the marker to see the virtual office</li>
+                <li>Move your device around to explore different angles</li>
+                <li>Click on interactive elements to learn more</li>
+            </ol>
+        </div>
+
+        <div class="tour-section">
+            <h2 class="section-title"><i class="fas fa-building"></i> Office Tour</h2>
+            <div class="ar-container">
+                <!-- AR.js scene will be loaded here -->
+                <div id="arScene"></div>
+                <div class="ar-overlay">Point your camera at the AR marker</div>
+            </div>
+        </div>
+
+        <div class="tour-section">
+            <h2 class="section-title"><i class="fas fa-map-signs"></i> Tour Options</h2>
+            <div class="tour-options">
+                <div class="tour-card" onclick="loadTour('tech-office')">
+                    <div class="tour-image">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <div class="tour-info">
+                        <h3>Tech Department</h3>
+                        <p>Explore our cutting-edge technology workspace with modern equipment and collaborative areas.</p>
+                    </div>
+                </div>
+                
+                <div class="tour-card" onclick="loadTour('creative-studio')">
+                    <div class="tour-image">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <div class="tour-info">
+                        <h3>Creative Studio</h3>
+                        <p>Visit our design and creative workspace with inspiration boards and artistic tools.</p>
+                    </div>
+                </div>
+                
+                <div class="tour-card" onclick="loadTour('meeting-rooms')">
+                    <div class="tour-image">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="tour-info">
+                        <h3>Meeting Rooms</h3>
+                        <p>See our variety of meeting spaces from small huddle rooms to large conference halls.</p>
+                    </div>
+                </div>
+                
+                <div class="tour-card" onclick="loadTour('break-area')">
+                    <div class="tour-image">
+                        <i class="fas fa-coffee"></i>
+                    </div>
+                    <div class="tour-info">
+                        <h3>Break Areas</h3>
+                        <p>Relax in our comfortable break areas with games, snacks, and social spaces.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 InternHub. Connecting talent with opportunity.</p>
+    </footer>
+
+    <script>
+        // Set dashboard link based on user role
+        document.addEventListener('DOMContentLoaded', function() {
+            // In a real app, this would be determined by authentication
+            const userRole = localStorage.getItem('userRole') || 'student';
+            document.getElementById('dashboardLink').href = userRole === 'hirer' ? 'hirer.html' : 'student-dashboard.html';
+            
+            // Initialize AR tour
+            initARTour();
+        });
+
+        function initARTour() {
+            // Create AR scene
+            const arScene = document.getElementById('arScene');
+            
+            // For demo purposes, we'll show instructions since actual AR requires a marker
+            arScene.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 2rem;">
+                    <i class="fas fa-vr-cardboard" style="font-size: 4rem; color: var(--sea-blue); margin-bottom: 1rem;"></i>
+                    <h3>Augmented Reality Office Tour</h3>
+                    <p style="margin: 1rem 0; max-width: 500px;">
+                        This demo shows how an AR office tour would work. In a full implementation, 
+                        you would point your camera at an AR marker to see a 3D virtual office.
+                    </p>
+                    <button class="btn" onclick="showMarker()" style="margin-top: 1rem;">
+                        <i class="fas fa-download"></i> Download AR Marker
+                    </button>
+                    <div style="margin-top: 2rem; background: var(--light-gray); padding: 1rem; border-radius: 8px; max-width: 500px;">
+                        <h4>AR Technology Used:</h4>
+                        <p>
+                            This implementation uses AR.js and A-Frame for marker-based augmented reality. 
+                            When a user points their camera at a printed marker, 3D content appears overlaid on the real world.
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadTour(tourType) {
+            alert(`Loading ${tourType} tour. In a full implementation, this would load a specific AR scene for the selected office area.`);
+            
+            // Update AR scene based on tour type
+            const arScene = document.getElementById('arScene');
+            arScene.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 2rem;">
+                    <i class="fas fa-sync fa-spin" style="font-size: 3rem; color: var(--sea-blue); margin-bottom: 1rem;"></i>
+                    <h3>Loading ${tourType.replace('-', ' ')} Tour</h3>
+                    <p style="margin: 1rem 0;">
+                        In a full implementation, this would show a 3D AR view of the ${tourType.replace('-', ' ')}.
+                    </p>
+                </div>
+            `;
+        }
+
+        function showMarker() {
+            // Create marker display
+            const markerWindow = window.open('', 'AR Marker', 'width=400,height=400');
+            markerWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>AR Marker</title>
+                    <style>
+                        body { 
+                            margin: 0; 
+                            padding: 20px; 
+                            display: flex; 
+                            flex-direction: column; 
+                            align-items: center; 
+                            font-family: Arial, sans-serif;
+                        }
+                        .marker {
+                            width: 200px;
+                            height: 200px;
+                            border: 2px solid black;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            margin: 20px 0;
+                            background: #fff;
+                        }
+                        .marker-pattern {
+                            width: 150px;
+                            height: 150px;
+                            background: 
+                                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%),
+                                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%);
+                            background-size: 20px 20px;
+                            background-position: 0 0, 10px 10px;
+                        }
+                        .instructions {
+                            text-align: center;
+                            max-width: 300px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h2>AR Marker</h2>
+                    <div class="marker">
+                        <div class="marker-pattern"></div>
+                    </div>
+                    <div class="instructions">
+                        <p>Print this marker or display it on another screen. Point your device's camera at it to start the AR experience.</p>
+                    </div>
+                </body>
+                </html>
+            `);
+        }
+
+        // In a real implementation, this would be the AR.js scene
+        function createARScene() {
+            // This is a placeholder for what a real AR scene might look like
+            return `
+                <a-scene embedded arjs='sourceType: webcam; detectionMode: mono; maxDetectionRate: 30;' renderer='antialias: true; alpha: true;'>
+                    <a-marker preset='hiro'>
+                        <a-entity 
+                            position='0 0 0' 
+                            scale='0.1 0.1 0.1'
+                            gltf-model='url(https://cdn.aframe.io/test-models/models/glTF-2.0/virtual-city/VC.gltf)'>
+                        </a-entity>
+                    </a-marker>
+                    <a-entity camera></a-entity>
+                </a-scene>
+            `;
+        }
+    </script>
+</body>
+</html>

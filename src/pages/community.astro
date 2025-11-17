@@ -1,0 +1,181 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Community - InternHub">
+  <main>
+    <h1>Community</h1>
+    <p>Connect with peers, mentors, and industry professionals.</p>
+    
+    <div class="community-tabs">
+      <button class="tab active">Feed</button>
+      <button class="tab">Connections</button>
+      <button class="tab">Events</button>
+    </div>
+    
+    <div class="community-content">
+      <div class="post-form">
+        <textarea placeholder="Share something with the community..." class="post-textarea"></textarea>
+        <div class="post-actions">
+          <button class="btn post-btn">
+            <i class="fas fa-paper-plane"></i> Post
+          </button>
+        </div>
+      </div>
+      
+      <div class="posts-feed">
+        <div class="post-card">
+          <div class="post-header">
+            <div class="avatar">JD</div>
+            <div class="post-author-info">
+              <h3>John Doe</h3>
+              <p>Software Engineering Intern at Google • 2 hours ago</p>
+            </div>
+          </div>
+          <div class="post-content">
+            <p>Just completed my first project at Google and it feels amazing! Working on optimizing search algorithms has been an incredible learning experience. The mentorship here is top-notch and I'm grateful for the opportunity.</p>
+          </div>
+          <div class="post-actions">
+            <button class="action-btn">
+              <i class="fas fa-thumbs-up"></i> Like (24)
+            </button>
+            <button class="action-btn">
+              <i class="fas fa-comment"></i> Comment (8)
+            </button>
+            <button class="action-btn">
+              <i class="fas fa-share"></i> Share (3)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <style>
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .community-tabs {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .tab {
+      padding: 1rem 2rem;
+      background: transparent;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-secondary);
+      border-bottom: 3px solid transparent;
+    }
+    
+    .tab.active {
+      color: var(--accent-color);
+      border-bottom-color: var(--accent-color);
+    }
+    
+    .post-form {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-color);
+    }
+    
+    .post-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 1rem;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      resize: vertical;
+    }
+    
+    .post-textarea:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+    
+    .post-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1rem;
+    }
+    
+    .post-btn {
+      padding: 0.8rem 1.5rem;
+    }
+    
+    .post-card {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 15px;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+    
+    .post-header {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+    
+    .post-author-info h3 {
+      margin-bottom: 0.3rem;
+    }
+    
+    .post-author-info p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    
+    .post-content {
+      margin-bottom: 1.5rem;
+    }
+    
+    .post-actions {
+      display: flex;
+      gap: 1rem;
+      border-top: 1px solid var(--border-color);
+      padding-top: 1rem;
+    }
+    
+    .action-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    
+    .action-btn:hover {
+      background: var(--tag-bg);
+      color: var(--accent-color);
+    }
+  </style>
+</Layout>

@@ -1,0 +1,35 @@
+{
+  "name": "internhub",
+  "version": "1.0.0",
+  "description": "InternHub - Connecting talent with opportunity",
+  "main": "index.js",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "keywords": [
+    "internship",
+    "career",
+    "networking",
+    "community"
+  ],
+  "author": "InternHub Team",
+  "license": "MIT",
+  "dependencies": {
+    "@astrojs/react": "^2.0.0",
+    "@astrojs/sitemap": "^1.0.0",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
+    "astro": "^2.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "graphql": "^16.6.0",
+    "express": "^4.18.2",
+    "express-graphql": "^0.12.0"
+  }
+}

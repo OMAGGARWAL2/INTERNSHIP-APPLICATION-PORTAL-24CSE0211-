@@ -642,12 +642,48 @@
         themeIcon.className = savedTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
 
         // Form submission
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            // Store user data
+            // Try backend login first
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Backend login successful
+                    localStorage.setItem('authToken', result.token);
+                    localStorage.setItem('currentUser', JSON.stringify({
+                        ...result.user,
+                        name: result.user.firstName + ' ' + result.user.lastName,
+                        profilePhoto: result.user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(result.user.firstName)}&background=f59e0b&color=fff&size=150`,
+                        loginTime: new Date().toISOString()
+                    }));
+                    
+                    showNotification('success', 'Welcome Back!', `Logged in as ${result.user.firstName}`);
+                    
+                    setTimeout(() => {
+                        // Redirect based on role
+                        if (result.user.role === 'instructor') {
+                            window.location.href = 'student-dashboard.html'; // or instructor dashboard
+                        } else {
+                            window.location.href = 'student-dashboard.html';
+                        }
+                    }, 1500);
+                    return;
+                }
+            } catch (error) {
+                console.log('Backend login failed, using static mode');
+            }
+
+            // Fallback: Static login (for when backend is not running)
             const userData = {
                 email: email,
                 name: email.split('@')[0],

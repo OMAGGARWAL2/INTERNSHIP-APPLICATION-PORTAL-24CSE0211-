@@ -1,0 +1,2011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="InternHub Community - Connect with professionals, share knowledge, and advance your career">
+    <meta name="keywords" content="internship, career, networking, professionals, community">
+    <title>Community - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="notifications.js"></script>
+    <script src="notifications-ui.js"></script>
+    <script src="voice-to-text.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* Accessibility enhancements */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* Focus indicators for keyboard navigation */
+        a:focus, button:focus, input:focus, textarea:focus, select:focus {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+        
+        /* Skip to main content link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            z-index: 10000;
+            text-decoration: none;
+            transition: top 0.3s;
+        }
+        
+        .skip-link:focus {
+            top: 6px;
+        }
+        
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --border-color: rgba(30, 58, 138, 0.5);
+                --shadow-color: rgba(30, 58, 138, 0.3);
+            }
+            
+            .btn:hover {
+                box-shadow: 0 5px 15px var(--shadow-color);
+            }
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Larger text support */
+        @media (min-width: 1200px) {
+            body {
+                font-size: 1.1em;
+            }
+        }
+
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+            --primary-bg: var(--cream);
+            --secondary-bg: #ffffff;
+            --header-bg: rgba(246, 241, 231, 0.95);
+            --text-primary: var(--blue);
+            --text-secondary: rgba(30, 58, 138, 0.8);
+            --accent-color: var(--sea-blue);
+            --hover-color: var(--blue);
+            --border-color: rgba(30, 58, 138, 0.15);
+            --shadow-color: rgba(30, 58, 138, 0.12);
+            --tag-bg: rgba(14, 165, 233, 0.12);
+            --primary-gradient: linear-gradient(135deg, var(--blue), var(--sea-blue));
+            --border-radius-main: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: var(--header-bg);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--accent-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        /* Notification badge */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .btn {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 1400px;
+            margin: 1rem auto;
+            padding: 0 2rem;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            border: 2px solid var(--border-color);
+            font-size: 1rem;
+            background: var(--secondary-bg);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.1);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 2rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-section h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+        }
+
+        .sidebar-links {
+            list-style: none;
+        }
+
+        .sidebar-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .sidebar-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-links a:hover {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--accent-color);
+        }
+
+        .sidebar-links a.active {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        /* Main Feed */
+        .main-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* New Post */
+        .new-post {
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            padding: 1.5rem;
+        }
+
+        .post-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .post-input {
+            flex: 1;
+        }
+
+        .post-input textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            resize: none;
+            min-height: 80px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .post-input textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        /* Voice-to-text button */
+        .voice-to-text-btn.listening {
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .action-btn:hover {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--accent-color);
+        }
+
+        /* Post */
+        .post {
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            padding: 1.5rem;
+        }
+
+        .post-author {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .post-author-info {
+            flex: 1;
+        }
+
+        .post-author-info h3 {
+            margin-bottom: 0.2rem;
+        }
+
+        .post-author-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .post-content {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .post-stats {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .post-actions-bar {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .post-action {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .post-action:hover {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--accent-color);
+        }
+
+        /* Certificates Section */
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .certificate-card {
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .certificate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .certificate-header {
+            padding: 1.5rem;
+            background: var(--primary-gradient);
+            color: white;
+            text-align: center;
+        }
+
+        .certificate-body {
+            padding: 1.5rem;
+        }
+
+        .certificate-body h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .certificate-body p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .certificate-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            background: rgba(30, 58, 138, 0.03);
+        }
+
+        /* People Section */
+        .people-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .person-card {
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .person-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .person-header {
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .person-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin: 0 auto 1rem;
+        }
+
+        .person-body {
+            padding: 1.5rem;
+        }
+
+        .person-body h3 {
+            margin-bottom: 0.3rem;
+        }
+
+        .person-body p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .person-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-tag {
+            background: var(--tag-bg);
+            color: var(--accent-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .person-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .connect-btn {
+            flex: 1;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 0.6rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .connect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.2);
+        }
+
+        .message-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(14, 165, 233, 0.1);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .message-btn:hover {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .tab {
+            padding: 0.8rem 1.5rem;
+            background: var(--secondary-bg);
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid var(--border-color);
+        }
+
+        .tab.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(14, 165, 233, 0.1);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary-bg);
+            border-top: 2px solid var(--border-color);
+            margin-top: 3rem;
+            padding: 2rem 0;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .footer-section a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header>
+        <nav>
+            <a href="index.html" class="logo"><i class="fas fa-graduation-cap"></i> InternHub</a>
+            <div class="nav-links">
+                <a href="find-internships.html">Internships</a>
+                <a href="community.html" style="color: var(--accent-color);">Community</a>
+                <a href="student-dashboard.html">Dashboard</a>
+                <button class="btn" onclick="window.location.href='login.html'">Login</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="search-container">
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search for people, posts, certificates..." id="searchInput">
+            <button class="btn" id="searchButton"><i class="fas fa-search"></i> <span id="searchText">Search</span></button>
+            <!-- Language selector -->
+            <div style="margin-left: 1rem;">
+                <select id="languageSelect" onchange="changeLanguage()" style="padding: 0.5rem; border-radius: 8px; border: 2px solid var(--border-color); background: var(--secondary-bg); color: var(--text-primary);">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="zh">中文</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="ar">العربية</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="main-content">
+        <div class="sidebar">
+            <!-- User Profile Card -->
+            <div class="sidebar-section" style="background: var(--primary-gradient); color: white; border-radius: var(--border-radius-main); padding: 1.5rem; margin-bottom: 1.5rem;" id="profileCard">
+                <div style="text-align: center; margin-bottom: 1rem;">
+                    <div class="avatar" style="width: 80px; height: 80px; font-size: 2rem; margin: 0 auto 1rem;" id="profileAvatar">JD</div>
+                    <h3 style="margin: 0 0 0.5rem 0; color: white;" id="profileName">John Doe</h3>
+                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;" id="profileHeadline">Software Developer Intern at TechCorp</p>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.8rem; opacity: 0.8;" id="profileLocation"><i class="fas fa-map-marker-alt"></i> San Francisco, CA</p>
+                </div>
+                <div style="display: flex; justify-content: space-between; text-align: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.2);">
+                    <div>
+                        <div style="font-weight: 700; font-size: 1.2rem;" id="profileConnections">127</div>
+                        <div style="font-size: 0.8rem; opacity: 0.9;">Connections</div>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700; font-size: 1.2rem;" id="profileViews">42</div>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; text-align: center;">
+                    <button class="btn" style="background: rgba(255,255,255,0.2); border: 1px solid white; padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="editProfile()">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>Community</h3>
+                <ul class="sidebar-links">
+                    <li><a href="community.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="network.html"><i class="fas fa-users"></i> My Network</a></li>
+                    <li><a href="jobs.html"><i class="fas fa-briefcase"></i> Jobs</a></li>
+                    <li><a href="messages.html"><i class="fas fa-comments"></i> Messaging</a></li>
+                    <li><a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>Interests</h3>
+                <ul class="sidebar-links">
+                    <li><a href="find-internships.html"><i class="fas fa-laptop-code"></i> Technology</a></li>
+                    <li><a href="find-internships.html"><i class="fas fa-chart-line"></i> Business</a></li>
+                    <li><a href="find-internships.html"><i class="fas fa-paint-brush"></i> Design</a></li>
+                    <li><a href="find-internships.html"><i class="fas fa-calculator"></i> Finance</a></li>
+                    <li><a href="find-internships.html"><i class="fas fa-heartbeat"></i> Healthcare</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>Manage Network</h3>
+                <ul class="sidebar-links">
+                    <li><a href="add-connections.html"><i class="fas fa-user-plus"></i> Add Connections</a></li>
+                    <li><a href="sent-invitations.html"><i class="fas fa-paper-plane"></i> Sent Invitations</a></li>
+                    <li><a href="groups.html"><i class="fas fa-user-friends"></i> Groups</a></li>
+                    <li><a href="hashtags.html"><i class="fas fa-hashtag"></i> Hashtags</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="main-feed">
+            <div class="new-post">
+                <div class="post-header">
+                    <div class="avatar" id="currentUserAvatar">JD</div>
+                    <div class="post-input">
+                        <textarea placeholder="Share your thoughts, experiences, or ask a question..." id="postContent"></textarea>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="addMedia('photo')"><i class="fas fa-image"></i> Photo</button>
+                        <button class="action-btn" onclick="addMedia('video')"><i class="fas fa-video"></i> Video</button>
+                        <button class="action-btn" onclick="openEventModal()"><i class="fas fa-calendar-alt"></i> Event</button>
+                        <button class="action-btn" onclick="addMedia('document')"><i class="fas fa-file-alt"></i> Document</button>
+                    </div>
+                    <button class="btn" onclick="submitPost()">Post</button>
+                </div>
+            </div>
+
+            <div class="tabs" role="tablist">
+                <div class="tab active" onclick="switchTab('feed')" data-tab="feed" role="tab" aria-selected="true" tabindex="0">Feed</div>
+                <div class="tab" onclick="switchTab('certificates')" data-tab="certificates" role="tab" aria-selected="false" tabindex="-1">Certificates</div>
+                <div class="tab" onclick="switchTab('people')" data-tab="people" role="tab" aria-selected="false" tabindex="-1">People</div>
+            </div>
+
+            <div id="feed" class="content-section active" role="tabpanel" aria-labelledby="feed-tab">
+                <!-- Posts will be loaded here dynamically -->
+            </div>
+
+            <div id="certificates" class="content-section" role="tabpanel" aria-labelledby="certificates-tab" hidden>
+                <div class="certificates-grid" id="certificatesGrid">
+                    <!-- Certificates will be loaded here dynamically -->
+                </div>
+            </div>
+
+            <div id="people" class="content-section" role="tabpanel" aria-labelledby="people-tab" hidden>
+                <div class="people-grid" id="peopleGrid">
+                    <!-- People will be loaded here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div class="modal" id="eventModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center;">
+        <div class="modal-content" style="background: var(--secondary-bg); padding: 2rem; border-radius: var(--border-radius-main); max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2>Create Event</h2>
+                <button class="close-btn" onclick="closeEventModal()" style="background: none; border: none; color: var(--text-secondary); font-size: 2rem; cursor: pointer;">&times;</button>
+            </div>
+            <form id="eventForm">
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Event Title</label>
+                    <input type="text" id="eventTitle" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--secondary-bg); color: var(--text-primary); font-family: inherit;" placeholder="Event title">
+                </div>
+                <div class="form-row" style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="margin-bottom: 1.5rem; flex: 1;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Date</label>
+                        <input type="date" id="eventDate" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--secondary-bg); color: var(--text-primary); font-family: inherit;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1.5rem; flex: 1;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Time</label>
+                        <input type="time" id="eventTime" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--secondary-bg); color: var(--text-primary); font-family: inherit;">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Location</label>
+                    <input type="text" id="eventLocation" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--secondary-bg); color: var(--text-primary); font-family: inherit;" placeholder="Event location">
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Description</label>
+                    <textarea id="eventDescription" rows="3" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--secondary-bg); color: var(--text-primary); font-family: inherit;" placeholder="Event description"></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <button type="submit" class="btn" style="width: 100%;">Create Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="cookies.html">Cookie Policy</a>
+            </div>
+            <div class="footer-section">
+                <h4>Trust</h4>
+                <a href="accessibility.html">Accessibility</a>
+                <a href="security.html">Security</a>
+                <a href="sitemap.xml">Sitemap</a>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="careers.html">Careers</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // User data
+        let currentUser = {
+            name: "John Doe",
+            avatar: "JD",
+            headline: "Software Developer Intern at TechCorp",
+            location: "San Francisco, CA",
+            connections: 127,
+            profileViews: 42
+        };
+
+        // Sample data
+        let posts = [];
+        let certificates = [];
+        let people = [];
+
+        // Multilingual support (extended with additional languages)
+        // See translations declaration later in the file
+
+        // Change language
+        function changeLanguage() {
+            const lang = document.getElementById('languageSelect').value;
+            translateContent(lang);
+        }
+
+        // Translate content based on selected language
+        function translateContent(lang) {
+            // Update tab labels
+            const tabs = document.querySelectorAll('.tab');
+            if (tabs.length >= 3) {
+                tabs[0].textContent = translations[lang].feed;
+                tabs[1].textContent = translations[lang].certificates;
+                tabs[2].textContent = translations[lang].people;
+            }
+            
+            // Update placeholders and button text
+            document.getElementById('searchInput').placeholder = translations[lang].searchPlaceholder;
+            document.getElementById('postContent').placeholder = translations[lang].postPlaceholder;
+            document.getElementById('searchText').textContent = translations[lang].search;
+            
+            // Update modal content if visible
+            const eventModal = document.getElementById('eventModal');
+            if (eventModal && eventModal.style.display === 'flex') {
+                document.getElementById('eventTitle').placeholder = translations[lang].eventName;
+                document.querySelector('#eventModal button[type="submit"]').textContent = translations[lang].createEvent;
+            }
+            
+            // Update post button
+            const postButtons = document.querySelectorAll('button[onclick="submitPost()"]');
+            postButtons.forEach(button => {
+                button.textContent = translations[lang].postButton;
+            });
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user data
+            loadUserData();
+            
+            // Load sample data
+            loadSampleData();
+            
+            // Render content
+            renderFeed();
+            renderCertificates();
+            renderPeople();
+            
+            // Set up event listeners
+            document.getElementById('searchButton').addEventListener('click', performSearch);
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            document.getElementById('eventForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                createEvent();
+            });
+        });
+
+        // Load user data
+        function loadUserData() {
+            // In a real app, this would come from localStorage or a server
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+            } else {
+                // Default user data
+                currentUser = {
+                    name: "John Doe",
+                    avatar: "JD",
+                    headline: "Software Developer Intern at TechCorp",
+                    location: "San Francisco, CA",
+                    connections: 127,
+                    profileViews: 42
+                };
+                // Save to localStorage for future visits
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+            
+            // Update UI with user data
+            document.getElementById('currentUserAvatar').textContent = currentUser.avatar || currentUser.name.charAt(0);
+            
+            // Update profile card
+            updateProfileCard();
+        }
+        
+        // Update profile card with current user data
+        function updateProfileCard() {
+            document.getElementById('profileName').textContent = currentUser.name;
+            document.getElementById('profileHeadline').textContent = currentUser.headline;
+            document.getElementById('profileLocation').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${currentUser.location}`;
+            document.getElementById('profileConnections').textContent = currentUser.connections;
+            document.getElementById('profileViews').textContent = currentUser.profileViews;
+            document.getElementById('profileAvatar').textContent = currentUser.avatar;
+        }
+        
+        // Edit profile
+        function editProfile() {
+            // Create a modal for editing profile
+            const modal = document.createElement('div');
+            modal.id = 'editProfileModal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.6);
+                backdrop-filter: blur(10px);
+                z-index: 2000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: var(--secondary-bg); padding: 2rem; border-radius: var(--border-radius-main); max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2>Edit Profile</h2>
+                        <button class="close-btn" onclick="closeEditProfileModal()" style="background: none; border: none; color: var(--text-secondary); font-size: 2rem; cursor: pointer;">&times;</button>
+                    </div>
+                    <form id="editProfileForm">
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Full Name</label>
+                            <input type="text" id="editName" value="${currentUser.name}" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--secondary-bg); color: var(--text-primary); font-family: inherit;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Headline</label>
+                            <input type="text" id="editHeadline" value="${currentUser.headline}" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--secondary-bg); color: var(--text-primary); font-family: inherit;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Location</label>
+                            <input type="text" id="editLocation" value="${currentUser.location}" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--secondary-bg); color: var(--text-primary); font-family: inherit;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <button type="submit" class="btn" style="width: 100%;">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Add event listener to form
+            document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveProfileChanges();
+            });
+        }
+        
+        // Close edit profile modal
+        function closeEditProfileModal() {
+            const modal = document.getElementById('editProfileModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        // Save profile changes
+        function saveProfileChanges() {
+            currentUser.name = document.getElementById('editName').value;
+            currentUser.headline = document.getElementById('editHeadline').value;
+            currentUser.location = document.getElementById('editLocation').value;
+            
+            // Save to localStorage
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            // Update UI
+            updateProfileCard();
+            
+            // Close modal
+            closeEditProfileModal();
+            
+            // Show success message
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #10b981;
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                font-weight: 600;
+            `;
+            notification.textContent = 'Profile updated successfully!';
+            document.body.appendChild(notification);
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+
+        // Load sample data
+        function loadSampleData() {
+            // Load posts from localStorage or use sample data
+            const storedPosts = localStorage.getItem('communityPosts');
+            if (storedPosts) {
+                posts = JSON.parse(storedPosts);
+            } else {
+                posts = [
+                    {
+                        id: 1,
+                        author: "Priya Sharma",
+                        avatar: "PS",
+                        position: "Software Engineering Intern at Google",
+                        time: "2 hours ago",
+                        content: "Just completed my first project at Google and it feels amazing! Working on optimizing search algorithms has been an incredible learning experience. The mentorship here is top-notch and I'm grateful for the opportunity.",
+                        tags: ["#internship", "#softwareengineering", "#google", "#careerdevelopment"],
+                        likes: 24,
+                        comments: 8,
+                        shares: 3
+                    },
+                    {
+                        id: 2,
+                        author: "Rahul Kumar",
+                        avatar: "RK",
+                        position: "Data Analyst Intern at Microsoft",
+                        time: "5 hours ago",
+                        content: "Just earned my Data Visualization Certificate from Coursera! This course helped me understand how to present complex data in a clear and compelling way. Highly recommend it to anyone in the data field.\n\nCheck out the certificate in my profile!",
+                        tags: [],
+                        likes: 42,
+                        comments: 12,
+                        shares: 5
+                    }
+                ];
+                savePosts();
+            }
+            
+            // Load certificates from localStorage or use sample data
+            const storedCertificates = localStorage.getItem('communityCertificates');
+            if (storedCertificates) {
+                certificates = JSON.parse(storedCertificates);
+            } else {
+                certificates = [
+                    {
+                        id: 1,
+                        title: "Python for Data Science",
+                        issuer: "IBM",
+                        description: "Completed advanced Python programming for data analysis and visualization.",
+                        skills: ["Python", "Data Science"],
+                        issueDate: "Jun 2023"
+                    },
+                    {
+                        id: 2,
+                        title: "Machine Learning",
+                        issuer: "Stanford",
+                        description: "Mastered supervised and unsupervised learning algorithms and applications.",
+                        skills: ["ML", "AI"],
+                        issueDate: "Apr 2023"
+                    }
+                ];
+                saveCertificates();
+            }
+            
+            // Load people from localStorage or use sample data
+            const storedPeople = localStorage.getItem('communityPeople');
+            if (storedPeople) {
+                people = JSON.parse(storedPeople);
+            } else {
+                people = [
+                    {
+                        id: 1,
+                        name: "Meera Jain",
+                        avatar: "MJ",
+                        position: "Senior Software Engineer at Meta",
+                        description: "Former intern at Microsoft. Passionate about mentoring and helping students succeed in tech.",
+                        skills: ["React", "Node.js", "Python"]
+                    },
+                    {
+                        id: 2,
+                        name: "Vikram Khanna",
+                        avatar: "VK",
+                        position: "Product Manager at Netflix",
+                        description: "Experienced in product strategy and user experience. Open to mentoring product-minded interns.",
+                        skills: ["Product", "Strategy", "UX"]
+                    }
+                ];
+                savePeople();
+            }
+        }
+
+        // Save data to localStorage
+        function savePosts() {
+            localStorage.setItem('communityPosts', JSON.stringify(posts));
+        }
+        
+        function saveCertificates() {
+            localStorage.setItem('communityCertificates', JSON.stringify(certificates));
+        }
+        
+        function savePeople() {
+            localStorage.setItem('communityPeople', JSON.stringify(people));
+        }
+
+        // Render feed
+        function renderFeed() {
+            const feedElement = document.getElementById('feed');
+            feedElement.innerHTML = '';
+            
+            if (posts.length === 0) {
+                feedElement.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 2rem;">No posts yet. Be the first to share something!</p>';
+                return;
+            }
+            
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.className = 'post';
+                postElement.setAttribute('data-id', post.id);
+                postElement.innerHTML = `
+                    <div class="post-author">
+                        <div class="avatar">${post.avatar}</div>
+                        <div class="post-author-info">
+                            <h3>${post.author}</h3>
+                            <p>${post.position} • ${post.time}</p>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>${post.content.replace(/\n/g, '<br>')}</p>
+                        ${post.tags.length > 0 ? `<p>${post.tags.join(' ')}</p>` : ''}
+                    </div>
+                    <div class="post-stats">
+                        <span>${post.likes} likes</span>
+                        <span>${post.comments} comments</span>
+                        <span>${post.shares} shares</span>
+                    </div>
+                    <div class="post-actions-bar">
+                        <button class="post-action" onclick="likePost(${post.id})"><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button class="post-action" onclick="commentOnPost(${post.id})"><i class="fas fa-comment"></i> Comment</button>
+                        <button class="post-action" onclick="sharePost(${post.id})"><i class="fas fa-share"></i> Share</button>
+                    </div>
+                `;
+                feedElement.appendChild(postElement);
+            });
+        }
+
+        // Render certificates
+        function renderCertificates() {
+            const certificatesGrid = document.getElementById('certificatesGrid');
+            certificatesGrid.innerHTML = '';
+            
+            if (certificates.length === 0) {
+                certificatesGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 2rem; grid-column: 1 / -1;">No certificates yet. Start earning some!</p>';
+                return;
+            }
+            
+            certificates.forEach(cert => {
+                const certElement = document.createElement('div');
+                certElement.className = 'certificate-card';
+                certElement.setAttribute('data-id', cert.id);
+                certElement.innerHTML = `
+                    <div class="certificate-header">
+                        <h3>${cert.title}</h3>
+                    </div>
+                    <div class="certificate-body">
+                        <h3>Issued by ${cert.issuer}</h3>
+                        <p>${cert.description}</p>
+                        <div class="person-skills">
+                            ${cert.skills.map(skill => `<div class="skill-tag">${skill}</div>`).join('')}
+                        </div>
+                    </div>
+                    <div class="certificate-footer">
+                        <span>Issued: ${cert.issueDate}</span>
+                        <button class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.9rem;">View</button>
+                    </div>
+                `;
+                certificatesGrid.appendChild(certElement);
+            });
+        }
+
+        // Render people
+        function renderPeople() {
+            const peopleGrid = document.getElementById('peopleGrid');
+            peopleGrid.innerHTML = '';
+            
+            if (people.length === 0) {
+                peopleGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 2rem; grid-column: 1 / -1;">No people to show. Start connecting!</p>';
+                return;
+            }
+            
+            people.forEach(person => {
+                const personElement = document.createElement('div');
+                personElement.className = 'person-card';
+                personElement.setAttribute('data-id', person.id);
+                personElement.innerHTML = `
+                    <div class="person-header">
+                        <div class="person-avatar">${person.avatar}</div>
+                        <h3>${person.name}</h3>
+                        <p>${person.position}</p>
+                    </div>
+                    <div class="person-body">
+                        <p>${person.description}</p>
+                        <div class="person-skills">
+                            ${person.skills.map(skill => `<div class="skill-tag">${skill}</div>`).join('')}
+                        </div>
+                    </div>
+                    <div class="person-footer">
+                        <button class="connect-btn">Connect</button>
+                        <button class="message-btn"><i class="fas fa-envelope"></i></button>
+                    </div>
+                `;
+                peopleGrid.appendChild(personElement);
+            });
+        }
+
+        // Submit a new post
+        function submitPost() {
+            const content = document.getElementById('postContent').value.trim();
+            
+            if (!content) {
+                alert('Please enter some content for your post.');
+                return;
+            }
+            
+            const newPost = {
+                id: Date.now(),
+                author: currentUser.name,
+                avatar: currentUser.avatar || currentUser.name.charAt(0),
+                position: "InternHub User",
+                time: "Just now",
+                content: content,
+                tags: [],
+                likes: 0,
+                comments: 0,
+                shares: 0
+            };
+            
+            posts.unshift(newPost);
+            savePosts();
+            renderFeed();
+            
+            // Clear the textarea
+            document.getElementById('postContent').value = '';
+            
+            // Switch to feed tab
+            switchTab('feed');
+        }
+
+        // Add media
+        function addMedia(type) {
+            alert(`Add ${type} functionality would be implemented here. In a real application, this would open a file picker.`);
+        }
+
+        // Like a post
+        function likePost(postId) {
+            const post = posts.find(p => p.id == postId);
+            if (post) {
+                // Initialize likedBy array if it doesn't exist
+                if (!post.likedBy) {
+                    post.likedBy = [];
+                }
+                
+                // Check if user already liked the post
+                const userIndex = post.likedBy.indexOf(currentUser.name);
+                
+                if (userIndex === -1) {
+                    // User hasn't liked the post, so add like
+                    post.likedBy.push(currentUser.name);
+                    post.likes = post.likedBy.length;
+                    savePosts();
+                    renderFeed();
+                    showNotification('Post liked!');
+                } else {
+                    // User already liked the post, so remove like (unlike)
+                    post.likedBy.splice(userIndex, 1);
+                    post.likes = post.likedBy.length;
+                    savePosts();
+                    renderFeed();
+                    showNotification('Like removed!', 'info');
+                }
+            }
+        }
+
+        // Comment on a post
+        function commentOnPost(postId) {
+            const post = posts.find(p => p.id == postId);
+            if (post) {
+                // Create a comment modal
+                const modal = document.createElement('div');
+                modal.id = 'commentModal';
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.6);
+                    backdrop-filter: blur(10px);
+                    z-index: 2000;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                `;
+                
+                // Check if user already commented
+                const userComments = post.userComments || [];
+                const hasCommented = userComments.some(comment => comment.author === currentUser.name);
+                
+                modal.innerHTML = `
+                    <div style="background: var(--secondary-bg); padding: 2rem; border-radius: var(--border-radius-main); max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h2>Add a Comment</h2>
+                            <button class="close-btn" onclick="closeCommentModal()" style="background: none; border: none; color: var(--text-secondary); font-size: 2rem; cursor: pointer;">&times;</button>
+                        </div>
+                        <div style="margin-bottom: 1.5rem; max-height: 200px; overflow-y: auto;">
+                            ${userComments.map(comment => `
+                                <div style="padding: 0.8rem; background: var(--tag-bg); border-radius: 8px; margin-bottom: 0.5rem;">
+                                    <div style="font-weight: 600;">${comment.author}</div>
+                                    <div>${comment.text}</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-secondary); text-align: right;">${comment.time}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${!hasCommented ? `
+                            <form id="commentForm">
+                                <div class="form-group" style="margin-bottom: 1.5rem;">
+                                    <textarea id="commentText" rows="3" placeholder="Write your comment..." style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--secondary-bg); color: var(--text-primary); font-family: inherit;"></textarea>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 1.5rem;">
+                                    <button type="submit" class="btn" style="width: 100%;">Post Comment</button>
+                                </div>
+                            </form>
+                        ` : `
+                            <div style="text-align: center; padding: 1rem; color: var(--text-secondary);">
+                                You have already commented on this post.
+                            </div>
+                        `}
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                // Add event listener to form if it exists
+                const commentForm = document.getElementById('commentForm');
+                if (commentForm) {
+                    commentForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        addCommentToPost(postId);
+                    });
+                }
+            }
+        }
+        
+        // Add comment to post
+        function addCommentToPost(postId) {
+            const post = posts.find(p => p.id == postId);
+            if (post) {
+                const commentText = document.getElementById('commentText').value.trim();
+                if (commentText) {
+                    // Initialize userComments array if it doesn't exist
+                    if (!post.userComments) {
+                        post.userComments = [];
+                    }
+                    
+                    // Add comment
+                    post.userComments.push({
+                        author: currentUser.name,
+                        text: commentText,
+                        time: new Date().toLocaleString()
+                    });
+                    
+                    // Update comment count
+                    post.comments = post.userComments.length;
+                    
+                    // Save and update UI
+                    savePosts();
+                    renderFeed();
+                    
+                    // Close modal
+                    closeCommentModal();
+                    
+                    // Show success message
+                    showNotification('Comment added successfully!');
+                }
+            }
+        }
+        
+        // Close comment modal
+        function closeCommentModal() {
+            const modal = document.getElementById('commentModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            let backgroundColor;
+            
+            switch(type) {
+                case 'success':
+                    backgroundColor = '#10b981';
+                    break;
+                case 'error':
+                    backgroundColor = '#ef4444';
+                    break;
+                case 'info':
+                    backgroundColor = '#0ea5e9';
+                    break;
+                default:
+                    backgroundColor = '#10b981';
+            }
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${backgroundColor};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                font-weight: 600;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+
+        // Share a post
+        function sharePost(postId) {
+            const post = posts.find(p => p.id == postId);
+            if (post) {
+                post.shares++;
+                savePosts();
+                renderFeed();
+                alert('Post shared successfully!');
+            }
+        }
+
+        // Switch tabs with accessibility support
+        function switchTab(tabId) {
+            // Hide all content sections and update accessibility attributes
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+                section.setAttribute('hidden', 'true');
+            });
+            
+            // Remove active class from all tabs and update accessibility attributes
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.setAttribute('aria-selected', 'false');
+                tab.setAttribute('tabindex', '-1');
+            });
+            
+            // Show selected content section
+            const targetSection = document.getElementById(tabId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                targetSection.removeAttribute('hidden');
+            }
+            
+            // Add active class to clicked tab and update accessibility attributes
+            const tabs = document.querySelectorAll('.tab');
+            for (let i = 0; i < tabs.length; i++) {
+                if (tabs[i].getAttribute('data-tab') === tabId) {
+                    tabs[i].classList.add('active');
+                    tabs[i].setAttribute('aria-selected', 'true');
+                    tabs[i].setAttribute('tabindex', '0');
+                    // Focus the active tab for keyboard navigation
+                    tabs[i].focus();
+                    break;
+                }
+            }
+        }
+
+        // Open event modal
+        function openEventModal() {
+            document.getElementById('eventModal').style.display = 'flex';
+        }
+
+        // Close event modal
+        function closeEventModal() {
+            document.getElementById('eventModal').style.display = 'none';
+        }
+
+        // Create event
+        function createEvent() {
+            const title = document.getElementById('eventTitle').value;
+            const date = document.getElementById('eventDate').value;
+            const time = document.getElementById('eventTime').value;
+            const location = document.getElementById('eventLocation').value;
+            const description = document.getElementById('eventDescription').value;
+            
+            if (!title || !date || !time) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // In a real app, this would create an actual event
+            alert(`Event "${title}" created for ${date} at ${time}!`);
+            
+            // Reset form and close modal
+            document.getElementById('eventForm').reset();
+            closeEventModal();
+        }
+
+        // Multilingual support
+        const translations = {
+            en: {
+                feed: "Feed",
+                certificates: "Certificates",
+                people: "People",
+                searchPlaceholder: "Search posts, people, certificates...",
+                postPlaceholder: "Share your thoughts...",
+                eventName: "Event Name",
+                eventDate: "Event Date",
+                eventDescription: "Event Description",
+                createEvent: "Create Event",
+                certificateName: "Certificate Name",
+                issuingOrganization: "Issuing Organization",
+                issueDate: "Issue Date",
+                addCertificate: "Add Certificate",
+                profileName: "Your Name",
+                profilePosition: "Your Position",
+                profileSkills: "Your Skills (comma separated)",
+                saveProfile: "Save Profile",
+                postButton: "Post",
+                like: "Like",
+                comment: "Comment",
+                share: "Share",
+                join: "Join",
+                editProfile: "Edit Profile",
+                voiceToText: "Voice to Text",
+                translate: "Translate",
+                search: "Search",
+                noResults: "No results found for your search.",
+                searchResults: "Found {count} result(s) for \"{query}\""
+            },
+            es: {
+                feed: "Feed",
+                certificates: "Certificados",
+                people: "Personas",
+                searchPlaceholder: "Buscar publicaciones, personas, certificados...",
+                postPlaceholder: "Comparte tus pensamientos...",
+                eventName: "Nombre del evento",
+                eventDate: "Fecha del evento",
+                eventDescription: "Descripción del evento",
+                createEvent: "Crear evento",
+                certificateName: "Nombre del certificado",
+                issuingOrganization: "Organización emisora",
+                issueDate: "Fecha de emisión",
+                addCertificate: "Agregar certificado",
+                profileName: "Tu nombre",
+                profilePosition: "Tu puesto",
+                profileSkills: "Tus habilidades (separadas por comas)",
+                saveProfile: "Guardar perfil",
+                postButton: "Publicar",
+                like: "Me gusta",
+                comment: "Comentar",
+                share: "Compartir",
+                join: "Unirse",
+                editProfile: "Editar perfil",
+                voiceToText: "Voz a texto",
+                translate: "Traducir",
+                search: "Buscar",
+                noResults: "No se encontraron resultados para su búsqueda.",
+                searchResults: "Se encontraron {count} resultado(s) para \"{query}\""
+            },
+            fr: {
+                feed: "Fil d'actualité",
+                certificates: "Certificats",
+                people: "Personnes",
+                searchPlaceholder: "Rechercher des publications, des personnes, des certificats...",
+                postPlaceholder: "Partagez vos pensées...",
+                eventName: "Nom de l'événement",
+                eventDate: "Date de l'événement",
+                eventDescription: "Description de l'événement",
+                createEvent: "Créer un événement",
+                certificateName: "Nom du certificat",
+                issuingOrganization: "Organisation émettrice",
+                issueDate: "Date d'émission",
+                addCertificate: "Ajouter un certificat",
+                profileName: "Votre nom",
+                profilePosition: "Votre poste",
+                profileSkills: "Vos compétences (séparées par des virgules)",
+                saveProfile: "Enregistrer le profil",
+                postButton: "Publier",
+                like: "J'aime",
+                comment: "Commenter",
+                share: "Partager",
+                join: "Rejoindre",
+                editProfile: "Modifier le profil",
+                voiceToText: "Voix vers texte",
+                translate: "Traduire",
+                search: "Rechercher",
+                noResults: "Aucun résultat trouvé pour votre recherche.",
+                searchResults: "{count} résultat(s) trouvé(s) pour \"{query}\""
+            },
+            de: {
+                feed: "Feed",
+                certificates: "Zertifikate",
+                people: "Personen",
+                searchPlaceholder: "Beiträge, Personen, Zertifikate suchen...",
+                postPlaceholder: "Teile deine Gedanken...",
+                eventName: "Veranstaltungsname",
+                eventDate: "Veranstaltungsdatum",
+                eventDescription: "Veranstaltungsbeschreibung",
+                createEvent: "Veranstaltung erstellen",
+                certificateName: "Zertifikatsname",
+                issuingOrganization: "Ausstellende Organisation",
+                issueDate: "Ausstellungsdatum",
+                addCertificate: "Zertifikat hinzufügen",
+                profileName: "Dein Name",
+                profilePosition: "Deine Position",
+                profileSkills: "Deine Fähigkeiten (durch Kommas getrennt)",
+                saveProfile: "Profil speichern",
+                postButton: "Posten",
+                like: "Gefällt mir",
+                comment: "Kommentieren",
+                share: "Teilen",
+                join: "Beitreten",
+                editProfile: "Profil bearbeiten",
+                voiceToText: "Sprache zu Text",
+                translate: "Übersetzen",
+                search: "Suchen",
+                noResults: "Keine Ergebnisse für Ihre Suche gefunden.",
+                searchResults: "{count} Ergebnis(se) gefunden für \"{query}\""
+            },
+            zh: {
+                feed: "动态",
+                certificates: "证书",
+                people: "人脉",
+                searchPlaceholder: "搜索帖子、人脉、证书...",
+                postPlaceholder: "分享你的想法...",
+                eventName: "活动名称",
+                eventDate: "活动日期",
+                eventDescription: "活动描述",
+                createEvent: "创建活动",
+                certificateName: "证书名称",
+                issuingOrganization: "颁发机构",
+                issueDate: "颁发日期",
+                addCertificate: "添加证书",
+                profileName: "你的姓名",
+                profilePosition: "你的职位",
+                profileSkills: "你的技能（逗号分隔）",
+                saveProfile: "保存资料",
+                postButton: "发布",
+                like: "点赞",
+                comment: "评论",
+                share: "分享",
+                join: "加入",
+                editProfile: "编辑资料",
+                voiceToText: "语音转文字",
+                translate: "翻译",
+                search: "搜索",
+                noResults: "未找到搜索结果。",
+                searchResults: "找到 {count} 个结果 \"{query}\""
+            },
+            hi: {
+                feed: "फ़ीड",
+                certificates: "प्रमाणपत्र",
+                people: "लोग",
+                searchPlaceholder: "पोस्ट, लोग, प्रमाणपत्र खोजें...",
+                postPlaceholder: "अपने विचार साझा करें...",
+                eventName: "कार्यक्रम का नाम",
+                eventDate: "कार्यक्रम की तारीख",
+                eventDescription: "कार्यक्रम का विवरण",
+                createEvent: "कार्यक्रम बनाएं",
+                certificateName: "प्रमाणपत्र का नाम",
+                issuingOrganization: "जारी करने वाला संगठन",
+                issueDate: "जारी करने की तारीख",
+                addCertificate: "प्रमाणपत्र जोड़ें",
+                profileName: "आपका नाम",
+                profilePosition: "आपका पद",
+                profileSkills: "आपके कौशल (अल्पविराम द्वारा अलग)",
+                saveProfile: "प्रोफाल सहेजें",
+                postButton: "पोस्ट",
+                like: "पसंद करें",
+                comment: "टिप्पणी करें",
+                share: "साझा करें",
+                join: "जुड़ें",
+                editProfile: "प्रोफ़ाइल संपादित करें",
+                voiceToText: "आवाज़ से पाठ",
+                translate: "अनुवाद करें",
+                search: "खोज",
+                noResults: "आपकी खोज के लिए कोई परिणाम नहीं मिला।",
+                searchResults: "\"{query}\" के लिए {count} परिणाम मिले"
+            },
+            ar: {
+                feed: "تغذية",
+                certificates: "الشهادات",
+                people: "الأشخاص",
+                searchPlaceholder: "البحث في المنشورات، الأشخاص، الشهادات...",
+                postPlaceholder: "شارك أفكارك...",
+                eventName: "اسم الحدث",
+                eventDate: "تاريخ الحدث",
+                eventDescription: "وصف الحدث",
+                createEvent: "إنشاء حدث",
+                certificateName: "اسم الشهادة",
+                issuingOrganization: "المنظمة المصدرة",
+                issueDate: "تاريخ الإصدار",
+                addCertificate: "إضافة شهادة",
+                profileName: "اسمك",
+                profilePosition: "منصبك",
+                profileSkills: "مهاراتك (مفصولة بفواصل)",
+                saveProfile: "حفظ الملف الشخصي",
+                postButton: "نشر",
+                like: "أعجبني",
+                comment: "تعليق",
+                share: "مشاركة",
+                join: "انضم",
+                editProfile: "تعديل الملف الشخصي",
+                voiceToText: "الصوت إلى نص",
+                translate: "ترجمة",
+                search: "بحث",
+                noResults: "لم يتم العثور على نتائج لبحثك.",
+                searchResults: "تم العثور على {count} نتيجة لـ \"{query}\""
+            }
+        };
+
+        // Change language
+        function changeLanguage() {
+            const lang = document.getElementById('languageSelect').value;
+            translateContent(lang);
+        }
+
+        // Translate content based on selected language
+        function translateContent(lang) {
+            document.getElementById('feed-tab').textContent = translations[lang].feed;
+            document.getElementById('certificates-tab').textContent = translations[lang].certificates;
+            document.getElementById('people-tab').textContent = translations[lang].people;
+            document.getElementById('searchInput').placeholder = translations[lang].searchPlaceholder;
+            document.getElementById('postContent').placeholder = translations[lang].postPlaceholder;
+            document.getElementById('postButton').textContent = translations[lang].postButton;
+            document.getElementById('searchText').textContent = translations[lang].search;
+            
+            // Update modal content
+            if (document.getElementById('eventModal').style.display === 'flex') {
+                document.getElementById('eventTitle').placeholder = translations[lang].eventName;
+                document.getElementById('eventDate').placeholder = translations[lang].eventDate;
+                document.getElementById('eventDescription').placeholder = translations[lang].eventDescription;
+                document.querySelector('#eventModal button[type="submit"]').textContent = translations[lang].createEvent;
+            }
+        }
+
+        // Perform search
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            
+            if (!query) {
+                const lang = document.getElementById('languageSelect').value || 'en';
+                alert(translations[lang].searchPlaceholder || 'Please enter a search term.');
+                return;
+            }
+            
+            // Create copies of original data to avoid modifying the source
+            const originalPosts = [...posts];
+            const originalPeople = [...people];
+            const originalCertificates = [...certificates];
+            
+            // Filter posts
+            const filteredPosts = originalPosts.filter(post => 
+                post.content.toLowerCase().includes(query) ||
+                post.author.toLowerCase().includes(query) ||
+                (post.tags && post.tags.some(tag => tag.toLowerCase().includes(query)))
+            );
+            
+            // Filter people
+            const filteredPeople = originalPeople.filter(person => 
+                person.name.toLowerCase().includes(query) ||
+                person.position.toLowerCase().includes(query) ||
+                (person.skills && person.skills.some(skill => skill.toLowerCase().includes(query)))
+            );
+            
+            // Filter certificates
+            const filteredCertificates = originalCertificates.filter(cert => 
+                cert.title.toLowerCase().includes(query) ||
+                cert.issuer.toLowerCase().includes(query) ||
+                (cert.skills && cert.skills.some(skill => skill.toLowerCase().includes(query)))
+            );
+            
+            // Display results
+            if (filteredPosts.length > 0) {
+                // Update the global posts array with filtered results
+                posts = filteredPosts;
+                renderFeed();
+                switchTab('feed');
+            } else if (filteredPeople.length > 0) {
+                // Update the global people array with filtered results
+                people = filteredPeople;
+                renderPeople();
+                switchTab('people');
+            } else if (filteredCertificates.length > 0) {
+                // Update the global certificates array with filtered results
+                certificates = filteredCertificates;
+                renderCertificates();
+                switchTab('certificates');
+            } else {
+                const lang = document.getElementById('languageSelect').value || 'en';
+                alert(translations[lang].noResults || 'No results found for your search.');
+                // Reset to original data
+                loadSampleData();
+                renderFeed();
+                renderPeople();
+                renderCertificates();
+            }
+            
+            // Show search results message
+            if (filteredPosts.length > 0 || filteredPeople.length > 0 || filteredCertificates.length > 0) {
+                const totalResults = filteredPosts.length + filteredPeople.length + filteredCertificates.length;
+                const lang = document.getElementById('languageSelect').value || 'en';
+                const message = translations[lang].searchResults ? 
+                    translations[lang].searchResults.replace('{count}', totalResults).replace('{query}', query) :
+                    `Found ${totalResults} result${totalResults !== 1 ? 's' : ''} for "${query}"`;
+                
+                // Create a temporary notification
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--primary-gradient);
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    z-index: 10000;
+                    font-weight: 600;
+                `;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                // Remove notification after 3 seconds
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 3000);
+            }
+        }
+        
+        // Register service worker for offline functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(function(registrationError) {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+        
+        // Add sample notifications to demonstrate the system
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add some sample notifications after a short delay
+            setTimeout(() => {
+                if (typeof notificationManager !== 'undefined') {
+                    notificationManager.addNotification(
+                        'New Connection Request', 
+                        'Priya Sharma wants to connect with you', 
+                        'connection', 
+                        'connections'
+                    );
+                    
+                    notificationManager.addNotification(
+                        'Post Liked', 
+                        'Rahul Kumar liked your post', 
+                        'post', 
+                        'likes'
+                    );
+                    
+                    notificationManager.addNotification(
+                        'New Comment', 
+                        'Meera Jain commented on your post', 
+                        'post', 
+                        'comments'
+                    );
+                    
+                    // Add several notifications to trigger grouping
+                    for (let i = 0; i < 7; i++) {
+                        notificationManager.addNotification(
+                            `New Message ${i+1}`, 
+                            `You have a new message from user ${i+1}`, 
+                            'message', 
+                            'messages'
+                        );
+                    }
+                }
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

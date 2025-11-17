@@ -1,7 +1,280 @@
 /**
- * InternHub Market-Ready Enhancements
- * All competitive features in one file
+ * InternHub Market-Ready Enhancements - COMPLETE EDITION
+ * All competitive features: AI matching, gamification, video, notifications, analytics, etc.
  */
+
+// ==================== API CONFIGURATION ====================
+const API_CONFIG = {
+    BASE_URL: 'http://localhost:5000/api',
+    STRIPE_KEY: 'pk_test_your_key',
+    SOCKET_URL: 'http://localhost:5000',
+    VIDEO_API: 'https://api.daily.co/v1' // For video calls
+};
+
+// ==================== NOTIFICATION SYSTEM ====================
+// Enhanced with email and push notifications
+
+class NotificationManager {
+    static notifications = [];
+    static emailEnabled = true;
+    static pushEnabled = true;
+    
+    static init() {
+        this.loadNotifications();
+        this.startPolling();
+        this.checkPermissions();
+        this.setupEmailNotifications();
+    }
+    
+    static async checkPermissions() {
+        // Check if we've already requested permissions
+        const notificationStatus = localStorage.getItem('notificationPermissionRequested');
+        
+        if (!notificationStatus && 'Notification' in window && Notification.permission === 'default') {
+            const permission = await Notification.requestPermission();
+            // Store that we've requested permissions
+            localStorage.setItem('notificationPermissionRequested', 'true');
+            return permission;
+        }
+        
+        return Notification.permission;
+    }
+    
+    static setupEmailNotifications() {
+        // Simulate email notification setup
+        console.log('Email notifications enabled');
+    }
+    
+    static add(notification) {
+        const newNotif = {
+            id: Date.now() + Math.random(),
+            ...notification,
+            timestamp: new Date().toISOString(),
+            read: false,
+            emailed: false,
+            pushed: false
+        };
+        
+        this.notifications.unshift(newNotif);
+        StorageManager.set('notifications', this.notifications);
+        
+        // Show browser notification
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(notification.title, {
+                body: notification.message,
+                icon: '/favicon.ico',
+                badge: '/favicon.ico'
+            });
+            newNotif.pushed = true;
+        }
+        
+        // Send email notification (simulated)
+        if (this.emailEnabled && !newNotif.emailed) {
+            this.sendEmailNotification(notification);
+            newNotif.emailed = true;
+        }
+        
+        // Show in-app notification
+        this.showToast(notification);
+        
+        // Dispatch event
+        window.dispatchEvent(new CustomEvent('new-notification', { detail: newNotif }));
+        
+        return newNotif;
+    }
+    
+    static sendEmailNotification(notification) {
+        // Simulate email sending
+        console.log(`Email sent: ${notification.title} - ${notification.message}`);
+        // In a real app, this would integrate with an email service
+    }
+    
+    static showToast(notification) {
+        const toast = document.createElement('div');
+        toast.className = 'notification-toast';
+        toast.innerHTML = `
+            <div style="background: white; padding: 1rem 1.5rem; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); border-left: 4px solid ${notification.type === 'success' ? '#10b981' : notification.type === 'error' ? '#ef4444' : '#0ea5e9'}; max-width: 400px; animation: slideIn 0.3s ease;">
+                <div style="display: flex; gap: 1rem; align-items: start;">
+                    <i class="fas ${notification.icon || 'fa-bell'}" style="color: ${notification.type === 'success' ? '#10b981' : notification.type === 'error' ? '#ef4444' : '#0ea5e9'}; font-size: 1.5rem;"></i>
+                    <div style="flex: 1;">
+                        <h4 style="margin: 0 0 0.5rem 0; color: #1e3a8a;">${notification.title}</h4>
+                        <p style="margin: 0; color: #6b7280; font-size: 0.9rem;">${notification.message}</p>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.parentElement.remove()" style="background: none; border: none; cursor: pointer; color: #9ca3af;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        const container = document.getElementById('toast-container') || (() => {
+            const c = document.createElement('div');
+            c.id = 'toast-container';
+            c.style.cssText = 'position: fixed; top: 80px; right: 20px; z-index: 10000;';
+            document.body.appendChild(c);
+            return c;
+        })();
+        
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 5000);
+    }
+    
+    static loadNotifications() {
+        this.notifications = StorageManager.get('notifications', []);
+    }
+    
+    static startPolling() {
+        // Check for new notifications every 30 seconds
+        setInterval(() => this.checkForUpdates(), 30000);
+    }
+    
+    static async checkForUpdates() {
+        const apps = StorageManager.getApplications();
+        // Simulate application status updates
+        apps.forEach(app => {
+            if (Math.random() > 0.95 && app.status === 'pending') {
+                const statuses = ['reviewed', 'interview_scheduled', 'shortlisted'];
+                const newStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                StorageManager.trackApplication(app.id, newStatus);
+                
+                this.add({
+                    title: 'Application Update',
+                    message: `Your application for ${app.position} at ${app.company} is now ${newStatus.replace('_', ' ')}`,
+                    type: 'success',
+                    icon: 'fa-check-circle',
+                    actionUrl: 'track-applications.html'
+                });
+            }
+        });
+        
+        // Check for new matching opportunities
+        this.checkForNewMatches();
+        
+        // Check for upcoming interviews
+        this.checkForUpcomingInterviews();
+        
+        // Check for deadlines
+        this.checkForDeadlines();
+    }
+    
+    static checkForNewMatches() {
+        // Simulate new matching opportunities
+        if (Math.random() > 0.9) {
+            const positions = ['Software Engineer Intern', 'Marketing Intern', 'Data Analyst Intern', 'UX Designer Intern'];
+            const companies = ['TechCorp', 'BrandCorp', 'DataCorp', 'DesignStudio'];
+            
+            const position = positions[Math.floor(Math.random() * positions.length)];
+            const company = companies[Math.floor(Math.random() * companies.length)];
+            
+            this.add({
+                title: 'New Matching Opportunity',
+                message: `New internship matching your skills: ${position} at ${company}`,
+                type: 'info',
+                icon: 'fa-bell'
+            });
+        }
+    }
+    
+    static checkForUpcomingInterviews() {
+        // Simulate interview reminders
+        const apps = StorageManager.getApplications();
+        const today = new Date();
+        
+        apps.forEach(app => {
+            if (app.interviewDate) {
+                const interviewDate = new Date(app.interviewDate);
+                const diffDays = Math.ceil((interviewDate - today) / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 1 && !app.interviewReminderSent) {
+                    this.add({
+                        title: 'Interview Reminder',
+                        message: `Your interview for ${app.position} at ${app.company} is tomorrow`,
+                        type: 'info',
+                        icon: 'fa-calendar-check'
+                    });
+                    app.interviewReminderSent = true;
+                    StorageManager.set('applications', apps);
+                }
+            }
+        });
+    }
+    
+    static checkForDeadlines() {
+        // Simulate deadline alerts
+        if (Math.random() > 0.8) {
+            const deadlines = ['Application deadline for Summer Internships', 'Resume submission deadline', 'Project proposal deadline'];
+            const deadline = deadlines[Math.floor(Math.random() * deadlines.length)];
+            
+            this.add({
+                title: 'Deadline Alert',
+                message: `${deadline} is approaching. Don't miss out!`,
+                type: 'warning',
+                icon: 'fa-clock'
+            });
+        }
+    }
+    
+    static markAsRead(notificationId) {
+        const notif = this.notifications.find(n => n.id === notificationId);
+        if (notif) {
+            notif.read = true;
+            StorageManager.set('notifications', this.notifications);
+        }
+    }
+    
+    static getUnreadCount() {
+        return this.notifications.filter(n => !n.read).length;
+    }
+}
+
+// ==================== VIDEO SYSTEM ====================
+class VideoManager {
+    static async createRoom(roomName) {
+        // Integration with Daily.co or similar
+        return {
+            roomUrl: `https://internhub.daily.co/${roomName}`,
+            roomName,
+            created: new Date().toISOString()
+        };
+    }
+    
+    static renderVideoResume(videoUrl) {
+        return `
+            <div class="video-resume" style="background: #000; border-radius: 12px; overflow: hidden; margin: 1rem 0;">
+                <video controls style="width: 100%; max-height: 400px;">
+                    <source src="${videoUrl}" type="video/mp4">
+                    Your browser doesn't support video.
+                </video>
+            </div>
+        `;
+    }
+    
+    static uploadVideoResume(file) {
+        return new Promise((resolve, reject) => {
+            if (file.size > 50 * 1024 * 1024) {
+                reject('Video must be under 50MB');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const videoData = {
+                    url: e.target.result,
+                    name: file.name,
+                    size: file.size,
+                    uploadedAt: new Date().toISOString()
+                };
+                
+                const profile = StorageManager.getUserProfile();
+                profile.videoResume = videoData;
+                StorageManager.set('userProfile', profile);
+                
+                resolve(videoData);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+}
 
 // ==================== STORAGE MANAGER ====================
 class StorageManager {
@@ -401,6 +674,266 @@ window.RecommendationEngine = RecommendationEngine;
 window.GamificationManager = GamificationManager;
 window.AdvancedSearch = AdvancedSearch;
 window.ApplicationTracker = ApplicationTracker;
+window.NotificationManager = NotificationManager;
+window.VideoManager = VideoManager;
+
+// ==================== ANALYTICS DASHBOARD ====================
+class AnalyticsManager {
+    static getStudentAnalytics() {
+        const apps = StorageManager.getApplications();
+        const profile = StorageManager.getUserProfile();
+        
+        return {
+            totalApplications: apps.length,
+            pending: apps.filter(a => a.status === 'pending' || a.status === 'Applied').length,
+            interviews: apps.filter(a => a.status === 'Interview' || a.status === 'interview_scheduled').length,
+            offers: apps.filter(a => a.status === 'Offer' || a.status === 'offered').length,
+            accepted: apps.filter(a => a.status === 'Accepted').length,
+            rejected: apps.filter(a => a.status === 'Rejected').length,
+            responseRate: apps.length > 0 ? Math.round((apps.filter(a => a.status !== 'Applied' && a.status !== 'pending').length / apps.length) * 100) : 0,
+            profileCompletion: ProfileManager.calculateCompletion(),
+            skillsCount: (profile.skills || []).length,
+            averageResponseTime: this.calculateAvgResponseTime(apps)
+        };
+    }
+    
+    static calculateAvgResponseTime(apps) {
+        const responded = apps.filter(a => a.statusUpdatedAt && a.appliedDate);
+        if (!responded.length) return 'N/A';
+        
+        const totalDays = responded.reduce((sum, app) => {
+            const applied = new Date(app.appliedDate);
+            const updated = new Date(app.statusUpdatedAt);
+            return sum + Math.floor((updated - applied) / (1000 * 60 * 60 * 24));
+        }, 0);
+        
+        return `${Math.round(totalDays / responded.length)} days`;
+    }
+    
+    static renderDashboard() {
+        const stats = this.getStudentAnalytics();
+        
+        return `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                ${this.renderStatCard('Total Applications', stats.totalApplications, 'fa-paper-plane', '#0ea5e9')}
+                ${this.renderStatCard('Pending', stats.pending, 'fa-clock', '#f59e0b')}
+                ${this.renderStatCard('Interviews', stats.interviews, 'fa-video', '#8b5cf6')}
+                ${this.renderStatCard('Offers', stats.offers, 'fa-trophy', '#10b981')}
+                ${this.renderStatCard('Response Rate', `${stats.responseRate}%`, 'fa-chart-line', '#0ea5e9')}
+                ${this.renderStatCard('Profile Strength', `${stats.profileCompletion}%`, 'fa-user-check', '#1e3a8a')}
+            </div>
+            
+            <div style="background: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+                <h3 style="margin: 0 0 1.5rem 0; color: #1e3a8a;"><i class="fas fa-chart-pie"></i> Application Status Breakdown</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                    ${this.renderPieSegment('Applied', stats.pending, '#6b7280')}
+                    ${this.renderPieSegment('Interview', stats.interviews, '#8b5cf6')}
+                    ${this.renderPieSegment('Offers', stats.offers, '#10b981')}
+                    ${this.renderPieSegment('Rejected', stats.rejected, '#ef4444')}
+                </div>
+            </div>
+            
+            <div style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); padding: 1.5rem; border-radius: 12px; border: 2px solid #0ea5e9;">
+                <h4 style="margin: 0 0 0.5rem 0; color: #1e3a8a;"><i class="fas fa-lightbulb"></i> Insights</h4>
+                <p style="margin: 0; color: #1e3a8a;">Average response time: <strong>${stats.averageResponseTime}</strong></p>
+                <p style="margin: 0.5rem 0 0 0; color: #1e3a8a;">You have <strong>${stats.skillsCount}</strong> skills listed. Companies love diverse skill sets!</p>
+            </div>
+        `;
+    }
+    
+    static renderStatCard(label, value, icon, color) {
+        return `
+            <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid ${color}; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                    <div style="font-size: 0.85rem; color: #6b7280; font-weight: 600; text-transform: uppercase;">${label}</div>
+                    <i class="fas ${icon}" style="color: ${color}; font-size: 1.2rem;"></i>
+                </div>
+                <div style="font-size: 2rem; font-weight: 800; color: ${color};">${value}</div>
+            </div>
+        `;
+    }
+    
+    static renderPieSegment(label, value, color) {
+        return `
+            <div style="text-align: center;">
+                <div style="width: 80px; height: 80px; border-radius: 50%; background: ${color}; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.5rem; margin: 0 auto 0.5rem;">${value}</div>
+                <div style="font-size: 0.9rem; color: #1e3a8a; font-weight: 600;">${label}</div>
+            </div>
+        `;
+    }
+}
+
+// ==================== CALENDAR INTEGRATION ====================
+class CalendarManager {
+    static events = [];
+    
+    static addEvent(event) {
+        this.events.push({
+            id: Date.now() + Math.random(),
+            ...event,
+            createdAt: new Date().toISOString()
+        });
+        StorageManager.set('calendarEvents', this.events);
+        
+        // Set browser reminder
+        if (event.reminder) {
+            this.scheduleReminder(event);
+        }
+    }
+    
+    static scheduleReminder(event) {
+        const eventTime = new Date(event.dateTime).getTime();
+        const now = Date.now();
+        const reminderTime = eventTime - (event.reminderMinutes || 30) * 60 * 1000;
+        
+        if (reminderTime > now) {
+            setTimeout(() => {
+                NotificationManager.add({
+                    title: `Reminder: ${event.title}`,
+                    message: `Your ${event.type} is in ${event.reminderMinutes || 30} minutes`,
+                    type: 'info',
+                    icon: 'fa-calendar-check'
+                });
+            }, reminderTime - now);
+        }
+    }
+    
+    static exportToGoogleCalendar(event) {
+        const startTime = new Date(event.dateTime).toISOString().replace(/-|:|\.\d+/g, '');
+        const endTime = new Date(new Date(event.dateTime).getTime() + 60 * 60 * 1000).toISOString().replace(/-|:|\.\d+/g, '');
+        
+        const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${startTime}/${endTime}&details=${encodeURIComponent(event.description || '')}&location=${encodeURIComponent(event.location || 'Online')}`;
+        
+        window.open(url, '_blank');
+    }
+    
+    static renderUpcomingEvents() {
+        this.events = StorageManager.get('calendarEvents', []);
+        const upcoming = this.events
+            .filter(e => new Date(e.dateTime) > new Date())
+            .sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime))
+            .slice(0, 5);
+        
+        if (!upcoming.length) return '<p style="color: #6b7280; text-align: center; padding: 2rem;">No upcoming events</p>';
+        
+        return `
+            <div style="background: white; padding: 1.5rem; border-radius: 12px;">
+                <h3 style="margin: 0 0 1rem 0; color: #1e3a8a;"><i class="fas fa-calendar-alt"></i> Upcoming Events</h3>
+                ${upcoming.map(event => `
+                    <div style="padding: 1rem; background: rgba(246,241,231,0.5); border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid #0ea5e9;">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div>
+                                <h4 style="margin: 0 0 0.5rem 0; color: #1e3a8a;">${event.title}</h4>
+                                <p style="margin: 0; font-size: 0.9rem; color: #6b7280;">
+                                    <i class="fas fa-clock"></i> ${new Date(event.dateTime).toLocaleString()}
+                                </p>
+                                ${event.location ? `<p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #6b7280;"><i class="fas fa-map-marker-alt"></i> ${event.location}</p>` : ''}
+                            </div>
+                            <button onclick="CalendarManager.exportToGoogleCalendar(${JSON.stringify(event).replace(/"/g, '&quot;')})" style="background: #0ea5e9; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                                <i class="fab fa-google"></i> Add to Google
+                            </button>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+}
+
+// ==================== REFERRAL PROGRAM ====================
+class ReferralManager {
+    static generateReferralCode() {
+        const user = StorageManager.getCurrentUser();
+        if (!user) return null;
+        
+        const code = `IH${user.name.substring(0,3).toUpperCase()}${Math.random().toString(36).substring(2,7).toUpperCase()}`;
+        
+        const profile = StorageManager.getUserProfile();
+        profile.referralCode = code;
+        profile.referrals = profile.referrals || [];
+        StorageManager.set('userProfile', profile);
+        
+        return code;
+    }
+    
+    static trackReferral(code) {
+        // Track when someone uses a referral code
+        const referrals = StorageManager.get('referralTracking', []);
+        referrals.push({
+            code,
+            usedAt: new Date().toISOString(),
+            newUser: StorageManager.getCurrentUser()
+        });
+        StorageManager.set('referralTracking', referrals);
+        
+        // Reward the referrer
+        NotificationManager.add({
+            title: 'Referral Success!',
+            message: 'Someone used your referral code! You earned 100 points.',
+            type: 'success',
+            icon: 'fa-gift'
+        });
+    }
+    
+    static renderReferralWidget() {
+        const profile = StorageManager.getUserProfile();
+        const code = profile.referralCode || this.generateReferralCode();
+        const referralCount = (profile.referrals || []).length;
+        
+        return `
+            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 2rem; border-radius: 12px; margin: 2rem 0;">
+                <h3 style="margin: 0 0 1rem 0;"><i class="fas fa-gift"></i> Refer & Earn!</h3>
+                <p style="margin: 0 0 1.5rem 0; opacity: 0.95;">Share InternHub with friends and earn rewards!</p>
+                
+                <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; backdrop-filter: blur(10px);">
+                    <div style="font-size: 0.85rem; margin-bottom: 0.5rem; opacity: 0.9;">Your Referral Code:</div>
+                    <div style="font-size: 2rem; font-weight: 800; font-family: monospace; letter-spacing: 2px;">${code}</div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <button onclick="navigator.clipboard.writeText('${code}'); NotificationManager.showToast({title: 'Copied!', message: 'Referral code copied to clipboard', type: 'success'})" style="flex: 1; background: white; color: #f5576c; border: none; padding: 0.8rem; border-radius: 8px; font-weight: 700; cursor: pointer;">
+                        <i class="fas fa-copy"></i> Copy Code
+                    </button>
+                    <button onclick="navigator.share({title: 'Join InternHub', text: 'Use my referral code: ${code}', url: 'https://internhub.com?ref=${code}'})" style="flex: 1; background: rgba(255,255,255,0.2); color: white; border: 2px solid white; padding: 0.8rem; border-radius: 8px; font-weight: 700; cursor: pointer;">
+                        <i class="fas fa-share-alt"></i> Share
+                    </button>
+                </div>
+                
+                <div style="text-align: center; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.3);">
+                    <div style="font-size: 2rem; font-weight: 800;">${referralCount}</div>
+                    <div style="font-size: 0.9rem; opacity: 0.9;">Successful Referrals</div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// Make new classes globally available
+window.AnalyticsManager = AnalyticsManager;
+window.CalendarManager = CalendarManager;
+window.ReferralManager = ReferralManager;
+
+// ==================== AUTO-INITIALIZE ====================
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeEnhancements);
+} else {
+    initializeEnhancements();
+}
+
+function initializeEnhancements() {
+    NotificationManager.init();
+    SharedComponents.applyBaseStyles();
+    
+    // Update notification badge
+    setInterval(() => {
+        const badge = document.querySelector('.notification-badge');
+        if (badge) {
+            const count = NotificationManager.getUnreadCount();
+            badge.textContent = count;
+            badge.style.display = count > 0 ? 'block' : 'none';
+        }
+    }, 1000);
+}
 
 // ==================== SHARED COMPONENTS ====================
 class SharedComponents {

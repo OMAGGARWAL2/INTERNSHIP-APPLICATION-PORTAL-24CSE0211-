@@ -1,0 +1,145 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About Us - InternHub">
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>About InternHub</h1>
+        <p>Bridging the gap between talented students and innovative companies</p>
+      </div>
+    </section>
+    
+    <section class="content-section">
+      <h2>Our Mission</h2>
+      <p>At InternHub, we're dedicated to connecting ambitious students with transformative internship opportunities. Our platform simplifies the internship search process, providing students with access to vetted positions and companies with access to top talent.</p>
+      
+      <h2>Why InternHub?</h2>
+      <ul>
+        <li><strong>Verified Opportunities:</strong> All internships are vetted to ensure quality and legitimacy</li>
+        <li><strong>Skill Matching:</strong> Our algorithm matches students with internships based on their skills and interests</li>
+        <li><strong>Community Support:</strong> Connect with peers, mentors, and industry professionals</li>
+        <li><strong>Career Resources:</strong> Access preparation materials, courses, and career guidance</li>
+        <li><strong>Progress Tracking:</strong> Monitor applications, interviews, and career development</li>
+      </ul>
+      
+      <h2>Our Team</h2>
+      <div class="team-grid">
+        <div class="team-member">
+          <div class="member-photo">
+            <i class="fas fa-user"></i>
+          </div>
+          <h3>Alex Johnson</h3>
+          <p class="member-role">CEO & Founder</p>
+        </div>
+        <div class="team-member">
+          <div class="member-photo">
+            <i class="fas fa-user"></i>
+          </div>
+          <h3>Sarah Chen</h3>
+          <p class="member-role">CTO</p>
+        </div>
+        <div class="team-member">
+          <div class="member-photo">
+            <i class="fas fa-user"></i>
+          </div>
+          <h3>Michael Rodriguez</h3>
+          <p class="member-role">Head of Partnerships</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <style>
+    .hero {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--sea-blue) 100%);
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+      border-radius: var(--border-radius-main);
+      margin-bottom: 3rem;
+    }
+    
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .hero p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    
+    .content-section {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      margin: 2rem 0 1rem 0;
+      color: var(--accent-color);
+    }
+    
+    p {
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+    
+    ul {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+    }
+    
+    li {
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
+    }
+    
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .team-member {
+      text-align: center;
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border-color);
+    }
+    
+    .member-photo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      color: white;
+      font-size: 2rem;
+    }
+    
+    .member-role {
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+    
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</Layout>

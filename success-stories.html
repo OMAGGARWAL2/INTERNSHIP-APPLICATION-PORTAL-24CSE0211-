@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success Stories - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="market-enhancements.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+            --primary-bg: var(--cream);
+            --secondary-bg: #ffffff;
+            --header-bg: rgba(246, 241, 231, 0.95);
+            --text-primary: var(--blue);
+            --text-secondary: rgba(30, 58, 138, 0.8);
+            --accent-color: var(--sea-blue);
+            --hover-color: var(--blue);
+            --border-color: rgba(30, 58, 138, 0.15);
+            --shadow-color: rgba(30, 58, 138, 0.12);
+            --tag-bg: rgba(14, 165, 233, 0.12);
+            --primary-gradient: linear-gradient(135deg, var(--blue), var(--sea-blue));
+            --border-radius-main: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: var(--header-bg);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--accent-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .btn {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Filter Options */
+        .filter-options {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.2rem;
+            background: var(--secondary-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        /* Stories Grid */
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .story-card {
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-main);
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .story-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px var(--shadow-color);
+        }
+
+        .story-header {
+            padding: 1.5rem;
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .story-header h3 {
+            margin: 0 0 0.5rem 0;
+        }
+
+        .story-header p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .story-content {
+            padding: 1.5rem;
+        }
+
+        .story-content p {
+            margin: 0 0 1rem 0;
+            line-height: 1.6;
+        }
+
+        .story-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .story-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .story-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .author-info {
+            flex: 1;
+        }
+
+        .author-name {
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+
+        .author-role {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Testimonial Submission */
+        .testimonial-form {
+            background: var(--secondary-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            margin-top: 3rem;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h2 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary-bg);
+            border-top: 2px solid var(--border-color);
+            margin-top: 3rem;
+            padding: 2rem 0;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .footer-section a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo"><i class="fas fa-graduation-cap"></i> InternHub</a>
+            <div class="nav-links">
+                <a href="find-internships.html">Internships</a>
+                <a href="student-dashboard.html">Dashboard</a>
+                <a href="community.html">Community</a>
+                <a href="analytics.html">Analytics</a>
+                <a href="notifications.html">Notifications</a>
+                <button class="btn" onclick="window.location.href='login.html'">Login</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Success Stories</h1>
+            <p>Inspiring journeys of students who transformed their careers through InternHub</p>
+        </div>
+
+        <div class="filter-options">
+            <button class="filter-btn active" onclick="filterStories('all')">All Stories</button>
+            <button class="filter-btn" onclick="filterStories('tech')">Technology</button>
+            <button class="filter-btn" onclick="filterStories('business')">Business</button>
+            <button class="filter-btn" onclick="filterStories('creative')">Creative</button>
+            <button class="filter-btn" onclick="filterStories('research')">Research</button>
+        </div>
+
+        <div class="stories-grid">
+            <div class="story-card" data-category="tech">
+                <div class="story-header">
+                    <h3>From Intern to Full-Time</h3>
+                    <p>How I landed my dream job at TechCorp</p>
+                </div>
+                <div class="story-content">
+                    <p>When I started my internship at TechCorp, I never imagined I'd be offered a full-time position just 6 months later. Here's how I made the most of every opportunity...</p>
+                    <p>Key takeaways: Be proactive, ask questions, and don't be afraid to take on challenges outside your comfort zone. The mentors at TechCorp were incredibly supportive and helped me grow both technically and professionally.</p>
+                    <div class="story-stats">
+                        <div class="story-stat">
+                            <i class="fas fa-user-graduate"></i> 245 interns inspired
+                        </div>
+                        <div class="story-stat">
+                            <i class="fas fa-heart"></i> 89 likes
+                        </div>
+                        <div class="story-stat">
+                            <i class="fas fa-share"></i> 24 shares
+                        </div>
+                    </div>
+                    <div class="story-author">
+                        <div class="author-avatar">JD</div>
+                        <div class="author-info">
+                            <div class="author-name">John Doe</div>
+                            <div class="author-role">Software Engineer at TechCorp</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card" data-category="business">
+                <div class="story-header">
+                    <h3>Breaking Into Tech</h3>
+                    <p>A career changer's journey to software engineering</p>
+                </div>
+                <div class="story-content">
+                    <p>At 32, I decided to leave my accounting career behind and pursue software engineering. It wasn't easy, but with dedication and the right resources, I made it happen...</p>
+                    <p>My advice: Start with the basics, build projects, and connect with others in the field. Age is just a number! InternHub helped me find opportunities that welcomed career changers like myself.</p>
+                    <div class="story-stats">
+                        <div class="story-stat">
+                            <i class="fas fa-user-graduate"></i> 187 interns inspired
+                        </div>
+                        <div class="story-stat">
+                            <i class="fas fa-heart"></i> 156 likes
+                        </div>
+                        <div class="story-stat">
+                            <i class="fas fa-share"></i> 42 shares
+                        </div>
+                    </div>
+                    <div class="story-author">
+                        <div class="author-avatar">RT</div>
+                        <div class="author-info">
+                            <div class="author-name">Rajesh Thakur</div>
+                            <div class="author-role">Software Engineer at StartupX</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card" data-category="tech">
+                <div class="story-header">
+                    <h3>Global Internship Experience</h3>
+                    <p>Navigating remote internships across time zones</p>
+                </div>
+                <div class="story-content">
+                    <p>My internship with a startup in San Francisco while living in India was challenging but incredibly rewarding. Here's how I managed the time difference and cultural barriers...</p>
+                    <p>Pro tip: Over-communicate and be flexible with your schedule. The experience is worth it! Thanks to InternHub, I was able to find this amazing remote opportunity that broadened my horizons.</p>
+                    <div class="story-stats">
+                        <div class="story-stat">
+                            <i class="fas fa-user-graduate"></i> 92 interns inspired
+                        </div>
+                        <div class="story-stat">
+                            <i class="fas fa-heart"></i> 67 likes
+                        </div>
+                        <div class="story-stat">
+                            <i class="fas fa-share"></i> 18 shares
+                        </div>
+                    </div>
+                    <div class="story-author">
+                        <div class="author-avatar">PS</div>
+                        <div class="author-info">
+                            <div class="author-name">Priya Sharma</div>
+                            <div class="author-role">Product Manager at GlobalTech</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card" data-category="creative">
+                <div class="story-header">
+                    <h3>From Design Student to UX Lead</h3>
+                    <p>How internships shaped my design career</p>
+                </div>
+                <div class="story-content">
+                    <p>Starting as a design student with no real-world experience, I was nervous about entering the professional world. My first internship at DesignStudio changed everything...</p>
+                    <p>The hands-on experience I gained through InternHub opportunities helped me build a strong portfolio and develop the confidence to take on leadership roles in design teams.</p>
+                    <div class="story-stats">
+                        <div class="story-stat">
+                            <i class="fas fa-user-graduate"></i> 156 interns inspired
+                        </div>
+                        <div class="story-stat">
+                            <i class="fas fa-heart"></i> 98 likes
+                        </div>
+                        <div class="story-stat">
+                            <i class="fas fa-share"></i> 31 shares
+                        </div>
+                    </div>
+                    <div class="story-author">
+                        <div class="author-avatar">AD</div>
+                        <div class="author-info">
+                            <div class="author-name">Ananya Das</div>
+                            <div class="author-role">UX Lead at CreativeAgency</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card" data-category="research">
+                <div class="story-header">
+                    <h3>Research Internship to PhD Journey</h3>
+                    <p>How a summer research internship led to graduate school</p>
+                </div>
+                <div class="story-content">
+                    <p>My summer research internship at the University opened my eyes to the world of academic research. What started as a 3-month project turned into a passion for discovery...</p>
+                    <p>The mentorship I received during my internship was invaluable. It not only shaped my research skills but also helped me secure funding for my PhD program. InternHub connected me with the right opportunity at the right time.</p>
+                    <div class="story-stats">
+                        <div class="story-stat">
+                            <i class="fas fa-user-graduate"></i> 78 interns inspired
+                        </div>
+                        <div class="story-stat">
+                            <i class="fas fa-heart"></i> 112 likes
+                        </div>
+                        <div class="story-stat">
+                            <i class="fas fa-share"></i> 27 shares
+                        </div>
+                    </div>
+                    <div class="story-author">
+                        <div class="author-avatar">VK</div>
+                        <div class="author-info">
+                            <div class="author-name">Vikram Kumar</div>
+                            <div class="author-role">PhD Candidate in Biomedical Engineering</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card" data-category="business">
+                <div class="story-header">
+                    <h3>Entrepreneur's First Steps</h3>
+                    <p>How internships taught me business fundamentals</p>
+                </div>
+                <div class="story-content">
+                    <p>Before launching my startup, I completed internships in marketing, finance, and operations. Each experience taught me crucial lessons about running a business...</p>
+                    <p>InternHub was instrumental in helping me find diverse opportunities that gave me a well-rounded understanding of business operations. These experiences became the foundation for my entrepreneurial journey.</p>
+                    <div class="story-stats">
+                        <div class="story-stat">
+                            <i class="fas fa-user-graduate"></i> 203 interns inspired
+                        </div>
+                        <div class="story-stat">
+                            <i class="fas fa-heart"></i> 142 likes
+                        </div>
+                        <div class="story-stat">
+                            <i class="fas fa-share"></i> 39 shares
+                        </div>
+                    </div>
+                    <div class="story-author">
+                        <div class="author-avatar">SR</div>
+                        <div class="author-info">
+                            <div class="author-name">Sneha Reddy</div>
+                            <div class="author-role">Founder & CEO of MarketUp</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="testimonial-form">
+            <div class="form-header">
+                <h2>Share Your Success Story</h2>
+                <p>Help inspire others by sharing your internship journey</p>
+            </div>
+            <form id="testimonialForm">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="role">Current Role</label>
+                    <input type="text" id="role" placeholder="Enter your current position and company">
+                </div>
+                <div class="form-group">
+                    <label for="category">Internship Category</label>
+                    <select id="category">
+                        <option value="">Select a category</option>
+                        <option value="tech">Technology</option>
+                        <option value="business">Business</option>
+                        <option value="creative">Creative</option>
+                        <option value="research">Research</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="story">Your Story</label>
+                    <textarea id="story" placeholder="Share your internship journey, challenges you faced, and how it impacted your career..."></textarea>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Submit Your Story</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="cookies.html">Cookie Policy</a>
+            </div>
+            <div class="footer-section">
+                <h4>Trust</h4>
+                <a href="accessibility.html">Accessibility</a>
+                <a href="security.html">Security</a>
+                <a href="sitemap.xml">Sitemap</a>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="careers.html">Careers</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function filterStories(category) {
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Filter stories
+            const stories = document.querySelectorAll('.story-card');
+            stories.forEach(story => {
+                if (category === 'all' || story.dataset.category === category) {
+                    story.style.display = 'block';
+                } else {
+                    story.style.display = 'none';
+                }
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('testimonialForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const role = document.getElementById('role').value;
+            const category = document.getElementById('category').value;
+            const story = document.getElementById('story').value;
+            
+            // Validate form
+            if (!name || !email || !role || !category || !story) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Show success message
+            alert('Thank you for sharing your story! We will review and publish it soon.');
+            
+            // Reset form
+            this.reset();
+        });
+    </script>
+</body>
+</html>

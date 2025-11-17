@@ -1,0 +1,133 @@
+---
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content="Astro v2.0.0" />
+    <title>{title}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+        --cream: #f6f1e7;
+        --blue: #1e3a8a;
+        --sea-blue: #0ea5e9;
+        --primary-bg: var(--cream);
+        --secondary-bg: #ffffff;
+        --header-bg: rgba(246, 241, 231, 0.95);
+        --text-primary: var(--blue);
+        --text-secondary: rgba(30, 58, 138, 0.8);
+        --accent-color: var(--sea-blue);
+        --hover-color: var(--blue);
+        --border-color: rgba(30, 58, 138, 0.15);
+        --shadow-color: rgba(30, 58, 138, 0.12);
+        --tag-bg: rgba(14, 165, 233, 0.12);
+        --primary-gradient: linear-gradient(135deg, var(--blue), var(--sea-blue));
+        --border-radius-main: 16px;
+      }
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: var(--primary-bg);
+        color: var(--text-primary);
+        min-height: 100vh;
+        margin: 0;
+      }
+
+      header {
+        background: var(--header-bg);
+        backdrop-filter: blur(20px);
+        padding: 1rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 2px solid var(--accent-color);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        text-decoration: none;
+      }
+
+      .logo i {
+        font-size: 2rem;
+        color: var(--accent-color);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+      }
+
+      .nav-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--accent-color);
+      }
+
+      .btn {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 0.6rem 1.2rem;
+        border-radius: 50px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px var(--shadow-color);
+      }
+
+      main {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/" class="logo">
+          <i class="fas fa-graduation-cap"></i>
+          <span>InternHub</span>
+        </a>
+        <div class="nav-links">
+          <a href="/"><i class="fas fa-home"></i> Home</a>
+          <a href="/internships"><i class="fas fa-briefcase"></i> Internships</a>
+          <a href="/community"><i class="fas fa-users"></i> Community</a>
+          <a href="/about"><i class="fas fa-info-circle"></i> About</a>
+        </div>
+      </nav>
+    </header>
+    <slot />
+  </body>
+</html>

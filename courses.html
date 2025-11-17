@@ -104,10 +104,142 @@
         </div>
     </div>
     <script>
+        // API Configuration
+        const API_URL = 'http://localhost:5000/api';
+        let authToken = localStorage.getItem('authToken');
+        
         let currentCourse = 0;
         let currentModule = 0;
         let progress = {};
         let examAnswers = {};
+        let coursesFromAPI = [];
+
+        // API Helper Functions
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            
+            if (authToken) {
+                options.headers['Authorization'] = `Bearer ${authToken}`;
+            }
+            
+            if (data && method !== 'GET') {
+                options.body = JSON.stringify(data);
+            }
+            
+            const response = await fetch(`${API_URL}${endpoint}`, options);
+            return await response.json();
+        }
+
+        // Fetch Courses from Backend
+        async function fetchCoursesFromBackend() {
+            try {
+                const result = await apiCall('/courses');
+                if (result.success) {
+                    coursesFromAPI = result.courses;
+                    displayCoursesMarketplace();
+                }
+            } catch (error) {
+                console.log('Using static courses (backend not available)');
+            }
+        }
+
+        // Display Courses Marketplace
+        function displayCoursesMarketplace() {
+            const lessonContent = document.getElementById('lessonContent');
+            let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem;">';
+            
+            coursesFromAPI.forEach(course => {
+                html += `
+                    <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                        <img src="${course.thumbnail}" alt="${course.title}" style="width: 100%; height: 200px; object-fit: cover;">
+                        <div style="padding: 1.5rem;">
+                            <span style="background: var(--accent); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">${course.category}</span>
+                            <h3 style="margin: 1rem 0 0.5rem; font-size: 1.2rem;">${course.title}</h3>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">${course.shortDescription || course.description.substring(0, 100)}...</p>
+                            <div style="display: flex; gap: 1rem; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                                <span>⭐ ${course.ratings.average} (${course.ratings.count})</span>
+                                <span>👥 ${course.totalStudents}</span>
+                                <span>🕒 ${course.duration}h</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--border);">
+                                ${course.isFree ? 
+                                    '<span style="background: #27ae60; color: white; padding: 6px 16px; border-radius: 20px; font-weight: 700;">FREE</span>' : 
+                                    `<span style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">$${course.discountPrice || course.price}</span>`
+                                }
+                                ${course.isFree ? 
+                                    `<button onclick="enrollFree('${course._id}')" class="btn-submit" style="padding: 0.6rem 1.5rem;">Enroll Now</button>` : 
+                                    `<button onclick="buyNow('${course._id}', '${course.title}', ${course.discountPrice || course.price})" class="btn-submit" style="padding: 0.6rem 1.5rem;">Buy Now</button>`
+                                }
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            lessonContent.innerHTML = html;
+        }
+
+        // Enroll in Free Course
+        async function enrollFree(courseId) {
+            if (!authToken) {
+                showNotification('Please login first!', 'error');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                const result = await apiCall('/payments/free-enroll', 'POST', { courseId });
+                if (result.success) {
+                    showNotification('Successfully enrolled! Check your dashboard.', 'success');
+                    setTimeout(() => window.location.href = 'student-dashboard.html', 2000);
+                } else {
+                    showNotification(result.message, 'error');
+                }
+            } catch (error) {
+                showNotification('Enrollment failed. Please try again.', 'error');
+            }
+        }
+
+        // Buy Course with Stripe
+        async function buyNow(courseId, title, price) {
+            if (!authToken) {
+                showNotification('Please login first!', 'error');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            if (confirm(`Purchase "${title}" for $${price}?`)) {
+                // For now, redirect to a simple payment page or show modal
+                // In production, integrate Stripe Checkout
+                showNotification('Redirecting to payment...', 'success');
+                
+                // Simulated payment - Replace with actual Stripe integration
+                try {
+                    const result = await apiCall('/payments/create-intent', 'POST', {
+                        items: [{ itemId: courseId, itemType: 'Course' }]
+                    });
+                    
+                    if (result.success) {
+                        // Redirect to Stripe checkout or open payment modal
+                        showNotification('Payment system ready! (Demo mode)', 'success');
+                        // window.location.href = `checkout.html?clientSecret=${result.clientSecret}`;
+                    }
+                } catch (error) {
+                    showNotification('Payment initiation failed.', 'error');
+                }
+            }
+        }
+
+        // Load courses on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchCoursesFromBackend();
+        });
 
         const courses = [
             {

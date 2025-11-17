@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Call - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+            --primary-bg: var(--cream);
+            --secondary-bg: #ffffff;
+            --header-bg: rgba(246, 241, 231, 0.95);
+            --text-primary: var(--blue);
+            --text-secondary: rgba(30, 58, 138, 0.8);
+            --accent-color: var(--sea-blue);
+            --hover-color: var(--blue);
+            --border-color: rgba(30, 58, 138, 0.15);
+            --shadow-color: rgba(30, 58, 138, 0.12);
+            --tag-bg: rgba(14, 165, 233, 0.12);
+            --primary-gradient: linear-gradient(135deg, var(--blue), var(--sea-blue));
+            --border-radius-main: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            background: var(--header-bg);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--accent-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .btn {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        /* Main Content */
+        .container {
+            display: flex;
+            height: calc(100vh - 80px);
+            padding: 1rem;
+        }
+
+        /* Video Area */
+        .video-area {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .main-video-container {
+            flex: 1;
+            background: #000;
+            border-radius: var(--border-radius-main);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .main-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .participant-name {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .participants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            height: 150px;
+        }
+
+        .participant-video {
+            background: #333;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .participant-video video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .participant-video .name {
+            position: absolute;
+            bottom: 0.5rem;
+            left: 0.5rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            margin-left: 1rem;
+            max-width: 350px;
+        }
+
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 0.8rem;
+            border-radius: 12px;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: var(--tag-bg);
+            color: var(--text-primary);
+        }
+
+        .message .sender {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .message .time {
+            font-size: 0.7rem;
+            text-align: right;
+            margin-top: 0.3rem;
+            opacity: 0.8;
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .send-button {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Controls */
+        .controls-area {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            margin-top: 1rem;
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .mic-btn {
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .mic-btn.muted {
+            background: #ef4444;
+            color: white;
+        }
+
+        .video-btn {
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .video-btn.off {
+            background: #ef4444;
+            color: white;
+        }
+
+        .end-call-btn {
+            background: #ef4444;
+            color: white;
+            width: 60px;
+            height: 60px;
+        }
+
+        .screen-share-btn {
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .screen-share-btn.sharing {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* Call Info */
+        .call-info {
+            text-align: center;
+            padding: 1rem;
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .call-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .call-timer {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .chat-area {
+                max-width: 100%;
+                margin-left: 0;
+                margin-top: 1rem;
+                height: 300px;
+            }
+            
+            .participants-grid {
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">
+                <i class="fas fa-video"></i>
+                <span>InternHub Video Call</span>
+            </a>
+            <div class="nav-links">
+                <a href="hirer.html"><i class="fas fa-building"></i> Hirer Dashboard</a>
+                <a href="student-dashboard.html"><i class="fas fa-graduation-cap"></i> Student Dashboard</a>
+                <a href="messages.html"><i class="fas fa-comments"></i> Messages</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="video-area">
+            <div class="call-info">
+                <div class="call-title" id="callTitle">Interview with Priya Sharma</div>
+                <div class="call-timer" id="callTimer">00:00</div>
+            </div>
+            
+            <div class="main-video-container">
+                <video class="main-video" id="mainVideo" autoplay playsinline></video>
+                <div class="participant-name" id="mainParticipantName">Priya Sharma</div>
+            </div>
+            
+            <div class="participants-grid" id="participantsGrid">
+                <!-- Participant videos will be added here -->
+            </div>
+            
+            <div class="controls-area">
+                <button class="control-btn mic-btn" id="micBtn" title="Mute/Unmute">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="control-btn video-btn" id="videoBtn" title="Turn Camera On/Off">
+                    <i class="fas fa-video"></i>
+                </button>
+                <button class="control-btn screen-share-btn" id="screenShareBtn" title="Share Screen">
+                    <i class="fas fa-desktop"></i>
+                </button>
+                <button class="control-btn end-call-btn" id="endCallBtn" title="End Call">
+                    <i class="fas fa-phone"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="chat-area">
+            <div class="chat-header">
+                <i class="fas fa-comments"></i> Chat
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be added here -->
+            </div>
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Type a message...">
+                <button class="send-button" id="sendButton">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Call state
+        let callTimer = null;
+        let callSeconds = 0;
+        let isMuted = false;
+        let isVideoOff = false;
+        let isScreenSharing = false;
+        let localStream = null;
+        let remoteStream = null;
+        
+        // Initialize the video call
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get URL parameters to determine call type
+            const urlParams = new URLSearchParams(window.location.search);
+            const callType = urlParams.get('type') || 'interview';
+            const participantName = urlParams.get('participant') || 'Participant';
+            
+            // Update UI based on call type
+            document.getElementById('callTitle').textContent = 
+                callType === 'interview' ? `Interview with ${participantName}` : `Mentoring Session with ${participantName}`;
+            document.getElementById('mainParticipantName').textContent = participantName;
+            
+            // Start call timer
+            startCallTimer();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Initialize media
+            initializeMedia();
+            
+            // Load sample chat messages
+            loadSampleChatMessages();
+        });
+        
+        // Start call timer
+        function startCallTimer() {
+            callTimer = setInterval(() => {
+                callSeconds++;
+                const minutes = Math.floor(callSeconds / 60).toString().padStart(2, '0');
+                const seconds = (callSeconds % 60).toString().padStart(2, '0');
+                document.getElementById('callTimer').textContent = `${minutes}:${seconds}`;
+            }, 1000);
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Microphone toggle
+            document.getElementById('micBtn').addEventListener('click', toggleMicrophone);
+            
+            // Video toggle
+            document.getElementById('videoBtn').addEventListener('click', toggleVideo);
+            
+            // Screen share toggle
+            document.getElementById('screenShareBtn').addEventListener('click', toggleScreenShare);
+            
+            // End call
+            document.getElementById('endCallBtn').addEventListener('click', endCall);
+            
+            // Chat functionality
+            document.getElementById('sendButton').addEventListener('click', sendMessage);
+            document.getElementById('chatInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        }
+        
+        // Initialize media
+        async function initializeMedia() {
+            try {
+                // Get user media (camera and microphone)
+                localStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: true, 
+                    audio: true 
+                });
+                
+                // Display local video
+                const mainVideo = document.getElementById('mainVideo');
+                mainVideo.srcObject = localStream;
+                
+                // Add sample participant
+                addParticipantVideo('Priya Sharma');
+                
+            } catch (error) {
+                console.error('Error accessing media devices:', error);
+                alert('Could not access camera or microphone. Please check your device settings.');
+            }
+        }
+        
+        // Toggle microphone
+        function toggleMicrophone() {
+            const micBtn = document.getElementById('micBtn');
+            isMuted = !isMuted;
+            
+            if (localStream) {
+                localStream.getAudioTracks().forEach(track => {
+                    track.enabled = !isMuted;
+                });
+            }
+            
+            if (isMuted) {
+                micBtn.classList.add('muted');
+                micBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+            } else {
+                micBtn.classList.remove('muted');
+                micBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            }
+        }
+        
+        // Toggle video
+        function toggleVideo() {
+            const videoBtn = document.getElementById('videoBtn');
+            isVideoOff = !isVideoOff;
+            
+            if (localStream) {
+                localStream.getVideoTracks().forEach(track => {
+                    track.enabled = !isVideoOff;
+                });
+            }
+            
+            if (isVideoOff) {
+                videoBtn.classList.add('off');
+                videoBtn.innerHTML = '<i class="fas fa-video-slash"></i>';
+            } else {
+                videoBtn.classList.remove('off');
+                videoBtn.innerHTML = '<i class="fas fa-video"></i>';
+            }
+        }
+        
+        // Toggle screen share
+        async function toggleScreenShare() {
+            const screenShareBtn = document.getElementById('screenShareBtn');
+            
+            if (!isScreenSharing) {
+                try {
+                    // Get screen share stream
+                    const screenStream = await navigator.mediaDevices.getDisplayMedia({ 
+                        video: true 
+                    });
+                    
+                    isScreenSharing = true;
+                    screenShareBtn.classList.add('sharing');
+                    screenShareBtn.innerHTML = '<i class="fas fa-stop"></i>';
+                    
+                    // Replace main video with screen share
+                    const mainVideo = document.getElementById('mainVideo');
+                    mainVideo.srcObject = screenStream;
+                    
+                    // Stop screen sharing when user stops
+                    screenStream.getVideoTracks()[0].addEventListener('ended', () => {
+                        toggleScreenShare(); // Turn off screen sharing
+                    });
+                    
+                } catch (error) {
+                    console.error('Error sharing screen:', error);
+                    alert('Could not share screen.');
+                }
+            } else {
+                // Stop screen sharing and return to camera
+                isScreenSharing = false;
+                screenShareBtn.classList.remove('sharing');
+                screenShareBtn.innerHTML = '<i class="fas fa-desktop"></i>';
+                
+                // Return to camera feed
+                const mainVideo = document.getElementById('mainVideo');
+                mainVideo.srcObject = localStream;
+            }
+        }
+        
+        // End call
+        function endCall() {
+            if (confirm('Are you sure you want to end the call?')) {
+                // Stop all tracks
+                if (localStream) {
+                    localStream.getTracks().forEach(track => track.stop());
+                }
+                
+                // Clear timer
+                if (callTimer) {
+                    clearInterval(callTimer);
+                }
+                
+                // Redirect to appropriate page
+                const urlParams = new URLSearchParams(window.location.search);
+                const userType = urlParams.get('user') || 'student';
+                
+                if (userType === 'hirer') {
+                    window.location.href = 'hirer.html';
+                } else {
+                    window.location.href = 'student-dashboard.html';
+                }
+            }
+        }
+        
+        // Add participant video
+        function addParticipantVideo(name) {
+            const participantsGrid = document.getElementById('participantsGrid');
+            const participantElement = document.createElement('div');
+            participantElement.className = 'participant-video';
+            participantElement.innerHTML = `
+                <video autoplay playsinline></video>
+                <div class="name">${name}</div>
+            `;
+            participantsGrid.appendChild(participantElement);
+            
+            // For demo purposes, we'll just show a placeholder
+            // In a real app, this would be the remote stream
+        }
+        
+        // Load sample chat messages
+        function loadSampleChatMessages() {
+            const messages = [
+                { sender: 'Priya Sharma', text: 'Hi there! Thanks for taking the time to interview me.', time: '10:30 AM', type: 'received' },
+                { sender: 'You', text: 'Hello Priya! Great to meet you. I\'ve reviewed your resume and I\'m excited to learn more about your experience.', time: '10:31 AM', type: 'sent' },
+                { sender: 'Priya Sharma', text: 'Thank you! I\'m really interested in this internship opportunity.', time: '10:32 AM', type: 'received' }
+            ];
+            
+            const chatMessages = document.getElementById('chatMessages');
+            messages.forEach(msg => {
+                addMessageToChat(msg.sender, msg.text, msg.time, msg.type);
+            });
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Add message to chat
+        function addMessageToChat(sender, text, time, type) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${type}`;
+            messageElement.innerHTML = `
+                <div class="sender">${sender}</div>
+                <div class="text">${text}</div>
+                <div class="time">${time}</div>
+            `;
+            chatMessages.appendChild(messageElement);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Send message
+        function sendMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const message = chatInput.value.trim();
+            
+            if (message) {
+                const now = new Date();
+                const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                addMessageToChat('You', message, time, 'sent');
+                chatInput.value = '';
+            }
+        }
+        
+        // Simulate receiving a message
+        setInterval(() => {
+            if (Math.random() > 0.95) { // 5% chance every interval
+                const responses = [
+                    "That's a great question!",
+                    "I'd be happy to tell you more about that.",
+                    "Can you tell me more about your experience with React?",
+                    "How did you approach that project?",
+                    "What challenges did you face during your internship?"
+                ];
+                
+                const response = responses[Math.floor(Math.random() * responses.length)];
+                const now = new Date();
+                const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                addMessageToChat('Priya Sharma', response, time, 'received');
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

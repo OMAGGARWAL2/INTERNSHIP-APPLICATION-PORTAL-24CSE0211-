@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hashtags - InternHub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="community.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #f6f1e7;
+            --blue: #1e3a8a;
+            --sea-blue: #0ea5e9;
+            --primary-bg: var(--cream);
+            --secondary-bg: #ffffff;
+            --header-bg: rgba(246, 241, 231, 0.95);
+            --text-primary: var(--blue);
+            --text-secondary: rgba(30, 58, 138, 0.8);
+            --accent-color: var(--sea-blue);
+            --hover-color: var(--blue);
+            --border-color: rgba(30, 58, 138, 0.15);
+            --shadow-color: rgba(30, 58, 138, 0.12);
+            --tag-bg: rgba(14, 165, 233, 0.12);
+            --primary-gradient: linear-gradient(135deg, var(--blue), var(--sea-blue));
+            --border-radius-main: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: var(--header-bg);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--accent-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .btn {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 1400px;
+            margin: 1rem auto;
+            padding: 0 2rem;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            border: 2px solid var(--border-color);
+            font-size: 1rem;
+            background: var(--secondary-bg);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.1);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 2rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-section h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+        }
+
+        .sidebar-links {
+            list-style: none;
+        }
+
+        .sidebar-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .sidebar-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-links a:hover {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--accent-color);
+        }
+
+        .sidebar-links a.active {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        /* Hashtags Content */
+        .hashtags-content {
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            padding: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        /* Search Filters */
+        .search-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            font-size: 1rem;
+            background: var(--secondary-bg);
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        /* Trending Hashtags */
+        .trending-section {
+            margin-bottom: 3rem;
+        }
+
+        .trending-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            font-size: 1.3rem;
+        }
+
+        .hashtags-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .hashtag-card {
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-main);
+            border: 2px solid var(--border-color);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .hashtag-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .hashtag-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .hashtag-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .follow-btn {
+            background: none;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .follow-btn:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .hashtag-stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .hashtag-description {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .hashtag-posts {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .post-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        /* Following Hashtags */
+        .following-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .following-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            font-size: 1.3rem;
+        }
+
+        .following-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .following-tag {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .unfollow-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .unfollow-btn:hover {
+            opacity: 1;
+        }
+
+        /* Suggested Hashtags */
+        .suggested-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .suggested-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            font-size: 1.3rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary-bg);
+            border-top: 2px solid var(--border-color);
+            margin-top: 3rem;
+            padding: 2rem 0;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .footer-section a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo"><i class="fas fa-graduation-cap"></i> InternHub</a>
+            <div class="nav-links">
+                <a href="find-internships.html">Internships</a>
+                <a href="community.html" style="color: var(--accent-color);">Community</a>
+                <a href="student-dashboard.html">Dashboard</a>
+                <button class="btn" onclick="window.location.href='login.html'">Login</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="search-container">
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search for hashtags...">
+            <button class="btn"><i class="fas fa-search"></i> Search</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <h3>Community</h3>
+                <ul class="sidebar-links">
+                    <li><a href="community.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="network.html"><i class="fas fa-users"></i> My Network</a></li>
+                    <li><a href="jobs.html"><i class="fas fa-briefcase"></i> Jobs</a></li>
+                    <li><a href="messages.html"><i class="fas fa-comments"></i> Messaging</a></li>
+                    <li><a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>Manage Network</h3>
+                <ul class="sidebar-links">
+                    <li><a href="add-connections.html"><i class="fas fa-user-plus"></i> Add Connections</a></li>
+                    <li><a href="sent-invitations.html"><i class="fas fa-paper-plane"></i> Sent Invitations</a></li>
+                    <li><a href="groups.html"><i class="fas fa-user-friends"></i> Groups</a></li>
+                    <li><a href="hashtags.html" class="active"><i class="fas fa-hashtag"></i> Hashtags</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="hashtags-content">
+            <div class="section-header">
+                <h2>Hashtags</h2>
+                <button class="btn"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+            
+            <div class="search-filters">
+                <input type="text" class="filter-input" placeholder="Search by hashtag name...">
+                <button class="btn"><i class="fas fa-search"></i> Search</button>
+            </div>
+            
+            <div class="trending-section">
+                <h3>Trending Hashtags</h3>
+                <div class="hashtags-grid">
+                    <div class="hashtag-card">
+                        <div class="hashtag-header">
+                            <div class="hashtag-name">#Internship</div>
+                            <button class="follow-btn">Follow</button>
+                        </div>
+                        <div class="hashtag-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">12.4K</div>
+                                <div class="stat-label">Posts</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">8.2K</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                        </div>
+                        <div class="hashtag-description">
+                            <p>Share your internship experiences, challenges, and achievements with the community.</p>
+                        </div>
+                        <div class="hashtag-posts">
+                            <div class="post-preview">PS</div>
+                            <div class="post-preview">RK</div>
+                            <div class="post-preview">AD</div>
+                            <div class="post-preview">MJ</div>
+                        </div>
+                    </div>
+                    
+                    <div class="hashtag-card">
+                        <div class="hashtag-header">
+                            <div class="hashtag-name">#CareerDevelopment</div>
+                            <button class="follow-btn">Follow</button>
+                        </div>
+                        <div class="hashtag-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">9.7K</div>
+                                <div class="stat-label">Posts</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">6.5K</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                        </div>
+                        <div class="hashtag-description">
+                            <p>Tips, resources, and discussions about building a successful career path.</p>
+                        </div>
+                        <div class="hashtag-posts">
+                            <div class="post-preview">VK</div>
+                            <div class="post-preview">SP</div>
+                            <div class="post-preview">DR</div>
+                            <div class="post-preview">AR</div>
+                        </div>
+                    </div>
+                    
+                    <div class="hashtag-card">
+                        <div class="hashtag-header">
+                            <div class="hashtag-name">#TechSkills</div>
+                            <button class="follow-btn">Follow</button>
+                        </div>
+                        <div class="hashtag-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">15.2K</div>
+                                <div class="stat-label">Posts</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">11.8K</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                        </div>
+                        <div class="hashtag-description">
+                            <p>Latest trends, tutorials, and discussions about in-demand technology skills.</p>
+                        </div>
+                        <div class="hashtag-posts">
+                            <div class="post-preview">NP</div>
+                            <div class="post-preview">SR</div>
+                            <div class="post-preview">KT</div>
+                            <div class="post-preview">PS</div>
+                        </div>
+                    </div>
+                    
+                    <div class="hashtag-card">
+                        <div class="hashtag-header">
+                            <div class="hashtag-name">#Networking</div>
+                            <button class="follow-btn">Follow</button>
+                        </div>
+                        <div class="hashtag-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">7.3K</div>
+                                <div class="stat-label">Posts</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">5.9K</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                        </div>
+                        <div class="hashtag-description">
+                            <p>Strategies, events, and success stories about professional networking.</p>
+                        </div>
+                        <div class="hashtag-posts">
+                            <div class="post-preview">MJ</div>
+                            <div class="post-preview">VK</div>
+                            <div class="post-preview">SP</div>
+                            <div class="post-preview">DR</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="following-section">
+                <h3>Following</h3>
+                <div class="following-tags">
+                    <div class="following-tag">
+                        #SoftwareEngineering
+                        <button class="unfollow-btn"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="following-tag">
+                        #DataScience
+                        <button class="unfollow-btn"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="following-tag">
+                        #UXDesign
+                        <button class="unfollow-btn"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="following-tag">
+                        #ProductManagement
+                        <button class="unfollow-btn"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="suggested-section">
+                <h3>Suggested Hashtags</h3>
+                <div class="hashtags-grid">
+                    <div class="hashtag-card">
+                        <div class="hashtag-header">
+                            <div class="hashtag-name">#Leadership</div>
+                            <button class="follow-btn">Follow</button>
+                        </div>
+                        <div class="hashtag-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">6.8K</div>
+                                <div class="stat-label">Posts</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">4.7K</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                        </div>
+                        <div class="hashtag-description">
+                            <p>Developing leadership skills for your career journey.</p>
+                        </div>
+                        <div class="hashtag-posts">
+                            <div class="post-preview">SR</div>
+                            <div class="post-preview">VK</div>
+                            <div class="post-preview">KT</div>
+                        </div>
+                    </div>
+                    
+                    <div class="hashtag-card">
+                        <div class="hashtag-header">
+                            <div class="hashtag-name">#Innovation</div>
+                            <button class="follow-btn">Follow</button>
+                        </div>
+                        <div class="hashtag-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">8.4K</div>
+                                <div class="stat-label">Posts</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">6.2K</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                        </div>
+                        <div class="hashtag-description">
+                            <p>Creative solutions and breakthrough ideas in the workplace.</p>
+                        </div>
+                        <div class="hashtag-posts">
+                            <div class="post-preview">AR</div>
+                            <div class="post-preview">NP</div>
+                            <div class="post-preview">PS</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="cookies.html">Cookie Policy</a>
+            </div>
+            <div class="footer-section">
+                <h4>Trust</h4>
+                <a href="accessibility.html">Accessibility</a>
+                <a href="security.html">Security</a>
+                <a href="sitemap.xml">Sitemap</a>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="careers.html">Careers</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

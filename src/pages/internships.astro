@@ -1,0 +1,140 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Find Internships - InternHub">
+  <main>
+    <h1>Find Internships</h1>
+    <p>Discover opportunities that match your skills and career goals.</p>
+    
+    <div class="search-section">
+      <input type="text" placeholder="Search internships..." class="search-input" />
+      <button class="btn search-btn">
+        <i class="fas fa-search"></i> Search
+      </button>
+    </div>
+    
+    <div class="internships-grid">
+      <div class="internship-card">
+        <h3>Frontend Developer Intern</h3>
+        <p class="company">TechCorp</p>
+        <p class="location"><i class="fas fa-map-marker-alt"></i> Remote</p>
+        <p class="stipend"><i class="fas fa-rupee-sign"></i> ₹20,000 - ₹25,000/month</p>
+        <p class="description">Work on cutting-edge web applications using React and modern JavaScript frameworks.</p>
+        <div class="skills">
+          <span class="skill-tag">React</span>
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">HTML/CSS</span>
+        </div>
+        <button class="btn apply-btn">Apply Now</button>
+      </div>
+      
+      <div class="internship-card">
+        <h3>Data Science Intern</h3>
+        <p class="company">DataDriven Inc.</p>
+        <p class="location"><i class="fas fa-map-marker-alt"></i> Mumbai</p>
+        <p class="stipend"><i class="fas fa-rupee-sign"></i> ₹15,000 - ₹20,000/month</p>
+        <p class="description">Analyze large datasets to extract meaningful insights and support business decisions.</p>
+        <div class="skills">
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">SQL</span>
+          <span class="skill-tag">Machine Learning</span>
+        </div>
+        <button class="btn apply-btn">Apply Now</button>
+      </div>
+    </div>
+  </main>
+  
+  <style>
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .search-section {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      max-width: 600px;
+    }
+    
+    .search-input {
+      flex: 1;
+      padding: 1rem;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 1rem;
+    }
+    
+    .search-btn {
+      padding: 1rem 1.5rem;
+    }
+    
+    .internships-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .internship-card {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      border: 1px solid var(--border-color);
+    }
+    
+    .internship-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .internship-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+    
+    .company {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--accent-color);
+    }
+    
+    .location, .stipend {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+    
+    .description {
+      margin: 1rem 0;
+      color: var(--text-secondary);
+    }
+    
+    .skills {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    
+    .skill-tag {
+      background: var(--tag-bg);
+      color: var(--accent-color);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    
+    .apply-btn {
+      width: 100%;
+      padding: 0.8rem;
+    }
+  </style>
+</Layout>

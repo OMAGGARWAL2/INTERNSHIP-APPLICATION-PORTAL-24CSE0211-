@@ -1,0 +1,67 @@
+<section class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-number">5000+</div>
+      <div class="stat-label">Active Students</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">200+</div>
+      <div class="stat-label">Partner Companies</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">1500+</div>
+      <div class="stat-label">Internships Posted</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">95%</div>
+      <div class="stat-label">Success Rate</div>
+    </div>
+  </div>
+  <style>
+    .stats-section {
+      background: var(--card-bg);
+      padding: 4rem 2rem;
+      border-radius: 20px;
+      margin: 4rem 0;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      text-align: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .stat-item {
+      padding: 1.5rem;
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 800;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .stat-number {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</section>

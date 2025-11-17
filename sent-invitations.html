@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notifications - InternHub</title>
+    <title>Sent Invitations - InternHub</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='red' stroke='black' stroke-width='3'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>H</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="community.js"></script>
@@ -195,8 +195,8 @@
             color: white;
         }
 
-        /* Notifications Content */
-        .notifications-content {
+        /* Sent Invitations Content */
+        .sent-invitations-content {
             background: var(--secondary-bg);
             border-radius: var(--border-radius-main);
             border: 2px solid var(--border-color);
@@ -215,134 +215,124 @@
             color: var(--text-primary);
         }
 
-        /* Notification Filters */
-        .notification-filters {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 0.5rem 1.5rem;
-            border-radius: 20px;
-            border: 2px solid var(--border-color);
-            background: var(--secondary-bg);
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .filter-btn:hover {
-            background: rgba(14, 165, 233, 0.1);
-        }
-
-        .filter-btn.active {
-            background: var(--primary-gradient);
-            color: white;
-            border-color: var(--accent-color);
-        }
-
-        /* Notifications List */
-        .notifications-list {
+        /* Invitations List */
+        .invitations-list {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
-        .notification {
+        .invitation-card {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
             padding: 1.5rem;
             border-radius: 12px;
             border: 2px solid var(--border-color);
             transition: all 0.3s ease;
         }
 
-        .notification:hover {
+        .invitation-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .notification.unread {
-            border-left: 4px solid var(--accent-color);
-            background: rgba(14, 165, 233, 0.03);
-        }
-
-        .notification-icon {
-            width: 40px;
-            height: 40px;
+        .invitation-avatar {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: var(--primary-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
             flex-shrink: 0;
         }
 
-        .notification-content {
+        .invitation-details {
             flex: 1;
         }
 
-        .notification-content h3 {
+        .invitation-details h3 {
             margin-bottom: 0.3rem;
             color: var(--text-primary);
         }
 
-        .notification-content p {
+        .invitation-details p {
             margin: 0 0 0.5rem 0;
             color: var(--text-secondary);
-            line-height: 1.5;
         }
 
-        .notification-time {
+        .invitation-status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+        }
+
+        .status-accepted {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+        }
+
+        .status-declined {
+            background: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+        }
+
+        .invitation-message {
+            background: rgba(30, 58, 138, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-style: italic;
+        }
+
+        .invitation-date {
             color: var(--text-secondary);
             font-size: 0.9rem;
-            white-space: nowrap;
         }
 
-        .notification-actions {
+        .invitation-actions {
             display: flex;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+            gap: 1rem;
+            margin-top: 1rem;
         }
 
         .action-btn {
-            padding: 0.3rem 0.8rem;
-            border-radius: 5px;
-            border: 1px solid var(--border-color);
-            background: var(--secondary-bg);
-            color: var(--text-primary);
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .action-btn:hover {
-            background: rgba(14, 165, 233, 0.1);
-        }
-
-        /* Mark All as Read */
-        .mark-all {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .mark-all button {
-            background: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
             border: none;
-            color: var(--accent-color);
-            cursor: pointer;
             font-weight: 600;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .mark-all button:hover {
-            text-decoration: underline;
+        .withdraw-btn {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+
+        .withdraw-btn:hover {
+            background: rgba(220, 53, 69, 0.2);
+        }
+
+        .resend-btn {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .resend-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.2);
         }
 
         /* Footer */
@@ -386,6 +376,11 @@
             .nav-links {
                 display: none;
             }
+            
+            .invitation-card {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -395,7 +390,7 @@
             <a href="index.html" class="logo"><i class="fas fa-graduation-cap"></i> InternHub</a>
             <div class="nav-links">
                 <a href="find-internships.html">Internships</a>
-                <a href="community.html">Community</a>
+                <a href="community.html" style="color: var(--accent-color);">Community</a>
                 <a href="student-dashboard.html">Dashboard</a>
                 <button class="btn" onclick="window.location.href='login.html'">Login</button>
             </div>
@@ -404,7 +399,7 @@
 
     <div class="search-container">
         <div class="search-bar">
-            <input type="text" class="search-input" placeholder="Search notifications...">
+            <input type="text" class="search-input" placeholder="Search sent invitations...">
             <button class="btn"><i class="fas fa-search"></i> Search</button>
         </div>
     </div>
@@ -418,17 +413,7 @@
                     <li><a href="network.html"><i class="fas fa-users"></i> My Network</a></li>
                     <li><a href="jobs.html"><i class="fas fa-briefcase"></i> Jobs</a></li>
                     <li><a href="messages.html"><i class="fas fa-comments"></i> Messaging</a></li>
-                    <li><a href="notifications.html" class="active"><i class="fas fa-bell"></i> Notifications</a></li>
-                </ul>
-            </div>
-            
-            <div class="sidebar-section">
-                <h3>Notification Settings</h3>
-                <ul class="sidebar-links">
-                    <li><a href="#"><i class="fas fa-cog"></i> Preferences</a></li>
-                    <li><a href="#"><i class="fas fa-envelope"></i> Email Alerts</a></li>
-                    <li><a href="#"><i class="fas fa-mobile"></i> Push Notifications</a></li>
-                    <li><a href="#"><i class="fas fa-history"></i> Notification History</a></li>
+                    <li><a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
                 </ul>
             </div>
             
@@ -436,121 +421,87 @@
                 <h3>Manage Network</h3>
                 <ul class="sidebar-links">
                     <li><a href="add-connections.html"><i class="fas fa-user-plus"></i> Add Connections</a></li>
-                    <li><a href="sent-invitations.html"><i class="fas fa-paper-plane"></i> Sent Invitations</a></li>
+                    <li><a href="sent-invitations.html" class="active"><i class="fas fa-paper-plane"></i> Sent Invitations</a></li>
                     <li><a href="groups.html"><i class="fas fa-user-friends"></i> Groups</a></li>
                     <li><a href="hashtags.html"><i class="fas fa-hashtag"></i> Hashtags</a></li>
                 </ul>
             </div>
         </div>
 
-        <div class="notifications-content">
+        <div class="sent-invitations-content">
             <div class="section-header">
-                <h2>Notifications</h2>
-                <p>12 unread notifications</p>
+                <h2>Sent Invitations</h2>
+                <button class="btn"><i class="fas fa-sync-alt"></i> Refresh</button>
             </div>
             
-            <div class="notification-filters">
-                <button class="filter-btn active">All</button>
-                <button class="filter-btn">Unread</button>
-                <button class="filter-btn">Applications</button>
-                <button class="filter-btn">Messages</button>
-                <button class="filter-btn">Connections</button>
-                <button class="filter-btn">System</button>
-            </div>
-            
-            <div class="notifications-list">
-                <div class="notification unread">
-                    <div class="notification-icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <div class="notification-content">
-                        <h3>New Internship Match</h3>
-                        <p>We found a new internship that matches your skills: UX Design Intern at DesignStudio. Apply now to secure your spot!</p>
-                        <div class="notification-actions">
-                            <button class="action-btn">View Details</button>
-                            <button class="action-btn">Apply Now</button>
+            <div class="invitations-list">
+                <div class="invitation-card">
+                    <div class="invitation-avatar">PS</div>
+                    <div class="invitation-details">
+                        <h3>Priya Sharma</h3>
+                        <p>Software Engineer at Google</p>
+                        <div class="invitation-status status-pending">Pending</div>
+                        <div class="invitation-message">
+                            "Hi Priya, I came across your profile and thought we might have some common interests in software development. Would love to connect!"
+                        </div>
+                        <p class="invitation-date">Sent on June 15, 2023</p>
+                        <div class="invitation-actions">
+                            <button class="action-btn withdraw-btn"><i class="fas fa-times"></i> Withdraw</button>
+                            <button class="action-btn resend-btn"><i class="fas fa-redo"></i> Resend</button>
                         </div>
                     </div>
-                    <div class="notification-time">2 hours ago</div>
                 </div>
                 
-                <div class="notification unread">
-                    <div class="notification-icon">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <div class="notification-content">
-                        <h3>New Connection Request</h3>
-                        <p>Priya Sharma wants to connect with you. She's a Software Engineer at Google with similar interests.</p>
-                        <div class="notification-actions">
-                            <button class="action-btn">Accept</button>
-                            <button class="action-btn">View Profile</button>
+                <div class="invitation-card">
+                    <div class="invitation-avatar">VK</div>
+                    <div class="invitation-details">
+                        <h3>Vikram Khanna</h3>
+                        <p>Product Manager at Netflix</p>
+                        <div class="invitation-status status-accepted">Accepted</div>
+                        <div class="invitation-message">
+                            "Looking to expand my network in the product management space. Noticed your interest in product roles and thought we could connect!"
+                        </div>
+                        <p class="invitation-date">Sent on June 10, 2023 • Accepted on June 12, 2023</p>
+                        <div class="invitation-actions">
+                            <button class="action-btn withdraw-btn" disabled><i class="fas fa-check"></i> Connected</button>
+                            <button class="action-btn resend-btn" style="display: none;"><i class="fas fa-redo"></i> Resend</button>
                         </div>
                     </div>
-                    <div class="notification-time">5 hours ago</div>
                 </div>
                 
-                <div class="notification unread">
-                    <div class="notification-icon">
-                        <i class="fas fa-comments"></i>
-                    </div>
-                    <div class="notification-content">
-                        <h3>New Message</h3>
-                        <p>Rahul Kumar sent you a message: "Did you see the new internship posting? Would love your thoughts on it."</p>
-                        <div class="notification-actions">
-                            <button class="action-btn">Reply</button>
-                            <button class="action-btn">View Message</button>
+                <div class="invitation-card">
+                    <div class="invitation-avatar">SP</div>
+                    <div class="invitation-details">
+                        <h3>Sneha Patel</h3>
+                        <p>Data Scientist at Apple</p>
+                        <div class="invitation-status status-declined">Declined</div>
+                        <div class="invitation-message">
+                            "Hi Sneha, I'm interested in data science and would love to learn from your experience. Would you be open to connecting?"
+                        </div>
+                        <p class="invitation-date">Sent on June 5, 2023 • Declined on June 7, 2023</p>
+                        <div class="invitation-actions">
+                            <button class="action-btn withdraw-btn"><i class="fas fa-times"></i> Withdraw</button>
+                            <button class="action-btn resend-btn"><i class="fas fa-redo"></i> Resend</button>
                         </div>
                     </div>
-                    <div class="notification-time">1 day ago</div>
                 </div>
                 
-                <div class="notification">
-                    <div class="notification-icon">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                    <div class="notification-content">
-                        <h3>Interview Scheduled</h3>
-                        <p>Your interview with Amazon for the Data Analyst Intern position is scheduled for tomorrow at 2:00 PM.</p>
-                        <div class="notification-actions">
-                            <button class="action-btn">View Details</button>
-                            <button class="action-btn">Add to Calendar</button>
+                <div class="invitation-card">
+                    <div class="invitation-avatar">DR</div>
+                    <div class="invitation-details">
+                        <h3>David Rodriguez</h3>
+                        <p>UX Designer at Adobe</p>
+                        <div class="invitation-status status-pending">Pending</div>
+                        <div class="invitation-message">
+                            "Hi David, I'm working on UX projects and would appreciate connecting with an experienced designer like yourself."
+                        </div>
+                        <p class="invitation-date">Sent on May 28, 2023</p>
+                        <div class="invitation-actions">
+                            <button class="action-btn withdraw-btn"><i class="fas fa-times"></i> Withdraw</button>
+                            <button class="action-btn resend-btn"><i class="fas fa-redo"></i> Resend</button>
                         </div>
                     </div>
-                    <div class="notification-time">2 days ago</div>
                 </div>
-                
-                <div class="notification">
-                    <div class="notification-icon">
-                        <i class="fas fa-file-certificate"></i>
-                    </div>
-                    <div class="notification-content">
-                        <h3>Certificate Earned</h3>
-                        <p>Congratulations! You've earned your Python for Data Science certificate. Add it to your profile to showcase your skills.</p>
-                        <div class="notification-actions">
-                            <button class="action-btn">View Certificate</button>
-                            <button class="action-btn">Add to Profile</button>
-                        </div>
-                    </div>
-                    <div class="notification-time">3 days ago</div>
-                </div>
-                
-                <div class="notification">
-                    <div class="notification-icon">
-                        <i class="fas fa-trophy"></i>
-                    </div>
-                    <div class="notification-content">
-                        <h3>Profile View Milestone</h3>
-                        <p>Your profile has been viewed 100 times this month! This is 25% more than last month. Keep up the great work!</p>
-                        <div class="notification-actions">
-                            <button class="action-btn">View Analytics</button>
-                        </div>
-                    </div>
-                    <div class="notification-time">1 week ago</div>
-                </div>
-            </div>
-            
-            <div class="mark-all">
-                <button><i class="fas fa-check-circle"></i> Mark All as Read</button>
             </div>
         </div>
     </div>
