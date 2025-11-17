@@ -49,6 +49,19 @@
                     <input id="courseCategory" placeholder="e.g., Web Development">
                 </div>
             </div>
+            <div class="row" style="margin-top:1rem;">
+                <div>
+                    <label>Course Price (₹)</label>
+                    <input id="coursePrice" type="number" min="0" step="0.01" placeholder="e.g., 2999">
+                </div>
+                <div>
+                    <label>&nbsp;</label>
+                    <div style="display:flex; align-items:center; gap:.5rem;">
+                        <input type="checkbox" id="isFree" style="width:auto;">
+                        <label for="isFree" style="margin:0;">This course is free</label>
+                    </div>
+                </div>
+            </div>
             <div style="margin-top:1rem;">
                 <label>Course Description</label>
                 <textarea id="courseDescription" rows="3" placeholder="Describe what learners will achieve..."></textarea>
@@ -114,6 +127,13 @@ function moduleTemplate(id){
         </select>
       </div>
     </div>
+    <div class="row" style="margin-top:1rem;">
+      <div>
+        <label>Module Price (₹)</label>
+        <input class="module-price" type="number" min="0" step="0.01" placeholder="e.g., 499">
+      </div>
+      <div></div>
+    </div>
     <div class="module-config" style="margin-top:1rem;"></div>
     <div class="lessons" style="margin-top:1rem;"></div>
   </div>`;
@@ -135,6 +155,13 @@ function lessonTemplate(){
           <option value="text">Rich Text</option>
         </select>
       </div>
+    </div>
+    <div class="row" style="margin-top:1rem;">
+      <div>
+        <label>Study Material Price (₹)</label>
+        <input class="lesson-price" type="number" min="0" step="0.01" placeholder="e.g., 99">
+      </div>
+      <div></div>
     </div>
     <div style="margin-top:.5rem;">
       <label>Content</label>
@@ -165,18 +192,28 @@ window.removeModule = function(moduleId){
 function collectCourse(){
   const title = document.getElementById('courseTitle').value.trim();
   if (!title) { alert('Please add a course title.'); return null; }
+  
+  // Get course price (0 if free)
+  let price = 0;
+  const isFree = document.getElementById('isFree').checked;
+  if (!isFree) {
+    price = parseFloat(document.getElementById('coursePrice').value) || 0;
+  }
+  
   const course = {
     id: Date.now(),
     title,
     category: document.getElementById('courseCategory').value.trim(),
     description: document.getElementById('courseDescription').value.trim(),
+    price: price,
     durationHours: parseInt(document.getElementById('courseDuration').value||'0')||0,
     level: document.getElementById('courseLevel').value,
     modules: []
   };
   document.querySelectorAll('.module').forEach(mod => {
     const type = mod.querySelector('.module-type').value;
-    const moduleData = { title: mod.querySelector('.module-title').value.trim(), type };
+    const price = parseFloat(mod.querySelector('.module-price').value) || 0;
+    const moduleData = { title: mod.querySelector('.module-title').value.trim(), type, price };
     if (type === 'video') {
       moduleData.video = {
         fileName: mod.querySelector('.video-file')?.files?.[0]?.name || '',
@@ -223,10 +260,12 @@ function collectCourse(){
     }
     moduleData.lessons = [];
     mod.querySelectorAll('.lessons .card').forEach(lesson => {
+      const price = parseFloat(lesson.querySelector('.lesson-price')?.value) || 0;
       moduleData.lessons.push({
         title: lesson.querySelector('.lesson-title')?.value?.trim() || '',
         type: lesson.querySelector('.lesson-type')?.value || 'text',
-        content: lesson.querySelector('.lesson-content')?.value?.trim() || ''
+        content: lesson.querySelector('.lesson-content')?.value?.trim() || '',
+        price: price
       });
     });
     course.modules.push(moduleData);

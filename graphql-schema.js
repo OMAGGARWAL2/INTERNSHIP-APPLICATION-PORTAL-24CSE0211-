@@ -52,6 +52,55 @@ const schema = buildSchema(`
     timestamp: String!
   }
 
+  type Course {
+    id: ID!
+    title: String!
+    description: String!
+    price: Float!
+    hirerId: ID!
+    modules: [Module!]
+    isPublished: Boolean!
+  }
+
+  type Module {
+    id: ID!
+    title: String!
+    description: String!
+    price: Float!
+    courseId: ID!
+    materials: [StudyMaterial!]
+  }
+
+  type StudyMaterial {
+    id: ID!
+    title: String!
+    description: String!
+    price: Float!
+    moduleId: ID!
+    url: String
+  }
+
+  type Payment {
+    id: ID!
+    userId: ID!
+    courseId: ID
+    moduleId: ID
+    materialId: ID
+    amount: Float!
+    status: String!
+    paymentMethod: String!
+    createdAt: String!
+  }
+
+  type Subscription {
+    id: ID!
+    userId: ID!
+    courseId: ID!
+    startDate: String!
+    endDate: String!
+    isActive: Boolean!
+  }
+
   type Query {
     users: [User!]
     user(id: ID!): User
@@ -63,6 +112,11 @@ const schema = buildSchema(`
     application(id: ID!): Application
     searchInternships(query: String!): [Internship!]
     getUserApplications(userId: ID!): [Application!]
+    getCourses: [Course!]
+    getCourse(id: ID!): Course
+    getUserCourses(userId: ID!): [Course!]
+    getUserPayments(userId: ID!): [Payment!]
+    getUserSubscriptions(userId: ID!): [Subscription!]
   }
 
   type Mutation {
@@ -73,6 +127,14 @@ const schema = buildSchema(`
     addComment(postId: ID!, authorId: ID!, content: String!): Comment
     likePost(postId: ID!): Post
     updateApplicationStatus(applicationId: ID!, status: String!): Application
+    createCourse(title: String!, description: String!, price: Float!, hirerId: ID!): Course
+    updateCourse(id: ID!, title: String, description: String, price: Float, isPublished: Boolean): Course
+    createModule(courseId: ID!, title: String!, description: String!, price: Float!): Module
+    updateModule(id: ID!, title: String, description: String, price: Float): Module
+    createStudyMaterial(moduleId: ID!, title: String!, description: String!, price: Float!, url: String): StudyMaterial
+    updateStudyMaterial(id: ID!, title: String, description: String, price: Float, url: String): StudyMaterial
+    processPayment(userId: ID!, courseId: ID, moduleId: ID, materialId: ID, amount: Float!, paymentMethod: String!): Payment
+    createSubscription(userId: ID!, courseId: ID!, durationMonths: Int!): Subscription
   }
 `);
 
@@ -130,6 +192,62 @@ const posts = [
   }
 ];
 
+// Payment-related data structures
+const courses = [
+  {
+    id: '1',
+    title: 'Web Development Fundamentals',
+    description: 'Learn the basics of web development including HTML, CSS, and JavaScript',
+    price: 99.99,
+    hirerId: '2',
+    isPublished: true
+  }
+];
+
+const modules = [
+  {
+    id: '1',
+    title: 'HTML Basics',
+    description: 'Introduction to HTML and basic tags',
+    price: 29.99,
+    courseId: '1'
+  }
+];
+
+const studyMaterials = [
+  {
+    id: '1',
+    title: 'HTML Cheat Sheet',
+    description: 'Complete HTML reference guide',
+    price: 9.99,
+    moduleId: '1',
+    url: 'https://example.com/html-cheat-sheet.pdf'
+  }
+];
+
+const payments = [
+  {
+    id: '1',
+    userId: '1',
+    courseId: '1',
+    amount: 99.99,
+    status: 'completed',
+    paymentMethod: 'gpay',
+    createdAt: '2025-11-16T10:30:00Z'
+  }
+];
+
+const subscriptions = [
+  {
+    id: '1',
+    userId: '1',
+    courseId: '1',
+    startDate: '2025-11-16',
+    endDate: '2026-11-16',
+    isActive: true
+  }
+];
+
 // Root resolver
 const root = {
   // Queries
@@ -142,6 +260,10 @@ const root = {
   applications: () => applications,
   application: ({id}) => applications.find(app => app.id === id),
   
+  // Payment-related resolvers with relationships
+  courses: () => courses,
+  course: ({id}) => courses.find(course => course.id === id),
+  
   searchInternships: ({query}) => {
     return internships.filter(internship => 
       internship.position.toLowerCase().includes(query.toLowerCase()) ||
@@ -152,6 +274,20 @@ const root = {
   
   getUserApplications: ({userId}) => {
     return applications.filter(app => app.applicant.id === userId);
+  },
+
+  // Payment-related queries
+  getCourses: () => courses,
+  getCourse: ({id}) => courses.find(course => course.id === id),
+  getUserCourses: ({userId}) => {
+    // In a real app, this would check user purchases
+    return courses.filter(course => course.hirerId === userId);
+  },
+  getUserPayments: ({userId}) => {
+    return payments.filter(payment => payment.userId === userId);
+  },
+  getUserSubscriptions: ({userId}) => {
+    return subscriptions.filter(sub => sub.userId === userId);
   },
 
   // Mutations
@@ -261,6 +397,180 @@ const root = {
     
     application.status = status;
     return application;
+  },
+
+  // Payment-related mutations
+  createCourse: ({title, description, price, hirerId}) => {
+    const newCourse = {
+      id: String(courses.length + 1),
+      title,
+      description,
+      price,
+      hirerId,
+      isPublished: false
+    };
+    courses.push(newCourse);
+    return newCourse;
+  },
+
+  updateCourse: ({id, title, description, price, isPublished}) => {
+    const course = courses.find(c => c.id === id);
+    
+    if (!course) {
+      throw new Error('Course not found');
+    }
+    
+    if (title !== undefined) course.title = title;
+    if (description !== undefined) course.description = description;
+    if (price !== undefined) course.price = price;
+    if (isPublished !== undefined) course.isPublished = isPublished;
+    
+    return course;
+  },
+
+  createModule: ({courseId, title, description, price}) => {
+    // Check if course exists
+    const course = courses.find(c => c.id === courseId);
+    if (!course) {
+      throw new Error('Course not found');
+    }
+    
+    const newModule = {
+      id: String(modules.length + 1),
+      title,
+      description,
+      price,
+      courseId
+    };
+    modules.push(newModule);
+    return newModule;
+  },
+
+  updateModule: ({id, title, description, price}) => {
+    const module = modules.find(m => m.id === id);
+    
+    if (!module) {
+      throw new Error('Module not found');
+    }
+    
+    if (title !== undefined) module.title = title;
+    if (description !== undefined) module.description = description;
+    if (price !== undefined) module.price = price;
+    
+    return module;
+  },
+
+  createStudyMaterial: ({moduleId, title, description, price, url}) => {
+    // Check if module exists
+    const module = modules.find(m => m.id === moduleId);
+    if (!module) {
+      throw new Error('Module not found');
+    }
+    
+    const newMaterial = {
+      id: String(studyMaterials.length + 1),
+      title,
+      description,
+      price,
+      moduleId,
+      url: url || ''
+    };
+    studyMaterials.push(newMaterial);
+    return newMaterial;
+  },
+
+  updateStudyMaterial: ({id, title, description, price, url}) => {
+    const material = studyMaterials.find(m => m.id === id);
+    
+    if (!material) {
+      throw new Error('Study material not found');
+    }
+    
+    if (title !== undefined) material.title = title;
+    if (description !== undefined) material.description = description;
+    if (price !== undefined) material.price = price;
+    if (url !== undefined) material.url = url;
+    
+    return material;
+  },
+
+  processPayment: ({userId, courseId, moduleId, materialId, amount, paymentMethod}) => {
+    // In a real app, this would integrate with a payment gateway
+    const user = users.find(u => u.id === userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    
+    const newPayment = {
+      id: String(payments.length + 1),
+      userId,
+      courseId: courseId || null,
+      moduleId: moduleId || null,
+      materialId: materialId || null,
+      amount,
+      status: 'completed',
+      paymentMethod,
+      createdAt: new Date().toISOString()
+    };
+    
+    payments.push(newPayment);
+    return newPayment;
+  },
+
+  createSubscription: ({userId, courseId, durationMonths}) => {
+    const user = users.find(u => u.id === userId);
+    const course = courses.find(c => c.id === courseId);
+    
+    if (!user) {
+      throw new Error('User not found');
+    }
+    
+    if (!course) {
+      throw new Error('Course not found');
+    }
+    
+    const startDate = new Date();
+    const endDate = new Date();
+    endDate.setMonth(endDate.getMonth() + durationMonths);
+    
+    const newSubscription = {
+      id: String(subscriptions.length + 1),
+      userId,
+      courseId,
+      startDate: startDate.toISOString().split('T')[0],
+      endDate: endDate.toISOString().split('T')[0],
+      isActive: true
+    };
+    
+    subscriptions.push(newSubscription);
+    return newSubscription;
+  },
+  
+  // Relationship resolvers
+  Course: {
+    modules: (course) => modules.filter(module => module.courseId === course.id),
+    hirer: (course) => users.find(user => user.id === course.hirerId)
+  },
+  
+  Module: {
+    materials: (module) => studyMaterials.filter(material => material.moduleId === module.id),
+    course: (module) => courses.find(course => course.id === module.courseId)
+  },
+  
+  StudyMaterial: {
+    module: (material) => modules.find(module => module.id === material.moduleId)
+  },
+  
+  Payment: {
+    user: (payment) => users.find(user => user.id === payment.userId),
+    course: (payment) => courses.find(course => course.id === payment.courseId),
+    module: (payment) => modules.find(module => module.id === payment.moduleId),
+    material: (payment) => studyMaterials.find(material => material.id === payment.materialId)
+  },
+  
+  Subscription: {
+    user: (subscription) => users.find(user => user.id === subscription.userId),
+    course: (subscription) => courses.find(course => course.id === subscription.courseId)
   }
 };
 

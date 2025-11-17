@@ -206,7 +206,7 @@
             }
         }
 
-        // Buy Course with Stripe
+        // Buy Course with Payment Gateway
         async function buyNow(courseId, title, price) {
             if (!authToken) {
                 showNotification('Please login first!', 'error');
@@ -214,26 +214,8 @@
                 return;
             }
             
-            if (confirm(`Purchase "${title}" for $${price}?`)) {
-                // For now, redirect to a simple payment page or show modal
-                // In production, integrate Stripe Checkout
-                showNotification('Redirecting to payment...', 'success');
-                
-                // Simulated payment - Replace with actual Stripe integration
-                try {
-                    const result = await apiCall('/payments/create-intent', 'POST', {
-                        items: [{ itemId: courseId, itemType: 'Course' }]
-                    });
-                    
-                    if (result.success) {
-                        // Redirect to Stripe checkout or open payment modal
-                        showNotification('Payment system ready! (Demo mode)', 'success');
-                        // window.location.href = `checkout.html?clientSecret=${result.clientSecret}`;
-                    }
-                } catch (error) {
-                    showNotification('Payment initiation failed.', 'error');
-                }
-            }
+            // Redirect to our payment page
+            window.location.href = `payment.html?courseId=${courseId}`;
         }
 
         // Load courses on page load

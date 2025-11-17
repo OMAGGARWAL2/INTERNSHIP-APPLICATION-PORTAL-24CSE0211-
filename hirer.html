@@ -482,6 +482,28 @@
             </div>
         </div>
 
+        <!-- Course Management -->
+        <h2 style="margin-bottom: 1.5rem; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">Course Management</h2>
+        <div style="background: var(--card-bg); padding: 2rem; border-radius: 15px; margin-bottom: 3rem; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--text-primary);">
+                    <i class="fas fa-book" style="color: #8b5cf6;"></i> Your Courses
+                </h3>
+                <a href="createcourse.html" class="btn-post" style="text-decoration: none; background: #8b5cf6; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-plus"></i> Create New Course
+                </a>
+            </div>
+            <div id="coursesList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+                <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                    <i class="fas fa-book" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <p>No courses created yet</p>
+                    <a href="createcourse.html" class="btn-post" style="text-decoration: none; background: #8b5cf6; margin-top: 1rem; display: inline-block;">
+                        <i class="fas fa-plus"></i> Create Your First Course
+                    </a>
+                </div>
+            </div>
+        </div>
+        
         <!-- Internships Grid -->
         <h2 style="margin-bottom: 1.5rem; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">All Internship Listings</h2>
         <div class="internship-grid" id="internshipsGrid"></div>
@@ -1454,9 +1476,61 @@ int main() {
             }).join('');
         }
 
+        // Display courses
+        function displayCourses() {
+            const coursesContainer = document.getElementById('coursesList');
+            const courses = JSON.parse(localStorage.getItem('courses') || '[]');
+            
+            if (courses.length === 0) {
+                // Keep the default message
+                return;
+            }
+
+            // Display courses
+            coursesContainer.innerHTML = courses.map(course => `
+                <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid var(--border-color);">
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                            <h4 style="margin: 0; font-size: 1.2rem; color: var(--text-primary);">${course.title}</h4>
+                            <span style="background: ${course.price > 0 ? '#8b5cf6' : '#27ae60'}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">
+                                ${course.price > 0 ? `₹${course.price}` : 'FREE'}
+                            </span>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">${course.description || 'No description provided'}</p>
+                        <div style="display: flex; gap: 1rem; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                            <span><i class="fas fa-layer-group"></i> ${course.modules?.length || 0} Modules</span>
+                            <span><i class="fas fa-clock"></i> ${course.durationHours || 0}h</span>
+                            <span><i class="fas fa-signal"></i> ${course.level || 'Beginner'}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                            <button onclick="editCourse('${course.id}')" class="btn-edit" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button onclick="viewCourse('${course.id}')" class="btn-view" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Edit course function
+        function editCourse(courseId) {
+            // In a real app, this would redirect to an edit page
+            alert('Edit course functionality would be implemented here');
+        }
+
+        // View course function
+        function viewCourse(courseId) {
+            // In a real app, this would redirect to a course view page
+            alert('View course functionality would be implemented here');
+        }
+
         // Initialize
         displayInternships();
         displayMessagesPreview();
+        displayCourses();
 
         // Logout function
         function hirerLogout() {
