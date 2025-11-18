@@ -1,4 +1,3 @@
-// GraphQL Schema for InternHub
 const {
   graphql,
   buildSchema
